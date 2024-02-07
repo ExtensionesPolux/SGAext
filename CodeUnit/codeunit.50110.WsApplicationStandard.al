@@ -1,4 +1,4 @@
-codeunit 50110 WsApplicationStandard //Cambios 2024.02.01 F
+codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
 {
     #region LOGIN
 
