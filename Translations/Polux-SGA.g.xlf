@@ -8,131 +8,6 @@
           <note from="Developer" annotates="general" priority="2">ESP=Formato incorrecto. Se esperaba un Json</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SGA License Management - NamedType lblErrorJson</note>
         </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 3168196109" size-unit="char" translate="yes" xml:space="preserve">
-          <source>App Warehouse not defined</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el almacén de la App</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorAlmacen</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 3195850850" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Warehouse receipt error</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Error en la recepción</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorAlRecepcionar</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 2642384789" size-unit="char" translate="yes" xml:space="preserve">
-          <source>No product tracking code has been indicated for reference %1</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha indicado código seguimiento producto para la referencia %1</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorCodSeguimiento</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 951021725" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Journal Template Name not define on Warehouse Setup</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el diario inventario en la configuración de almacén</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorDiarioInv</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 1304331942" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Incorrect format. A Json was expected</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Formato incorrecto. Se esperaba un Json</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorJson</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 4232205562" size-unit="char" translate="yes" xml:space="preserve">
-          <source>There are no pending lines with sufficient quantity</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No hay lineas pendientes con cantidad suficiente</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorLineasCantidad</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 426222983" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Error generating internal Lot No number</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Error al generar el número de lote interno</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorLoteInterno</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 3649219638" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Internal Lot No %1 was not found in the system</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado el lote interno %1 en el sistema</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorLoteInternoNoExiste</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 41991427" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Error when moving</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Error al mover"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorMover</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 3779943642" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Nothing to handle.</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Nada que registrar"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorNadaQueRegistrar</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 3740895378" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A serial number has not been defined to generate the batch</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido un nº de serie para generar el lote</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorNSerieLote</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 1143900519" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Lot prefix not defined</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el prefijo del lote</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorPrefijoLote</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 824384756" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Warehouse receipt with number %1 not found</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado la recepción con número %1</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorRecepcion</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 2250250847" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The indicated resource was not found</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado el recurso indicado</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorRecurso</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 422849800" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Reference %1 not found in the system</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado la referencia %1 en el sistema</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorReferencia</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 2878665887" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Error posting</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Error al registrar</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorRegistrar</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 1690454790" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Put-away not found</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Almacenamiento no encontrado"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorSinAlmacenamiento</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 2029379943" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Inventory not found</source>
-          <note from="Developer" annotates="general" priority="2">ESP="No existe inventario"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorSinInventario</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 2273248168" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Track No. Not Found</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado la trazabilidad</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorTrackNo</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 3018482407" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Bin %1 not found</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Ubicación %1 no encontrada</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorUbicacion</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 1135649827" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Adjust bin not defined</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Ubicación de ajuste no definida"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblErrorUbicacionAjuste</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 3120865116" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Lot No</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Lote</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblLote</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 963375437" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Package</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Paquete</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblPaquete</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - NamedType 3076488670" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Serial No</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Serie</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - NamedType lblSerie</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2035773434 - Method 330294467 - NamedType 486645057" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Not exist Reclassification Template</source>
-          <note from="Developer" annotates="general" priority="2">ESP="No existe Libro diario Reclasificación"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplication - Method AppCreateReclassWarehouse - NamedType lblErrorReclasif</note>
-        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3168196109" size-unit="char" translate="yes" xml:space="preserve">
           <source>App Warehouse not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el almacén de la App</note>
@@ -368,6 +243,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension LocationCard - Control App - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 2187133665 - Control 4283809525 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2187133665">
+          <source>Read</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Phys. Inventory Journal - Control Leido - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 1518918944 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>Copy Allows</source>
           <note from="Developer" annotates="general" priority="2">ESP="Permite copiar"</note>
@@ -402,11 +282,6 @@
           <source>Envíos y Recepciones</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control AppEnviosRecepciones - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 3213244558 - Control 653299966 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
-          <source>Inventario</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control AppInventario - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 157422581 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Trazabilidad</source>
@@ -483,10 +358,35 @@
           <note from="Developer" annotates="general" priority="2">ESP=Usar Caducidad</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Item - Field Usar Caducidad - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 346005766 - Field 4283809525 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 346005766">
+          <source>Read</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Item Journal Line - Field Leido - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 6560835 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Advanced Warehouse</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Almacén Avanzado</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field Almacen Avanzado - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 1523876818 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Automatic Put-Away</source>
           <note from="Developer" annotates="general" priority="2">ESP="Almacenamiento automático"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field Almacenamiento automatico - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 1154349302 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Journal Batch</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Sección</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppInvJournalBatchName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 283379698 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Journal Template</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Diario</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppInvJournalTemplateName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 3882650204 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Add quantity in inventory</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Incrementar Cantidades</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field SumarCantidad - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 698477360 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Received Bin</source>
@@ -608,16 +508,6 @@
           <note from="Developer" annotates="general" priority="2">ESP=Almacén Aplicación SGA</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field App Location - Property Caption</note>
         </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 1154349302 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>Journal Batch</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Sección</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field AppInvJournalBatchName - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 283379698 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>Journal Template</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Diario</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field AppInvJournalTemplateName - Property Caption</note>
-        </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 1935546685 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Journal Batch</source>
           <note from="Developer" annotates="general" priority="2">ESP=Sección</note>
@@ -657,11 +547,6 @@
           <source>Mandatory Serial No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº. Serie Obligatorio</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Serie Interno Obligatorio - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 3882650204 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>Add quantity in inventory</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Incrementar Cantidades</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field SumarCantidad - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 4288541063 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Use Vendor Lot No</source>

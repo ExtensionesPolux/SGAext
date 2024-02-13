@@ -76,7 +76,7 @@ pageextension 50101 "Warehouse Setup" extends "Warehouse Setup"
                     }
                 }
 
-                group(AppInventario)
+                /*group(AppInventario)
                 {
                     Caption = 'Inventario';
                     field(AppInvJournalTemplateName; Rec.AppInvJournalTemplateName)
@@ -91,7 +91,7 @@ pageextension 50101 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
-                }
+                }*/
 
                 group(AppReclasifica)
                 {

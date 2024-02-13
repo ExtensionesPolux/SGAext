@@ -83,7 +83,7 @@ tableextension 50101 "Warehouse Setup" extends "Warehouse Setup"
         }
 
         //INVENTARIO APP 
-        field(50220; AppInvJournalTemplateName; Code[20])
+        /*field(50220; AppInvJournalTemplateName; Code[20])
         {
             TableRelation = "Warehouse Journal Template";
             Caption = 'Journal Template', Comment = 'ESP=Diario';
@@ -97,7 +97,7 @@ tableextension 50101 "Warehouse Setup" extends "Warehouse Setup"
         {
             DataClassification = ToBeClassified;
             Caption = 'Add quantity in inventory', Comment = 'ESP=Incrementar Cantidades';
-        }
+        }*/
 
         //RECLASIFICACION
         field(50225; AppJournalTemplateName; Code[20])

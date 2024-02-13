@@ -1,4 +1,4 @@
-codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
+codeunit 50110 WsApplicationStandard //Cambios 2024.02.01 F
 {
     #region LOGIN
 
@@ -148,16 +148,31 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
 
     local procedure Contador_Inventario(xLocation: Text): Integer
     var
-        RecWarehouseSetup: Record "Warehouse Setup";
+        //RecWarehouseSetup: Record "Warehouse Setup";
+        RecLocation: Record Location;
         RecWarehouseJournalLine: Record "Warehouse Journal Line";
+        RecItemJournalLine: Record "Item Journal Line";
     begin
-        RecWarehouseSetup.Get();
+        //RecWarehouseSetup.Get();
 
-        Clear(RecWarehouseJournalLine);
-        RecWarehouseJournalLine.SetRange("Location Code", xLocation);
-        RecWarehouseJournalLine.SetRange("Journal Template Name", RecWarehouseSetup.AppInvJournalTemplateName);
-        RecWarehouseJournalLine.SetRange("Journal Batch Name", RecWarehouseSetup.AppInvJournalBatchName);
-        exit(RecWarehouseJournalLine.Count());
+        RecLocation.Get(xLocation);
+
+        if (RecLocation."Almacen Avanzado") then begin
+            Clear(RecWarehouseJournalLine);
+            RecWarehouseJournalLine.SetRange("Location Code", xLocation);
+            RecWarehouseJournalLine.SetRange("Journal Template Name", RecLocation.AppInvJournalTemplateName);
+            RecWarehouseJournalLine.SetRange("Journal Batch Name", RecLocation.AppInvJournalBatchName);
+            exit(RecWarehouseJournalLine.Count());
+        end else begin
+            Clear(RecItemJournalLine);
+            RecItemJournalLine.SetRange("Location Code", xLocation);
+            RecItemJournalLine.SetRange("Journal Template Name", RecLocation.AppInvJournalTemplateName);
+            RecItemJournalLine.SetRange("Journal Batch Name", RecLocation.AppInvJournalBatchName);
+            exit(RecItemJournalLine.Count());
+
+        end;
+
+
     end;
 
 
@@ -784,6 +799,8 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
 
         VJsonObjectDatos: JsonObject;
 
+        RecLocation: Record Location;
+
         VJsonText: Text;
         jRecurso: Text;
         jLocation: Text;
@@ -810,7 +827,13 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
         jBinInv := DatoJsonTexto(VJsonObjectDatos, 'BinInv');
         jQuantity := DatoJsonDecimal(VJsonObjectDatos, 'Real');
 
-        Validar_Linea_Inventario(jTrackNo, jBinInv, jQuantity, jItemNo);
+
+        Clear(RecLocation);
+        RecLocation.Get(jLocation);
+        if RecLocation."Almacen Avanzado" then
+            Validar_Linea_Inventario_Almacen_Avanzado(jTrackNo, jBinInv, jQuantity, jItemNo, jLocation)
+        ELSE
+            Validar_Linea_Inventario_Almacen_Basico(jTrackNo, jBinInv, jQuantity, jItemNo, jLocation);
 
         exit(Inventario_Recurso(jRecurso, jLocation, jZone, jBin, jReferencia));
 
@@ -1109,6 +1132,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
         RecPurchaseLine: Record "Purchase Line";
         RecComentarios: Record "Warehouse Comment Line";
         RecItem: Record Item;
+        RecItemTrackingCode: Record "Item Tracking Code";
         Comentarios: Text;
 
         //RecItem: Record Item;
@@ -1198,10 +1222,15 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
                 VJsonObjectLines.Add('TipoSeguimimento', Format(TipoSeguimientoProducto(RecWhsReceiptLine."Item No.")));
                 VJsonObjectLines.Add('LoteInternoObligatorio', FormatoBoolean(RecWarehouseSetup."Lote Interno Obligatorio"));
 
-
                 Clear(RecItem);
                 RecItem.Get(RecWhsReceiptLine."Item No.");
-                VJsonObjectLines.Add('Caducidad', FormatoBoolean(RecItem."Usar Caducidad"));
+                if (RecItem."Item Tracking Code" <> '') then begin
+                    clear(RecItemTrackingCode);
+                    RecItemTrackingCode.Get(RecItem."Item Tracking Code");
+                    VJsonObjectLines.Add('Caducidad', FormatoBoolean(RecItemTrackingCode."Man. Expir. Date Entry Reqd."));
+                end else
+                    VJsonObjectLines.Add('Caducidad', FormatoBoolean(false));
+
 
                 VJsonObjectLines.Add('ItemReference', Buscar_Referencia_Cruzada(RecWhsReceiptLine."Item No.", ''));
                 VJsonObjectLines.Add('Outstanding', RecWhsReceiptLine."Qty. Outstanding (Base)");// ."Qty. Outstanding");
@@ -3597,8 +3626,10 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
         VJsonObjectInventario: JsonObject;
         VJsonArrayInventario: JsonArray;
 
-        RecWarehouseJournalLine: Record "Warehouse Journal Line";
-        RecWarehouseSetup: Record "Warehouse Setup";
+        //RecWarehouseJournalLine: Record "Warehouse Journal Line";
+        //RecWarehouseSetup: Record "Warehouse Setup";
+        RecDiario: RecordRef;
+        RecLocation: Record Location;
         RecRecurso: Record Resource;
         VJsonText: Text;
 
@@ -3609,20 +3640,54 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
 
         if (xResourceNo = '') then ERROR(lblErrorRecurso);
 
-        RecWarehouseSetup.get();
+        //RecWarehouseSetup.get();
+        RecLocation.Get(xLocation);
 
-        if ((RecWarehouseSetup.AppInvJournalTemplateName = '') or (RecWarehouseSetup.AppInvJournalBatchName = '')) then
+        if ((RecLocation.AppInvJournalTemplateName = '') or (RecLocation.AppInvJournalBatchName = '')) then
             ERROR(lblErrorDiarioInv);
 
         Clear(RecRecurso);
         RecRecurso.SetRange("No.", xResourceNo);
         if not RecRecurso.FindFirst() THEN ERROR(lblErrorRecurso);
 
+        if (RecLocation."Almacen Avanzado") then
+            VJsonText := Inventario_Recurso_Almacen_Avanzado(xResourceNo, xLocation, xZone, xBin, xItemNo)
+        else
+            VJsonText := Inventario_Recurso_Almacen_Basico(xResourceNo, xLocation, xZone, xBin, xItemNo);
+
+        exit(VJsonText);
+
+    end;
+
+
+
+    procedure Inventario_Recurso_Almacen_Avanzado(xResourceNo: Text; xLocation: Text; xZone: Text; xBin: Text; xItemNo: Text): Text
+    var
+
+        VJsonObjectInventario: JsonObject;
+        VJsonArrayInventario: JsonArray;
+
+        RecWarehouseJournalLine: Record "Warehouse Journal Line";
+
+        RecLocation: Record Location;
+        RecRecurso: Record Resource;
+        VJsonText: Text;
+
+        lContenedor: Text;
+        lSoloEnAlmacen: Integer;
+        bSoloEnAlmacen: Boolean;
+    begin
+
+        if (xResourceNo = '') then ERROR(lblErrorRecurso);
+
+        //RecWarehouseSetup.get();
+        RecLocation.Get(xLocation);
+
         //Todo lo que no sea urgencia
         Clear(RecWarehouseJournalLine);
         RecWarehouseJournalLine.SetRange("Location Code", xLocation);
-        RecWarehouseJournalLine.SetRange("Journal Template Name", RecWarehouseSetup.AppInvJournalTemplateName);
-        RecWarehouseJournalLine.SetRange("Journal Batch Name", RecWarehouseSetup.AppInvJournalBatchName);
+        RecWarehouseJournalLine.SetRange("Journal Template Name", RecLocation.AppInvJournalTemplateName);
+        RecWarehouseJournalLine.SetRange("Journal Batch Name", RecLocation.AppInvJournalBatchName);
 
         if (xZone <> '') then
             RecWarehouseJournalLine.SetRange("Zone Code", xZone);
@@ -3630,10 +3695,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
             RecWarehouseJournalLine.SetRange("Bin Code", xBin);
         if (xItemNo <> '') then
             RecWarehouseJournalLine.SetRange("Item No.", xItemNo);
-
-        //RecWarehouseJournalLine.SetRange(Urgente, false);
-        //if (RecRecurso."Ver Todo" = false) then
-        //    RecWarehouseJournalLine.SetFilter(Asignado, '=%1|%2', xRecurso, '');
 
         if RecWarehouseJournalLine.findset then begin
             repeat
@@ -3656,10 +3717,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
 
                 VJsonObjectInventario.Add('Leido', FormatoBoolean(RecWarehouseJournalLine.Leido));
 
-                //VJsonObjectInventario.Add('Resource', RecWarehouseJournalLine.Asignado);
-                //VJsonObjectInventario.Add('Revisado', FormatoBoolean(RecWarehouseJournalLine.Revisado));
-                //VJsonObjectInventario.Add('Urgente', FormatoBoolean(RecWarehouseJournalLine.Urgente));
-
                 VJsonArrayInventario.Add(VJsonObjectInventario.Clone());
                 Clear(VJsonObjectInventario);
 
@@ -3673,15 +3730,79 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
     end;
 
 
-    procedure Validar_Linea_Inventario(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xItemNo: Text): Text
+
+    procedure Inventario_Recurso_Almacen_Basico(xResourceNo: Text; xLocation: Text; xZone: Text; xBin: Text; xItemNo: Text): Text
+    var
+
+        VJsonObjectInventario: JsonObject;
+        VJsonArrayInventario: JsonArray;
+
+        RecItemJournalLine: Record "Item Journal Line";
+
+        RecLocation: Record Location;
+        RecRecurso: Record Resource;
+        VJsonText: Text;
+
+        lContenedor: Text;
+        lSoloEnAlmacen: Integer;
+        bSoloEnAlmacen: Boolean;
+    begin
+
+        if (xResourceNo = '') then ERROR(lblErrorRecurso);
+
+        //RecWarehouseSetup.get();
+        RecLocation.Get(xLocation);
+
+        //Todo lo que no sea urgencia
+        Clear(RecItemJournalLine);
+        RecItemJournalLine.SetRange("Location Code", xLocation);
+        RecItemJournalLine.SetRange("Journal Template Name", RecLocation.AppInvJournalTemplateName);
+        RecItemJournalLine.SetRange("Journal Batch Name", RecLocation.AppInvJournalBatchName);
+
+        if (xItemNo <> '') then
+            RecItemJournalLine.SetRange("Item No.", xItemNo);
+
+        if RecItemJournalLine.findset then begin
+            repeat
+                VJsonObjectInventario.Add('Location', RecItemJournalLine."Location Code");
+                VJsonObjectInventario.Add('LineNo', FormatoNumero(RecItemJournalLine."Line No."));
+                VJsonObjectInventario.Add('ItemNo', RecItemJournalLine."Item No.");
+                VJsonObjectInventario.Add('Description', RecItemJournalLine.Description);
+                VJsonObjectInventario.Add('TipoSeguimimento', Format(TipoSeguimientoProducto(RecItemJournalLine."Item No.")));
+                VJsonObjectInventario.Add('Zone', '');
+                VJsonObjectInventario.Add('Bin', '');
+                VJsonObjectInventario.Add('LotNo', RecItemJournalLine."Lot No.");
+                VJsonObjectInventario.Add('SerialNo', RecItemJournalLine."Serial No.");
+                VJsonObjectInventario.Add('PackagelNo', RecItemJournalLine."Package No.");
+
+                VJsonObjectInventario.Add('Date', FormatoFecha(RecItemJournalLine."Posting Date"));
+                VJsonObjectInventario.Add('Calculada', FormatoNumero(RecItemJournalLine."Qty. (Calculated)"));
+                VJsonObjectInventario.Add('Real', FormatoNumero(RecItemJournalLine."Qty. (Phys. Inventory)"));
+                VJsonObjectInventario.Add('Diferencia', FormatoNumero(RecItemJournalLine.Quantity));
+                VJsonObjectInventario.Add('Unit', RecItemJournalLine."Unit of Measure Code");
+
+                VJsonObjectInventario.Add('Leido', FormatoBoolean(RecItemJournalLine.Leido));
+
+                VJsonArrayInventario.Add(VJsonObjectInventario.Clone());
+                Clear(VJsonObjectInventario);
+
+            until RecItemJournalLine.Next() = 0;
+
+        end;
+
+        VJsonArrayInventario.WriteTo(VJsonText);
+        exit(VJsonText);
+
+    end;
+
+
+    procedure Validar_Linea_Inventario_Almacen_Avanzado(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xItemNo: Text; xLocation: Text): Text
     var
 
         RecWarehouseJournalLine: Record "Warehouse Journal Line";
-        RecWarehouseJournalLineAux: Record "Warehouse Journal Line";
         RecBin: Record Bin;
         RecLocation: Record Location;
 
-        RecWarehouseSetup: Record "Warehouse Setup";
         RecRecurso: Record Resource;
         VJsonText: Text;
 
@@ -3722,14 +3843,14 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
             RecWarehouseJournalLine.Modify();
         end else begin
 
-            Agregar_Linea_Inventario(xTrackNo, xBin, xQuantity, sTipo, xItemNo);
+            Agregar_Linea_Inventario_Almacen_Avanzado(xTrackNo, xBin, xQuantity, sTipo, xItemNo, xLocation);
 
         end;
 
     end;
 
 
-    procedure Agregar_Linea_Inventario(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xTipo: Code[1]; xItemNo: Text): Text
+    procedure Agregar_Linea_Inventario_Almacen_Avanzado(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xTipo: Code[1]; xItemNo: Text; xLocation: Text): Text
     var
 
         RecWarehouseJournalLine: Record "Warehouse Journal Line";
@@ -3737,7 +3858,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
         RecBin: Record Bin;
         RecLocation: Record Location;
 
-        RecWarehouseSetup: Record "Warehouse Setup";
         RecRecurso: Record Resource;
         VJsonText: Text;
 
@@ -3749,13 +3869,13 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
     begin
 
 
-        RecWarehouseSetup.GET();
-        IF (RecWarehouseSetup.AppInvJournalTemplateName = '') THEN ERROR(lblErrorDiarioInv);
-        IF (RecWarehouseSetup.AppInvJournalBatchName = '') THEN ERROR(lblErrorDiarioInv);
+        RecLocation.GET(xLocation);
+        IF (RecLocation.AppInvJournalTemplateName = '') THEN ERROR(lblErrorDiarioInv);
+        IF (RecLocation.AppInvJournalBatchName = '') THEN ERROR(lblErrorDiarioInv);
 
         clear(RecWarehouseJournalLineAux);
-        RecWarehouseJournalLineAux.SETRANGE("Journal Template Name", RecWarehouseSetup.AppInvJournalTemplateName);
-        RecWarehouseJournalLineAux.SETRANGE("Journal Batch Name", RecWarehouseSetup.AppInvJournalBatchName);
+        RecWarehouseJournalLineAux.SETRANGE("Journal Template Name", RecLocation.AppInvJournalTemplateName);
+        RecWarehouseJournalLineAux.SETRANGE("Journal Batch Name", RecLocation.AppInvJournalBatchName);
         if RecWarehouseJournalLineAux.FindLast() then
             NumeroLinea := RecWarehouseJournalLineAux."Line No." + 1001
         else
@@ -3768,8 +3888,8 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
         IF NOT RecBin.FindFirst() then Error(StrSubstNo(lblErrorUbicacion, xBin));
 
         RecWarehouseJournalLine.Init();
-        RecWarehouseJournalLine."Journal Template Name" := RecWarehouseSetup.AppInvJournalTemplateName;
-        RecWarehouseJournalLine."Journal Batch Name" := RecWarehouseSetup.AppInvJournalBatchName;
+        RecWarehouseJournalLine."Journal Template Name" := RecLocation.AppInvJournalTemplateName;
+        RecWarehouseJournalLine."Journal Batch Name" := RecLocation.AppInvJournalBatchName;
         NumeroLinea += 1000;
         RecWarehouseJournalLine."Line No." := NumeroLinea;
         RecWarehouseJournalLine."Registering Date" := Today;
@@ -3790,8 +3910,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
         //'N':
         //    Error(lblErrorTrackNo);
         end;
-
-
 
         RecWarehouseJournalLine."To Zone Code" := RecBin."Zone Code";
         RecWarehouseJournalLine."To Bin Code" := RecBin.Code;
@@ -3820,10 +3938,147 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01
 
         RecWarehouseJournalLine.Insert();
 
+    end;
 
 
+
+
+
+    procedure Validar_Linea_Inventario_Almacen_Basico(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xItemNo: Text; xLocation: Text): Text
+    var
+
+        RecItemJournalLine: Record "Item Journal Line";
+        RecBin: Record Bin;
+        RecLocation: Record Location;
+
+        RecRecurso: Record Resource;
+        VJsonText: Text;
+
+        lContenedor: Text;
+        lSoloEnAlmacen: Integer;
+        bSoloEnAlmacen: Boolean;
+
+        NumeroLinea: Integer;
+        sTipo: Code[1];
+    begin
+
+        sTipo := Tipo_Dato(xTrackNo);
+
+        CLEAR(RecItemJournalLine);
+
+        case sTipo of
+            'L':
+                RecItemJournalLine.SetRange("Lot No.", xTrackNo);
+            'S':
+                RecItemJournalLine.SetRange("Serial No.", xTrackNo);
+            'P':
+                RecItemJournalLine.SetRange("Package No.", xTrackNo);
+            'N':
+                begin
+                    IF (TipoSeguimientoProducto(xItemNo) > 0) THEN
+                        ERROR(lblErrorTrackNo);
+                    RecItemJournalLine.SetRange("Item No.", xItemNo);
+                end;
+
+        end;
+
+        IF (RecItemJournalLine.FindFirst()) THEN begin
+
+            RecItemJournalLine.Validate("Qty. (Phys. Inventory)", xQuantity);
+            RecItemJournalLine.Leido := true;
+            RecItemJournalLine.Modify();
+        end else begin
+
+            Agregar_Linea_Inventario_Almacen_Basico(xTrackNo, xBin, xQuantity, sTipo, xItemNo, xLocation);
+
+        end;
 
     end;
+
+
+    procedure Agregar_Linea_Inventario_Almacen_Basico(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xTipo: Code[1]; xItemNo: Text; xLocation: Text): Text
+    var
+
+        RecItemJournalLine: Record "Item Journal Line";
+        RecItemJournalLineAux: Record "Item Journal Line";
+        RecBin: Record Bin;
+        RecLocation: Record Location;
+
+        RecRecurso: Record Resource;
+        VJsonText: Text;
+
+        lContenedor: Text;
+        lSoloEnAlmacen: Integer;
+        bSoloEnAlmacen: Boolean;
+
+        NumeroLinea: Integer;
+    begin
+
+
+        RecLocation.GET(xLocation);
+        IF (RecLocation.AppInvJournalTemplateName = '') THEN ERROR(lblErrorDiarioInv);
+        IF (RecLocation.AppInvJournalBatchName = '') THEN ERROR(lblErrorDiarioInv);
+
+        clear(RecItemJournalLineAux);
+        RecItemJournalLineAux.SETRANGE("Journal Template Name", RecLocation.AppInvJournalTemplateName);
+        RecItemJournalLineAux.SETRANGE("Journal Batch Name", RecLocation.AppInvJournalBatchName);
+        if RecItemJournalLineAux.FindLast() then
+            NumeroLinea := RecItemJournalLineAux."Line No." + 1001
+        else
+            Error(lblErrorSinInventario);
+        ;
+
+        //Se añade la línea nueva
+        Clear(RecBin);
+        RecBin.SetRange(code, xBin);
+        IF NOT RecBin.FindFirst() then Error(StrSubstNo(lblErrorUbicacion, xBin));
+
+        RecItemJournalLine.Init();
+        RecItemJournalLine."Journal Template Name" := RecLocation.AppInvJournalTemplateName;
+        RecItemJournalLine."Journal Batch Name" := RecLocation.AppInvJournalBatchName;
+        NumeroLinea += 1000;
+        RecItemJournalLine."Line No." := NumeroLinea;
+        RecItemJournalLine."Posting Date" := Today;
+        RecItemJournalLine."Location Code" := RecBin."Location Code";
+
+        RecItemJournalLine.Validate("Item No.", xItemNo);
+
+        if (xTipo = '') then xTipo := Tipo_Dato(xTrackNo);
+
+        case xTipo of
+            'L':
+                RecItemJournalLine."Lot No." := xTrackNo;
+            'S':
+                RecItemJournalLine."Serial No." := xTrackNo;
+            'P':
+                RecItemJournalLine."Package No." := xTrackNo;
+        //'N':
+        //    Error(lblErrorTrackNo);
+        end;
+
+
+        Clear(RecLocation);
+        RecLocation.Get(RecBin."Location Code");
+
+
+        RecItemJournalLine."Source Code" := RecItemJournalLineAux."Source Code"; //'INVFISALM';
+        RecItemJournalLine."Phys. Inventory" := true;
+        RecItemJournalLine."Document No." := RecItemJournalLineAux."Document No.";
+        //RecItemJournalLine."Document Type" := RecItemJournalLine."Document Type"::;
+        RecItemJournalLine.Validate("Qty. (Calculated)", 0);
+        //RecItemJournalLine.Validate("Qty. (Calculated) (Base)", 0);
+        RecItemJournalLine.Validate("Qty. (Phys. Inventory)", xQuantity);
+        //RecItemJournalLine.Validate("Qty. (Phys. Inventory) (Base)", xQuantity);
+        RecItemJournalLine."Qty. per Unit of Measure" := 1;
+        RecItemJournalLine."Entry Type" := RecItemJournalLine."Entry Type"::"Positive Adjmt.";
+
+        RecItemJournalLine.Leido := true;
+
+        RecItemJournalLine.Insert();
+
+    end;
+
+
 
 
     #endregion
