@@ -159,7 +159,6 @@ codeunit 50111 "SGA License Management"
         WhseReceiptLine2.SetRange("Line No.", WhseReceiptLine."Line No.");
         IF NOT WhseReceiptLine2.Findfirst then exit;
 
-
         WarehouseSetup.Reset;
         IF NOT WarehouseSetup.Findfirst then exit;
         IF NOT WarehouseSetup."Cantidad recepcion a cero" then exit;
