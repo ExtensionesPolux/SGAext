@@ -1,6 +1,6 @@
 
 
-codeunit 50101 "SGA License Management"
+codeunit 50111 "SGA License Management"
 {
 
     trigger OnRun()
@@ -130,8 +130,6 @@ codeunit 50101 "SGA License Management"
     end;
 
 
-
-
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Get Source Doc. Inbound", 'OnAfterCreateWhseReceiptHeaderFromWhseRequest', '', false, false)]
     local procedure OnAfterCreateWhseReceiptHeaderFromWhseRequest(var WhseReceiptHeader: Record "Warehouse Receipt Header"; var WarehouseRequest: Record "Warehouse Request"; var GetSourceDocuments: Report "Get Source Documents");
     var
@@ -150,8 +148,34 @@ codeunit 50101 "SGA License Management"
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Receipt (Yes/No)", 'OnAfterWhsePostReceiptRun', '', false, false)]
     local procedure OnAfterWhsePostReceiptRun(var WhseReceiptLine: Record "Warehouse Receipt Line"; WhsePostReceipt: Codeunit "Whse.-Post Receipt")
+    var
+        WarehouseSetup: record "Warehouse Setup";
+        WhseReceiptLine2: Record "Warehouse Receipt Line";
+        TrackLine: record "Tracking Specification";
+
     begin
-        Message('Hola');
+        WhseReceiptLine2.reset;
+        WhseReceiptLine2.SetRange("No.", WhseReceiptLine."No.");
+        WhseReceiptLine2.SetRange("Line No.", WhseReceiptLine."Line No.");
+        IF NOT WhseReceiptLine2.Findfirst then exit;
+
+
+        WarehouseSetup.Reset;
+        IF NOT WarehouseSetup.Findfirst then exit;
+        IF NOT WarehouseSetup."Cantidad recepcion a cero" then exit;
+
+        TrackLine.reset;
+        trackLine.setrange("Source Type", WhseReceiptLine2."Source Type");
+        trackLine.Setrange("Source Subtype", WhseReceiptLine2."Source Subtype");
+        TrackLine.SetRange("Source ID", WhseReceiptLine2."Source No.");
+        TrackLine.SetRange("Source Ref. No.", WhseReceiptLine2."Source Line No.");
+        TrackLine.SetRange("Item No.", WhseReceiptLine2."Item No.");
+        TrackLine.SetRange("Variant Code", WhseReceiptLine2."Variant Code");
+        TrackLine.CalcSums("Qty. to Handle", "Qty. to Handle (Base)");
+
+        WhseReceiptLine2."Qty. to Receive" := TrackLine."Qty. to Handle";
+        WhseReceiptLine2."Qty. to Receive (Base)" := TrackLine."Qty. to Handle (Base)";
+        WhseReceiptLine2.Modify;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Get Source Doc. Outbound", 'OnAfterCreateWhseShipmentHeaderFromWhseRequest', '', false, false)]
@@ -169,10 +193,6 @@ codeunit 50101 "SGA License Management"
         WhseShptLine.modifyall("Qty. to Ship", 0);
         WhseShptLine.ModifyAll("Qty. to Ship (Base)", 0);
     end;
-
-
-
-
 
     var
         lblErrorJson: Label 'Incorrect format. A Json was expected', Comment = 'ESP=Formato incorrecto. Se esperaba un Json';

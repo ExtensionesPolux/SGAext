@@ -8,6 +8,8 @@ pageextension 50100 "Resource Card" extends "Resource Card"
             group(App)
             {
 
+                Caption = 'Aplicación SGA';
+
                 field(Pin; rec.Pin)
                 {
                     ToolTip = 'Pin', comment = 'ESP="Pin"';

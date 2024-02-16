@@ -19,23 +19,26 @@ pageextension 50106 LocationCard extends "Location Card"
                 {
                     ApplicationArea = all;
                 }
-
-
                 field("Almacen Avanzado"; Rec."Almacen Avanzado")
                 {
                     ApplicationArea = all;
                 }
-                field(AppInvJournalTemplateName; Rec.AppInvJournalTemplateName)
+                group(Inventario)
                 {
-                    ApplicationArea = all;
-                }
-                field(AppInvJournalBatchName; Rec.AppInvJournalBatchName)
-                {
-                    ApplicationArea = all;
-                }
-                field(SumarCantidad; Rec.SumarCantidad)
-                {
-                    ApplicationArea = all;
+                    Caption = 'Inventario';
+
+                    field(AppInvJournalTemplateName; Rec.AppInvJournalTemplateName)
+                    {
+                        ApplicationArea = all;
+                    }
+                    field(AppInvJournalBatchName; Rec.AppInvJournalBatchName)
+                    {
+                        ApplicationArea = all;
+                    }
+                    field(SumarCantidad; Rec.SumarCantidad)
+                    {
+                        ApplicationArea = all;
+                    }
                 }
 
             }
