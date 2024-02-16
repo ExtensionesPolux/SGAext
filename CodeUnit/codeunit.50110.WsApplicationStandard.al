@@ -182,7 +182,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01 F
 
     #region WEB SERVICES
 
-
     procedure WsAlmacenes(): Text
     var
         RecLocation: Record Location;
@@ -970,7 +969,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.01 F
     #endregion
 
     #region MOVIMIENTOS ALMACEN
-
 
     procedure Movimientos_Almacen(xNo: Code[20]; xLocation: Text): Text
     var
