@@ -193,6 +193,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page AlertaFactBox - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1377536918 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Alertas</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AlertaSerieFactBox - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1456375839 - Action 3231099658 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Test API Polux</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -217,6 +222,11 @@
           <source>Reservas</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page PageReservas - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2295959263 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Series Internos</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Series Internos - Property Caption</note>
         </trans-unit>
         <trans-unit id="Query 874675787 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot Numbers by Bin</source>
