@@ -41,6 +41,21 @@ pageextension 50106 LocationCard extends "Location Card"
                     }
                 }
 
+                group(Reclasificacion)
+                {
+                    Caption = 'Reclasificacion';
+
+                    field(AppJournalTemplateName; Rec.AppJournalTemplateName)
+                    {
+                        ApplicationArea = all;
+                    }
+                    field(AppJournalBatchName; Rec.AppJournalBatchName)
+                    {
+                        ApplicationArea = all;
+                    }
+
+                }
+
             }
 
         }

@@ -57,6 +57,26 @@ tableextension 50106 Location extends Location
             Caption = 'Add quantity in inventory', Comment = 'ESP=Incrementar Cantidades';
         }
 
+        //RECLASIFICACION
+        field(50025; AppJournalTemplateName; Code[20])
+        {
+
+            Caption = 'Journal Template', Comment = 'ESP=Diario';
+            TableRelation =
+            if ("Almacen Avanzado" = const(true)) "Warehouse Journal Template"
+            else
+            "Item Journal Template";
+
+        }
+        field(500026; AppJournalBatchName; Code[20])
+        {
+            TableRelation =
+            if ("Almacen Avanzado" = const(true)) "Warehouse Journal Batch".Name where("Journal Template Name" = FIELD(AppJournalTemplateName))
+            else
+            "Item Journal Batch".Name where("Journal Template Name" = FIELD(AppInvJournalTemplateName));
+            Caption = 'Journal Batch', Comment = 'ESP=Sección';
+
+        }
 
     }
 }

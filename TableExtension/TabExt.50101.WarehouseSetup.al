@@ -100,7 +100,7 @@ tableextension 50101 "Warehouse Setup" extends "Warehouse Setup"
         }*/
 
         //RECLASIFICACION
-        field(50225; AppJournalTemplateName; Code[20])
+        /*field(50225; AppJournalTemplateName; Code[20])
         {
             TableRelation = "Warehouse Journal Template";
             Caption = 'Journal Template', Comment = 'ESP=Diario';
@@ -111,7 +111,7 @@ tableextension 50101 "Warehouse Setup" extends "Warehouse Setup"
             TableRelation = "Warehouse Journal Batch".Name where("Journal Template Name" = FIELD(AppJournalTemplateName));
             Caption = 'Journal Batch', Comment = 'ESP=Sección';
 
-        }
+        }*/
 
         // Envíos y recepciones
         field(50230; "Cantidad envio a cero"; Boolean)

@@ -183,10 +183,10 @@
           <note from="Developer" annotates="general" priority="2">ESP="El producto %1 no existe"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - Method AnalizarSeguimientoProducto - NamedType lblErrorItem</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1185164919 - Method 330294467 - NamedType 486645057" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 1185164919 - Method 1158457578 - NamedType 486645057" size-unit="char" translate="yes" xml:space="preserve">
           <source>Not exist Reclassification Template</source>
           <note from="Developer" annotates="general" priority="2">ESP="No existe Libro diario Reclasificación"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - Method AppCreateReclassWarehouse - NamedType lblErrorReclasif</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - Method AppCreateReclassWarehouse_Avanzado - NamedType lblErrorReclasif</note>
         </trans-unit>
         <trans-unit id="Page 1622517182 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Alertas</source>
@@ -257,6 +257,11 @@
           <source>Inventario</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension LocationCard - Control Inventario - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1748631067 - Control 3741301255 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3870787835">
+          <source>Reclasificacion</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension LocationCard - Control Reclasificacion - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 2187133665 - Control 4283809525 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2187133665">
           <source>Read</source>
@@ -338,11 +343,6 @@
           <note from="Developer" annotates="general" priority="2">ESP="Para los productos con serie usar el serie del proveedor"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Usar Serie Proveedor - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="PageExtension 3213244558 - Control 4274327073 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
-          <source>Reclasificación</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control AppReclasifica - Property Caption</note>
-        </trans-unit>
         <trans-unit id="PageExtension 3288470611 - Control 4283809525 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3288470611">
           <source>Read</source>
           <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
@@ -397,6 +397,16 @@
           <source>Journal Template</source>
           <note from="Developer" annotates="general" priority="2">ESP=Diario</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppInvJournalTemplateName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 1935546685 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Journal Batch</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Sección</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppJournalBatchName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 1404235969 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Journal Template</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Diario</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppJournalTemplateName - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 3882650204 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Add quantity in inventory</source>
@@ -522,16 +532,6 @@
           <source>SGA App Location</source>
           <note from="Developer" annotates="general" priority="2">ESP=Almacén Aplicación SGA</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field App Location - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 1935546685 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>Journal Batch</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Sección</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field AppJournalBatchName - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 1404235969 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>Journal Template</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Diario</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field AppJournalTemplateName - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 4287287883 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Reset Shipment quantity</source>

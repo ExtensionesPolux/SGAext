@@ -843,10 +843,12 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     procedure WsMover(xJson: Text): Text
     var
 
+        RecLocation: Record Location;
+
         VJsonObjectDatos: JsonObject;
 
         lContenedor: Text;
-        lAlmacen: Boolean;
+        lAlmacen: Text;
 
         lUbicadionDesde: Text;
         lUbicacionHasta: Text;
@@ -869,12 +871,17 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         lUbicacionHasta := DatoJsonTexto(VJsonObjectDatos, 'BinTo');
         lCantidad := DatoJsonDecimal(VJsonObjectDatos, 'Quantity');
         lResource := DatoJsonTexto(VJsonObjectDatos, 'Resource');
-        lAlmacen := DatoJsonBoolean(VJsonObjectDatos, 'Location');
+        lAlmacen := DatoJsonTexto(VJsonObjectDatos, 'Location');
         lLotNo := DatoJsonTexto(VJsonObjectDatos, 'LotNo');
         lSerialNo := DatoJsonTexto(VJsonObjectDatos, 'SerialNo');
         lPackageNo := DatoJsonTexto(VJsonObjectDatos, 'PackageNo');
 
-        AppCreateReclassWarehouse(lUbicadionDesde, lUbicacionHasta, lCantidad, lContenedor, lResource, lItemNo, lLotNo, lSerialNo, lPackageNo);
+
+        Clear(RecLocation);
+        RecLocation.Get(lAlmacen);
+        if RecLocation."Almacen Avanzado" then
+            AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, lCantidad, lContenedor, lResource, lItemNo, lLotNo, lSerialNo, lPackageNo);
+
 
         exit('OK');
 
@@ -2408,9 +2415,9 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
-    procedure AppCreateReclassWarehouse(xFromBin: code[20]; xToBin: code[20]; xQty: decimal; xTrackNo: code[20]; xResourceNo: code[20]; xItemNo: code[20]; xLotNo: Text; xSerialNo: Text; xPackageNo: Text);
+    procedure AppCreateReclassWarehouse_Avanzado(xLocation: Text; xFromBin: code[20]; xToBin: code[20]; xQty: decimal; xTrackNo: code[20]; xResourceNo: code[20]; xItemNo: code[20]; xLotNo: Text; xSerialNo: Text; xPackageNo: Text);
     var
-        RecWarehouseSetup: record "Warehouse Setup";
+        RecLocation: Record Location;
         WhseJnlTemplate: record "Warehouse Journal Template";
         WhseJnlLine: record "Warehouse Journal Line";
         WhseJnlLineLast: record "Warehouse Journal Line";
@@ -2428,16 +2435,21 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         lblErrorReclasif: Label 'Not exist Reclassification Template', comment = 'ESP="No existe Libro diario Reclasificación"';
     begin
 
+        Clear(RecLocation);
+        RecLocation.Get(xLocation);
 
-        RecWarehouseSetup.get;
+        if (RecLocation.AppJournalTemplateName) = '' then Error(lblErrorReclasif);
+        if (RecLocation.AppJournalBatchName) = '' then Error(lblErrorReclasif);
+
+
         WhseJnlTemplate.reset;
         WhseJnlTemplate.setrange(Type, WhseJnlTemplate.Type::Reclassification);
         if not WhseJnlTemplate.findset then
             error(lblErrorReclasif);
 
         WhseJnlLine.RESET;
-        WhseJnlLine.SETRANGE("Journal Template Name", RecWarehouseSetup.AppJournalTemplateName);
-        WhseJnlLine.SETRANGE("Journal Batch Name", RecWarehouseSetup.AppJournalBatchName);
+        WhseJnlLine.SETRANGE("Journal Template Name", RecLocation.AppJournalTemplateName);
+        WhseJnlLine.SETRANGE("Journal Batch Name", RecLocation.AppJournalBatchName);
         IF WhseJnlLine.findset then
             repeat
                 WhseJnlLine.delete;
@@ -2449,15 +2461,15 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
         LineNo := 10001;
         WhseJnlLineLast.Reset;
-        WhseJnlLineLast.setrange("Journal Template Name", RecWarehouseSetup.AppJournalTemplateName);
-        WhseJnlLineLast.setrange("Journal Batch Name", RecWarehouseSetup.AppJournalBatchName);
+        WhseJnlLineLast.setrange("Journal Template Name", RecLocation.AppJournalTemplateName);
+        WhseJnlLineLast.setrange("Journal Batch Name", RecLocation.AppJournalBatchName);
         WhseJnlLineLast.setrange("Location Code", RecBin."Location Code");
         if WhseJnlLineLast.findlast then
             LineNo := WhseJnlLineLast."Line No." + 10000;
 
         WhseJnlLine.init;
-        WhseJnlLine."Journal Template Name" := RecWarehouseSetup.AppJournalTemplateName;
-        WhseJnlLine."Journal Batch Name" := RecWarehouseSetup.AppJournalBatchName;
+        WhseJnlLine."Journal Template Name" := RecLocation.AppJournalTemplateName;
+        WhseJnlLine."Journal Batch Name" := RecLocation.AppJournalBatchName;
         WhseJnlLine.validate("Location Code", RecBin."Location Code");
         WhseJnlLine."Line No." := LineNo;
         WhseJnlLine.validate("Registering Date", workdate);
@@ -2490,8 +2502,8 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
             WhseItemTrackingLine."Location Code" := RecBin."Location Code";
             WhseItemTrackingLine."Quantity (Base)" := xQty;
             WhseItemTrackingLine."Source Type" := 7311;
-            WhseItemTrackingLine."Source ID" := RecWarehouseSetup.AppJournalBatchName;
-            WhseItemTrackingLine."Source Batch Name" := RecWarehouseSetup.AppJournalTemplateName;
+            WhseItemTrackingLine."Source ID" := RecLocation.AppJournalBatchName;
+            WhseItemTrackingLine."Source Batch Name" := RecLocation.AppJournalTemplateName;
             WhseItemTrackingLine."Source Ref. No." := LineNo;
             WhseItemTrackingLine."Qty. per Unit of Measure" := 1;
             WhseItemTrackingLine."Qty. to Handle (Base)" := xQty;
@@ -3674,6 +3686,8 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         lContenedor: Text;
         lSoloEnAlmacen: Integer;
         bSoloEnAlmacen: Boolean;
+
+        iTipoTrack: Integer;
     begin
 
         if (xResourceNo = '') then ERROR(lblErrorRecurso);
@@ -3706,6 +3720,27 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
                 VJsonObjectInventario.Add('LotNo', RecWarehouseJournalLine."Lot No.");
                 VJsonObjectInventario.Add('SerialNo', RecWarehouseJournalLine."Serial No.");
                 VJsonObjectInventario.Add('PackagelNo', RecWarehouseJournalLine."Package No.");
+
+                iTipoTrack := TipoSeguimientoProducto(RecWarehouseJournalLine."Item No.");
+
+                case iTipoTrack of
+                    0:
+                        begin
+                            VJsonObjectInventario.Add('TrackNo', '');
+                            VJsonObjectInventario.Add('TipoTrack', 'I');
+                        end;
+                    2, 3, 5, 6:
+                        begin
+                            VJsonObjectInventario.Add('TrackNo', RecWarehouseJournalLine."Serial No.");
+                            VJsonObjectInventario.Add('TipoTrack', 'S');
+                        end;
+                    1, 4:
+                        begin
+                            VJsonObjectInventario.Add('TrackNo', RecWarehouseJournalLine."Lot No.");
+                            VJsonObjectInventario.Add('TipoTrack', 'L');
+                        end;
+
+                end;
 
                 VJsonObjectInventario.Add('Date', FormatoFecha(RecWarehouseJournalLine."Registering Date"));
                 VJsonObjectInventario.Add('Calculada', FormatoNumero(RecWarehouseJournalLine."Qty. (Calculated)"));
@@ -3937,8 +3972,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseJournalLine.Insert();
 
     end;
-
-
 
 
 

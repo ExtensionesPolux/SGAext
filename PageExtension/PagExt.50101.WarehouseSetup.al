@@ -93,7 +93,7 @@ pageextension 50101 "Warehouse Setup" extends "Warehouse Setup"
                     }
                 }*/
 
-                group(AppReclasifica)
+                /*group(AppReclasifica)
                 {
                     Caption = 'Reclasificación';
                     field(AppJournalTemplateName; Rec.AppJournalTemplateName)
@@ -104,7 +104,7 @@ pageextension 50101 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
-                }
+                }*/
 
                 group(AppEnviosRecepciones)
                 {
