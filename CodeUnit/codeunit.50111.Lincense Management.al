@@ -69,8 +69,6 @@ codeunit 50111 "SGA License Management"
     end;
 
 
-
-
     local procedure Enviar_Mensaje(Comando: text; Value: text) Respuesta: text
     var
         CompanyInfo: record "Company Information";
@@ -191,6 +189,45 @@ codeunit 50111 "SGA License Management"
         WhseShptLine.setrange("No.", WhseShptHeader."No.");
         WhseShptLine.modifyall("Qty. to Ship", 0);
         WhseShptLine.ModifyAll("Qty. to Ship (Base)", 0);
+    end;
+
+
+    // Crear info lote y serie obligatorio
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Item Jnl.-Post Line", 'OnAfterInsertItemLedgEntry', '', False, False)]
+    local procedure OnAfterInsertItemLedgEntry(var ItemLedgerEntry: Record "Item Ledger Entry"; ItemJournalLine: Record "Item Journal Line"; var ItemLedgEntryNo: Integer; var ValueEntryNo: Integer; var ItemApplnEntryNo: Integer; GlobalValueEntry: Record "Value Entry"; TransferItem: Boolean; var InventoryPostingToGL: Codeunit "Inventory Posting To G/L"; var OldItemLedgerEntry: Record "Item Ledger Entry")
+    var
+        LotInfo: record "Lot No. Information";
+        SerialInfo: Record "Serial No. Information";
+    begin
+        IF (ItemLedgerEntry."Lot No." = '') AND (ItemLedgerEntry."Serial No." = '') then exit;
+
+        IF (ItemLedgerEntry."Lot No." <> '') THEN begin
+            LotInfo.Reset;
+            LotInfo.SetRange("Item No.", ItemLedgerEntry."Item No.");
+            LotInfo.SetRange("Variant Code", ItemLedgerEntry."Variant Code");
+            LotInfo.SetRange("Lot No.", ItemLedgerEntry."Lot No.");
+            IF not LotInfo.Findfirst then begin
+                CLEAR(LotInfo);
+                LotInfo.Validate("Item No.", ItemLedgerEntry."Item No.");
+                LotInfo.Validate("Variant Code", ItemLedgerEntry."Variant Code");
+                LotInfo.Validate("Lot No.", ItemLedgerEntry."Lot No.");
+                LotInfo.Insert(False);
+            end;
+        end;
+
+        IF (ItemLedgerEntry."Serial No." <> '') THEN begin
+            SerialInfo.Reset;
+            SerialInfo.SetRange("Item No.", ItemLedgerEntry."Item No.");
+            SerialInfo.SetRange("Variant Code", ItemLedgerEntry."Variant Code");
+            SerialInfo.SetRange("Serial No.", ItemLedgerEntry."Serial No.");
+            IF not SerialInfo.Findfirst then begin
+                CLEAR(SerialInfo);
+                SerialInfo.Validate("Item No.", ItemLedgerEntry."Item No.");
+                SerialInfo.Validate("Variant Code", ItemLedgerEntry."Variant Code");
+                SerialInfo.Validate("Serial No.", ItemLedgerEntry."Serial No.");
+                SerialInfo.Insert(False);
+            end;
+        end;
     end;
 
     var
