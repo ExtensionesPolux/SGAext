@@ -49,10 +49,14 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         Clear(RecBin);
         RecBin.SetRange("Location Code", lLocation);
         if RecBin.FindSet() then;
-        if RecBin.Count > 0 then
-            VJsonObjectRecurso.Add('VerMover', FormatoBoolean(True))
-        else
+        if RecBin.Count > 0 then BEGIN
+            VJsonObjectRecurso.Add('VerMover', FormatoBoolean(True));
+            VJsonObjectRecurso.Add('UsaUbicaciones', FormatoBoolean(True));
+
+        END else BEGIN
             VJsonObjectRecurso.Add('VerMover', FormatoBoolean(False));
+            VJsonObjectRecurso.Add('UsaUbicaciones', FormatoBoolean(False));
+        END;
 
         VJsonObjectRecurso.Add('LoteInternoObligatorio', FormatoBoolean(RecWarehouseSetup."Lote Interno Obligatorio"));
         VJsonObjectRecurso.Add('UsarLoteProveedor', FormatoBoolean(RecWarehouseSetup."Usar Lote Proveedor"));
@@ -66,8 +70,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
         VJsonObjectRecurso.Add('Location', RecLocation.Code);
         VJsonObjectRecurso.Add('NombreAlamcen', RecLocation.Name);
-
-        VJsonObjectRecurso.Add('UsaUbicaciones', FormatoBoolean(RecLocation."Directed Put-away and Pick"));
 
         VJsonObjectRecurso.Add('RequiereAlmacenamiento', FormatoBoolean(RecLocation."Require Put-away"));
         VJsonObjectRecurso.Add('RequierePicking', FormatoBoolean(RecLocation."Require Pick"));
