@@ -78,5 +78,14 @@ tableextension 50106 Location extends Location
 
         }
 
+        field(50027; "Tiene Ubicaciones"; Boolean)
+        {
+            FieldClass = FlowField;
+            CalcFormula = exist(Bin where("Location Code" = field(Code)));
+        }
+
     }
+
+
+
 }

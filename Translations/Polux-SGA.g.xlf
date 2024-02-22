@@ -418,6 +418,11 @@
           <note from="Developer" annotates="general" priority="2">ESP=Incrementar Cantidades</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field SumarCantidad - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 953684134 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Tiene Ubicaciones</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field Tiene Ubicaciones - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 698477360 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Received Bin</source>
           <note from="Developer" annotates="general" priority="2">ESP="Ubicación Alm. Automático"</note>

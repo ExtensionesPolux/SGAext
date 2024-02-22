@@ -23,6 +23,10 @@ pageextension 50106 LocationCard extends "Location Card"
                 {
                     ApplicationArea = all;
                 }
+                field("Tiene Ubicaciones"; Rec."Tiene Ubicaciones")
+                {
+                    ApplicationArea = all;
+                }
                 group(Inventario)
                 {
                     Caption = 'Inventario';
