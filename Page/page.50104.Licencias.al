@@ -73,6 +73,20 @@ page 50104 Licencias
                     LicenseMgt.Test_Registro();
                 end;
             }
+            action(Informacion)
+            {
+                ApplicationArea = all;
+                Caption = 'Información Licencias';
+                image = Info;
+
+                trigger OnAction()
+                var
+                    LicenseMgt: Codeunit "SGA License Management";
+                begin
+                    LicenseMgt.Informacion();
+                end;
+
+            }
         }
     }
 

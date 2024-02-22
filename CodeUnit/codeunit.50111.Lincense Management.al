@@ -1,5 +1,3 @@
-
-
 codeunit 50111 "SGA License Management"
 {
 
@@ -26,48 +24,72 @@ codeunit 50111 "SGA License Management"
     procedure Vector_AES() Respuesta: text
     var
         CompanyInfo: Record "Company Information";
-        VJsonObjectRecurso: JsonObject;
-        VJsonText: Text;
+        JsonObjectRecurso: JsonObject;
+        JsonText: Text;
+    begin
+        Get_CompanyInfo(CompanyInfo);
+
+
+        Respuesta := CompanyInfo."Vector AES";
+
+        JsonObjectRecurso.Add('Vector', CompanyInfo."Vector AES");
+        JsonObjectRecurso.WriteTo(JsonText);
+        exit(JsonText);
+    end;
+
+
+    procedure Registro(xJson: Text): Text
+    var
+        JsonRegistroIn: JsonObject;
+        JsonRegistroOut: JsonObject;
+        JsonRegistroPoluxOut: JsonObject;
+        JsonRegistroPoluxIn: JsonObject;
+        CompanyInfo: record "Company Information";
+        Encriptado: text;
+        json: text;
+    begin
+        If not JsonRegistroIn.ReadFrom(xJson) then EXIT(lblErrorJson);
+
+        Get_CompanyInfo(CompanyInfo);
+
+        Encriptado := DatoJsonTexto(JsonRegistroIn, 'Registro');
+
+        JsonRegistroPoluxOut.Add('Licencia_BC', 'Licencia 12');
+        JsonRegistroPoluxOut.Add('ID_Polux', CompanyInfo."License Polux SGA");
+        JsonRegistroPoluxOut.Add('App', Encriptado);
+
+        JsonRegistroPoluxOut.WriteTo(json);
+        MESSAGE(Enviar_Mensaje('REGISTRAR', json));
+    end;
+
+
+
+    procedure Informacion()
+    var
+        CompanyInfo: record "Company Information";
+        JsonInfoOut: JsonObject;
+        json: text;
+
+    begin
+        Get_CompanyInfo(CompanyInfo);
+
+        JsonInfoOut.Add('Licencia_BC', 'Licencia 12');
+        JsonInfoOut.Add('ID_Polux', CompanyInfo."License Polux SGA");
+        JsonInfoOut.WriteTo(json);
+
+        MESSAGE(Enviar_Mensaje('INFORMACION', json));
+    end;
+
+    #Region Funciones Auxiliares
+
+    local procedure Get_CompanyInfo(var CompanyInfo: record "Company Information")
     begin
         CompanyInfo.Reset;
         IF not CompanyInfo.findfirst then error('No Existe Información Empresa');
         IF CompanyInfo."URL API" = '' then error('No se ha definido URL para accesso -Información Empresa-');
         IF CompanyInfo."Azure Code" = '' then error('No se ha definido Azure Code -Información Empresa-');
         IF CompanyInfo."Vector AES" = '' then error('No se ha indicado Vector AES -Información Empresa-');
-
-        Respuesta := CompanyInfo."Vector AES";
-
-        VJsonObjectRecurso.Add('Vector', CompanyInfo."Vector AES");
-        VJsonObjectRecurso.WriteTo(VJsonText);
-        exit(VJsonText);
     end;
-
-
-    procedure Registro(xJson: Text): Text
-    var
-        VJsonRegistroIn: JsonObject;
-        VJsonRegistroOut: JsonObject;
-        VJsonRegistroPoluxOut: JsonObject;
-        VJsonRegistroPoluxIn: JsonObject;
-        CompanyInfo: record "Company Information";
-        Encriptado: text;
-        json: text;
-    begin
-        If not VJsonRegistroIn.ReadFrom(xJson) then EXIT(lblErrorJson);
-
-        CompanyInfo.Reset;
-        IF NOT CompanyInfo.FindFirst() then error('No Existe confirngación empresa');
-
-        Encriptado := DatoJsonTexto(VJsonRegistroIn, 'Registro');
-
-        VJsonRegistroPoluxOut.Add('Licencia_BC', 'Licencia 12');
-        VJsonRegistroPoluxOut.Add('ID_Polux', CompanyInfo."License Polux SGA");
-        VJsonRegistroPoluxOut.Add('App', Encriptado);
-
-        VJsonRegistroPoluxOut.WriteTo(json);
-        MESSAGE(Enviar_Mensaje('REGISTRAR', json));
-    end;
-
 
     local procedure Enviar_Mensaje(Comando: text; Value: text) Respuesta: text
     var
@@ -85,10 +107,7 @@ codeunit 50111 "SGA License Management"
         Respuesta := 'Error de Conexión';
         sw9 := True;
 
-        CompanyInfo.Reset;
-        IF not CompanyInfo.findfirst then error('No Existe Información Empresa');
-        IF CompanyInfo."URL API" = '' then error('No se ha definido URL para accesso -Información Empresa-');
-        IF CompanyInfo."Azure Code" = '' then error('No se ha definido Azure Code -Información Empresa-');
+        Get_CompanyInfo(CompanyInfo);
         Identificador := CreateGuid();
 
         url := CompanyInfo."URL API" + '?Code=' + CompanyInfo."Azure Code" + '&Command=' + Comando + '&ID=' + format(Identificador);
@@ -111,22 +130,24 @@ codeunit 50111 "SGA License Management"
 
     local procedure DatoJsonTexto(xObjeto: JsonObject; xNodo: Text): text
     var
-        VJsonTokenParte: JsonToken;
+        JsonTokenParte: JsonToken;
         jVariable: Text;
     begin
         jVariable := '';
-        if xObjeto.Get(xNodo, VJsonTokenParte) then begin
-            if VJsonTokenParte.AsValue().IsNull then
+        if xObjeto.Get(xNodo, JsonTokenParte) then begin
+            if JsonTokenParte.AsValue().IsNull then
                 exit('')
             else begin
-                jVariable := VJsonTokenParte.AsValue().AsText();
+                jVariable := JsonTokenParte.AsValue().AsText();
                 exit(jVariable);
             end;
         end else begin
             exit('');
         end;
     end;
+    #endregion
 
+    #region DISPARADORES
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Get Source Doc. Inbound", 'OnAfterCreateWhseReceiptHeaderFromWhseRequest', '', false, false)]
     local procedure OnAfterCreateWhseReceiptHeaderFromWhseRequest(var WhseReceiptHeader: Record "Warehouse Receipt Header"; var WarehouseRequest: Record "Warehouse Request"; var GetSourceDocuments: Report "Get Source Documents");
@@ -229,6 +250,7 @@ codeunit 50111 "SGA License Management"
             end;
         end;
     end;
+    #Endregion
 
     var
         lblErrorJson: Label 'Incorrect format. A Json was expected', Comment = 'ESP=Formato incorrecto. Se esperaba un Json';
