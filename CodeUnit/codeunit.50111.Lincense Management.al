@@ -78,6 +78,7 @@ codeunit 50111 "SGA License Management"
         JsonInfoOut.WriteTo(json);
 
         MESSAGE(Enviar_Mensaje('INFORMACION', json));
+
     end;
 
     #Region Funciones Auxiliares
