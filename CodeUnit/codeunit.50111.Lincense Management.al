@@ -64,20 +64,63 @@ codeunit 50111 "SGA License Management"
 
 
 
-    procedure Informacion()
+    procedure Informacion(var Licencias: record Licencias)
     var
         CompanyInfo: record "Company Information";
         JsonInfoOut: JsonObject;
         json: text;
+        respuesta: Text;
+        jsonToken: JsonToken;
+        jsonTokenLines: JsonToken;
+        jsonInfo: JsonObject;
+        jsonDetalle: JsonObject;
+        jsonResponse: JsonObject;
+        jsonArrayLines: JsonArray;
+        n: integer;
 
     begin
         Get_CompanyInfo(CompanyInfo);
 
-        JsonInfoOut.Add('Licencia_BC', 'Licencia 12');
+        Licencias.Reset;
+        Licencias.deleteall;
+
+        JsonInfoOut.Add('Licencia_BC', 'Polux-Solutions');
         JsonInfoOut.Add('ID_Polux', CompanyInfo."License Polux SGA");
         JsonInfoOut.WriteTo(json);
 
-        MESSAGE(Enviar_Mensaje('INFORMACION', json));
+        Respuesta := Enviar_Mensaje('INFORMACION', json);
+
+        if jsonInfo.ReadFrom(respuesta) then begin
+            Licencias.Id := 0;
+
+            jsonInfo.Get('Estado', jsonToken);
+            Licencias.Estado := jsonToken.AsValue().AsText();
+            jsonInfo.Get('Error', jsonToken);
+            Licencias.Error := jsonToken.AsValue().AsText();
+            jsonInfo.Get('Licencias_Activas', jsonToken);
+            Licencias."Licencias Activas" := jsonToken.AsValue().AsInteger();
+            jsonInfo.Get('Licencias_Usadas', jsonToken);
+            Licencias."Licencias Usadas" := jsonToken.AsValue().AsInteger();
+            Licencias.Insert;
+
+            jsonInfo.get('Devices', jsonTokenLines);
+            jsonArrayLines := jsonTokenLines.AsArray();
+
+            n := 0;
+            foreach jsonTokenLines in jsonArrayLines do begin
+                if jsonDetalle.ReadFrom(FORMAT(jsonTokenLines)) then begin
+                    n += 1;
+                    Licencias.Id := n;
+                    jsonDetalle.Get('Id_Dispositivo', jsonToken);
+                    Licencias.Device := jsonToken.AsValue().AsText();
+                    jsonDetalle.Get('IP', jsonToken);
+                    Licencias.IP := jsonToken.AsValue().AsText();
+                    jsonDetalle.Get('Fecha_Registro', jsonToken);
+                    //Licencias."Posting Date" := jsonToken.AsValue().AsText();
+                    Licencias.Insert;
+                end;
+            end;
+        end;
 
     end;
 

@@ -1,33 +1,46 @@
 page 50104 Licencias
 {
-    PageType = Card;
+    PageType = list;
     ApplicationArea = All;
-    UsageCategory = Administration;
+    UsageCategory = Tasks;
+    SourceTable = Licencias;
+
 
     layout
     {
         area(Content)
         {
-            group(GroupName)
+            group(Datos)
             {
-                field(Texto; Texto)
-                {
-                    ApplicationArea = all;
-                    MultiLine = true;
-                }
-                field(Pwd; Pwd)
+                field(Estado; LicenciasDatos.Estado)
                 {
                     ApplicationArea = all;
                 }
-                field(Hash; Hash)
+                field(TextoError; LicenciasDatos.Error)
                 {
                     ApplicationArea = all;
-                    MultiLine = true;
                 }
-                field(Largo; Largo)
+                field(LicenciasNo; LicenciasDatos."Licencias Activas")
+                { }
+                field(LicenciasUsadas; LicenciasDatos."Licencias Usadas")
+                { }
+            }
+            repeater(Control1)
+            {
+                field(Device; rec.Device)
                 {
+                    Caption = 'Id Dispositivo';
                     ApplicationArea = all;
-                    BlankZero = true;
+                }
+                field(IP; rec.IP)
+                {
+                    Caption = 'IP Registro';
+                    ApplicationArea = all;
+                }
+                field("Posting Date"; rec."Posting Date")
+                {
+                    Caption = 'Fecha Registro';
+                    ApplicationArea = all;
                 }
             }
         }
@@ -49,18 +62,6 @@ page 50104 Licencias
                     LicenseMgt.Test();
                 end;
             }
-            action(TestCript)
-            {
-                ApplicationArea = All;
-                Caption = 'Test Encriptación';
-                Image = TestFile;
-                trigger OnAction()
-                var
-                    LicenseMgt: Codeunit "SGA License Management";
-                begin
-                    LicenseMgt.Test_Encriptado();
-                end;
-            }
             action(TestRegistro)
             {
                 ApplicationArea = All;
@@ -76,14 +77,13 @@ page 50104 Licencias
             action(Informacion)
             {
                 ApplicationArea = all;
-                Caption = 'Información Licencias';
+                Caption = 'Cargar Datos';
                 image = Info;
 
                 trigger OnAction()
-                var
-                    LicenseMgt: Codeunit "SGA License Management";
                 begin
-                    LicenseMgt.Informacion();
+                    Cargar_Datos();
+                    CurrPage.Update(false);
                 end;
 
             }
@@ -92,43 +92,26 @@ page 50104 Licencias
 
     trigger OnOpenPage()
     begin
-        Texto := 'En un lugar de la Mancha';
-        Pwd := '_venus13';
+        Cargar_Datos();
     end;
 
     var
-        Texto: Text;
-        Pwd: Text;
-        Hash: text;
-        Largo: integer;
+        LicenciasDatos: record Licencias;
 
 
-    local procedure Azure_Test()
+    local procedure Cargar_Datos()
     var
-        Client: HttpClient;
-        Content: HttpContent;
-        ResponseMessage: HttpResponseMessage;
-        Stream: InStream;
-        Url: Text;
-        texto: text;
-        t: text;
-
+        Licencias: record Licencias;
+        LicenseMgt: Codeunit "SGA License Management";
     begin
-        url := 'https://polux-sga20240105130107.azurewebsites.net/api/Inicio?Code=aLS1S5LrrL4TsrUEKcOr0iJwZrY7jd07wuxXS7snT_CmAzFu3N3ObA==&Command=CRYPT-BC';
+        Licencias.reset;
+        Licencias.deleteall;
 
-        if not client.Post(Url, Content, ResponseMessage) then exit;
+        LicenseMgt.Informacion(rec);
 
-        if not ResponseMessage.IsSuccessStatusCode() then exit;
-
-        ResponseMessage.Content().ReadAs(Stream);
-
-        texto := '';
-        while not (Stream.EOS) do begin
-            Stream.ReadText(t, 100);
-            texto += t;
-        end;
-
-        message(texto);
-
+        rec.reset;
+        if rec.Findfirst then LicenciasDatos.copy(rec);
+        rec.setfilter(Id, '>%1', 0);
     end;
+
 }
