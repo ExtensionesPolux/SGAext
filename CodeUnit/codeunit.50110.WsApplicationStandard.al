@@ -3051,11 +3051,18 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectShipments.Add('Date', FormatoFecha(RecWhsShipmentHeader."Posting Date"));
         VJsonObjectShipments.Add('CustomerName', '');
         VJsonObjectShipments.Add('Status', FORMAT(RecWhsShipmentHeader."Document Status"));
-        if ((RecWhsShipmentHeader."Document Status" = RecWhsShipmentHeader."Document Status"::"Completely Picked")
-            OR (RecWhsShipmentHeader."Document Status" = RecWhsShipmentHeader."Document Status"::"Partially Shipped")) THEN
+        if (RecWhsShipmentHeader."Document Status" = RecWhsShipmentHeader."Document Status"::"Completely Picked") THEN
             VJsonObjectShipments.Add('CompletelyPicked', 'True')
         ELSE
             VJsonObjectShipments.Add('CompletelyPicked', 'False');
+
+        if ((RecWhsShipmentHeader."Document Status" = RecWhsShipmentHeader."Document Status"::"Partially Picked")
+        or (RecWhsShipmentHeader."Document Status" = RecWhsShipmentHeader."Document Status"::"Partially Shipped")) THEN
+            VJsonObjectShipments.Add('PartiallyPicked', 'True')
+        ELSE
+            VJsonObjectShipments.Add('PartiallyPicked', 'False');
+
+
         //Comentarios
 
         Comentarios := '';
