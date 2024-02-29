@@ -3,8 +3,6 @@
   <file datatype="xml" source-language="en-US" target-language="en-US" original="Polux-SGA">
     <body>
       <group id="body">
-<<<<<<< HEAD
-=======
         <trans-unit id="Table 2006825773 - Field 400793991 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bin</source>
           <note from="Developer" annotates="general" priority="2">ESP="Ubicación"</note>
@@ -15,63 +13,11 @@
           <note from="Developer" annotates="general" priority="2">ESP="Descripción"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventario - Field Description - Property Caption</note>
         </trans-unit>
->>>>>>> f4b2a0e (UX)
         <trans-unit id="Table 2006825773 - Field 883711285 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Entry No.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventario - Field Entry No. - Property Caption</note>
         </trans-unit>
-<<<<<<< HEAD
-        <trans-unit id="Table 1456375839 - Field 3212038148 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Device</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Device - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 2248886284 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Error</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Error - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 2950845476 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Estado</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Estado - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 415504711 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Id</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Id - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 3510957723 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>IP</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field IP - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 3723405985 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Licencia BC</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencia BC - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 618491676 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Licencia Polux</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencia Polux - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 1334820330 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Licencias Activas</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencias Activas - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 4092529168 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Licencias Usadas</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencias Usadas - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 3710982960 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posting Date</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Posting Date - Property Caption</note>
-=======
         <trans-unit id="Table 2006825773 - Field 633051610 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Family</source>
           <note from="Developer" annotates="general" priority="2">ESP="Familia"</note>
@@ -142,91 +88,55 @@
           <note from="Developer" annotates="general" priority="2">ESP="Subfamilia"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventario - Field Subfamily - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Table 607751247 - Field 400793991 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Bin</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Ubicación"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Bin - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 607751247 - Field 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Description</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Descripción"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Description - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 607751247 - Field 883711285 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Entry No.</source>
+        <trans-unit id="Table 1456375839 - Field 3212038148 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Device</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Entry No. - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Device - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Table 607751247 - Field 633051610 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Family</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Familia"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Family - Property Caption</note>
+        <trans-unit id="Table 1456375839 - Field 2248886284 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Error</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Error - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Table 607751247 - Field 332802016 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item No</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Referencia"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field ItemNo - Property Caption</note>
+        <trans-unit id="Table 1456375839 - Field 2950845476 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Estado</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Estado - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Table 607751247 - Field 3523677570 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Lot No.</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Nº Lote"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field LotNo - Property Caption</note>
+        <trans-unit id="Table 1456375839 - Field 415504711 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Id</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Id - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Table 607751247 - Field 2961552353 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Name</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Nombre"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Name - Property Caption</note>
+        <trans-unit id="Table 1456375839 - Field 3510957723 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>IP</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field IP - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Table 607751247 - Field 4175084391 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Inventory</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Inventario"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field NumInventario - Property Caption</note>
+        <trans-unit id="Table 1456375839 - Field 3723405985 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Licencia BC</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencia BC - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Table 607751247 - Field 3416099157 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Package No.</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Nº Paquete"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field PackageNo - Property Caption</note>
+        <trans-unit id="Table 1456375839 - Field 618491676 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Licencia Polux</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencia Polux - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Table 607751247 - Field 3710982960 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Table 1456375839 - Field 1334820330 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Licencias Activas</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencias Activas - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1456375839 - Field 4092529168 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Licencias Usadas</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencias Usadas - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1456375839 - Field 3710982960 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting Date</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Fecha Registro"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Posting Date - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 607751247 - Field 2704404533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Quantity</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Cantidad"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Quantity - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 607751247 - Field 1714163563 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Read Quantity</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Leída"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field QuantityRead - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 607751247 - Field 2119658478 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Read</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Leído"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Read - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 607751247 - Field 348912950 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Resource</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Recurso"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Resource - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 607751247 - Field 1063157342 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Revised</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Revisado"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Revised - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 607751247 - Field 2164308859 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Serial No.</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Nº Serie"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field SerialNo - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 607751247 - Field 53200078 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Subfamily</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Subfamilia"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table InventarioHistorico - Field Subfamily - Property Caption</note>
->>>>>>> f4b2a0e (UX)
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Posting Date - Property Caption</note>
         </trans-unit>
         <trans-unit id="Codeunit 186058903 - NamedType 1304331942" size-unit="char" translate="yes" xml:space="preserve">
           <source>Incorrect format. A Json was expected</source>
@@ -423,7 +333,6 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page AlertaSerieFactBox - Property Caption</note>
         </trans-unit>
-<<<<<<< HEAD
         <trans-unit id="Page 1456375839 - Control 3212038148 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Id Dispositivo</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -438,97 +347,6 @@
           <source>Fecha Registro</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Control Posting Date - Property Caption</note>
-=======
-        <trans-unit id="Page 2142645028 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Inventory</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Inventario"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 400793991 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Bin field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Bin - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Description field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Description - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 883711285 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Entry No. field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Entry No. - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 633051610 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Family field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Family - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 332802016 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the ItemNo field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control ItemNo - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 3523677570 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the LotNo field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control LotNo - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 2961552353 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Name field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Name - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 4175084391 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Bin field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control NumInventario - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 3416099157 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the PackageNo field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control PackageNo - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 3710982960 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Posting Date field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Posting Date - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 2704404533 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Quantity field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Quantity - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 1714163563 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the QuantityRead field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control QuantityRead - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 2119658478 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Read field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Read - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 348912950 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Resource field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Resource - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 1063157342 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Revised field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Revised - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 2164308859 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the SerialNo field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control SerialNo - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2142645028 - Control 53200078 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the value of the Subfamily field.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Inventarios - Control Subfamily - Property ToolTip</note>
->>>>>>> f4b2a0e (UX)
         </trans-unit>
         <trans-unit id="Page 1456375839 - Action 240497149 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cargar Datos</source>

@@ -1197,7 +1197,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
         Clear(RecWhsReceiptLine);
         RecWhsReceiptLine.SetRange("No.", RecWhsReceiptHeader."No.");
-
         if RecWhsReceiptLine.FindSet() then begin
 
             //Buscar el nombre del proveedor                    
@@ -1241,11 +1240,17 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
                 VJsonObjectLines.Add('Outstanding', RecWhsReceiptLine."Qty. Outstanding (Base)");// ."Qty. Outstanding");
                 VJsonObjectLines.Add('ToReceive', RecWhsReceiptLine."Qty. to Receive (Base)");// ."Qty. to Receive");
 
-                if (RecWhsReceiptLine."Qty. to Receive (Base)" < RecWhsReceiptLine."Qty. Outstanding (Base)") then
-                    VJsonObjectLines.Add('Complete', false)
-                else
-                    VJsonObjectLines.Add('Complete', true);
+                if (RecWhsReceiptLine."Qty. to Receive (Base)" < RecWhsReceiptLine."Qty. Outstanding (Base)") then begin
+                    VJsonObjectLines.Add('Complete', false);
+                    if (RecWhsReceiptLine."Qty. to Receive (Base)" > 0) then
+                        VJsonObjectLines.Add('Partial', true)
+                    else
+                        VJsonObjectLines.Add('Partial', false);
 
+                end else begin
+                    VJsonObjectLines.Add('Complete', true);
+                    VJsonObjectLines.Add('Partial', false);
+                end;
                 //Se busca si tiene lote predefinido
                 /*clear(RecPurchaseLine);
                 RecPurchaseLine.SetRange("Document No.", RecWhsReceiptLine."Source No.");
@@ -3112,10 +3117,18 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
                 VJsonObjectLines.Add('Outstanding', RecWhsShipmentLine."Qty. Outstanding (Base)");// ."Qty. Outstanding");
                 VJsonObjectLines.Add('ToShip', RecWhsShipmentLine."Qty. to Ship (Base)");// ."Qty. to Receive");
 
-                if (RecWhsShipmentLine."Qty. to Ship (Base)" < RecWhsShipmentLine."Qty. Outstanding (Base)") then
-                    VJsonObjectLines.Add('Complete', false)
-                else
+                if (RecWhsShipmentLine."Qty. to Ship (Base)" < RecWhsShipmentLine."Qty. Outstanding (Base)") then begin
+                    VJsonObjectLines.Add('Complete', false);
+                    if (RecWhsShipmentLine."Qty. to Ship (Base)" > 0) then
+                        VJsonObjectLines.Add('Partial', true)
+                    else
+                        VJsonObjectLines.Add('Partial', false);
+
+                end else begin
                     VJsonObjectLines.Add('Complete', true);
+                    VJsonObjectLines.Add('Partial', false);
+                end;
+
 
                 //Se busca si tiene lote predefinido
                 /*clear(RecPurchaseLine);

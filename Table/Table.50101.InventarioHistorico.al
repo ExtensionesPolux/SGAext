@@ -1,4 +1,4 @@
-table 50101 InventarioHistorico
+/*table 50101 InventarioHistorico
 {
     DataClassification = ToBeClassified;
 
@@ -137,4 +137,4 @@ table 50101 InventarioHistorico
 
     end;
 
-}
+}*/

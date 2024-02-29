@@ -1,4 +1,4 @@
-page 50108 Inventarios
+/*page 50108 Inventarios
 {
     ApplicationArea = All;
     Caption = 'Inventory', comment = 'ESP="Inventario"';
@@ -153,3 +153,4 @@ page 50108 Inventarios
         }
     }
 }
+*/
