@@ -97,6 +97,7 @@ page 50104 Licencias
 
     var
         LicenciasDatos: record Licencias;
+        d: Report "Make Phys. Invt. Recording";
 
 
     local procedure Cargar_Datos()
