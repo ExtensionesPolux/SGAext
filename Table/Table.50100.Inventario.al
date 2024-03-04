@@ -9,11 +9,28 @@ table 50100 Inventario
             AutoIncrement = true;
             DataClassification = ToBeClassified;
         }
+        field(5; "Create Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Creation Date', comment = 'ESP="Fecha de Creación"';
+        }
         field(10; NumInventario; Code[50])
         {
             DataClassification = ToBeClassified;
             Caption = 'Inventory', comment = 'ESP="Inventario"';
 
+        }
+
+        field(15; Location; Code[50])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Location', comment = 'ESP="Almacén"';
+        }
+
+        field(16; Zone; Code[50])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Zone', comment = 'ESP="Zona"';
         }
         field(20; Bin; Code[50])
         {
@@ -102,6 +119,14 @@ table 50100 Inventario
         {
             DataClassification = ToBeClassified;
             Caption = 'Revised', comment = 'ESP="Revisado"';
+        }
+        field(170; TipoTrack; Code[1])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(180; TrackNo; Text[50])
+        {
+            DataClassification = ToBeClassified;
         }
 
     }

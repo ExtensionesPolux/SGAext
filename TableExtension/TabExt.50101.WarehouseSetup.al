@@ -122,6 +122,14 @@ tableextension 50101 "Warehouse Setup" extends "Warehouse Setup"
         {
             Caption = 'Reset Receipt quantity', Comment = 'ESP=Crear Recepciones sin cantidad';
         }
+
+        field(50240; "Numero Serie Inventario"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "No. Series".Code;
+            Caption = 'Inventory No Serial', Comment = 'ESP=Nº Serie Inventario';
+
+        }
     }
 
 }

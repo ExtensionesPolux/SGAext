@@ -375,8 +375,8 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         else
             iTipoDato := '';
 
-
-        if RecLocations."Directed Put-away and Pick" then begin
+        RecLocations.CalcFields("Tiene Ubicaciones");
+        if RecLocations."Tiene Ubicaciones" then begin
 
             case iTipoDato of
                 'I':
@@ -3683,7 +3683,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         if (RecLocation."Almacen Avanzado") then
             VJsonText := Inventario_Recurso_Almacen_Avanzado(xResourceNo, xLocation, xZone, xBin, xItemNo)
         else
-            VJsonText := Inventario_Recurso_Almacen_Basico(xResourceNo, xLocation, xZone, xBin, xItemNo);
+            VJsonText := Inventario_Personalizado_Recurso(xResourceNo, xLocation, xZone, xBin, xItemNo);
 
         exit(VJsonText);
 
@@ -3784,13 +3784,13 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
 
-    procedure Inventario_Recurso_Almacen_Basico(xResourceNo: Text; xLocation: Text; xZone: Text; xBin: Text; xItemNo: Text): Text
+    procedure Inventario_Personalizado_Recurso(xResourceNo: Text; xLocation: Text; xZone: Text; xBin: Text; xItemNo: Text): Text
     var
 
         VJsonObjectInventario: JsonObject;
         VJsonArrayInventario: JsonArray;
 
-        RecItemJournalLine: Record "Item Journal Line";
+        RecInventario: Record Inventario;
 
         RecLocation: Record Location;
         RecRecurso: Record Resource;
@@ -3807,39 +3807,45 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         RecLocation.Get(xLocation);
 
         //Todo lo que no sea urgencia
-        Clear(RecItemJournalLine);
-        RecItemJournalLine.SetRange("Location Code", xLocation);
-        RecItemJournalLine.SetRange("Journal Template Name", RecLocation.AppInvJournalTemplateName);
-        RecItemJournalLine.SetRange("Journal Batch Name", RecLocation.AppInvJournalBatchName);
+        Clear(RecInventario);
+        RecInventario.SetRange("Location", xLocation);
 
         if (xItemNo <> '') then
-            RecItemJournalLine.SetRange("Item No.", xItemNo);
+            RecInventario.SetRange(ItemNo, xItemNo);
 
-        if RecItemJournalLine.findset then begin
+        if (xZone <> '') then
+            RecInventario.SetRange(Zone, xZone);
+
+        if (xBin <> '') then
+            RecInventario.SetRange(Bin, xBin);
+
+        if RecInventario.findset then begin
             repeat
-                VJsonObjectInventario.Add('Location', RecItemJournalLine."Location Code");
-                VJsonObjectInventario.Add('LineNo', FormatoNumero(RecItemJournalLine."Line No."));
-                VJsonObjectInventario.Add('ItemNo', RecItemJournalLine."Item No.");
-                VJsonObjectInventario.Add('Description', RecItemJournalLine.Description);
-                VJsonObjectInventario.Add('TipoSeguimimento', Format(TipoSeguimientoProducto(RecItemJournalLine."Item No.")));
-                VJsonObjectInventario.Add('Zone', '');
-                VJsonObjectInventario.Add('Bin', '');
-                VJsonObjectInventario.Add('LotNo', RecItemJournalLine."Lot No.");
-                VJsonObjectInventario.Add('SerialNo', RecItemJournalLine."Serial No.");
-                VJsonObjectInventario.Add('PackagelNo', RecItemJournalLine."Package No.");
+                VJsonObjectInventario.Add('Location', RecInventario.Location);
+                VJsonObjectInventario.Add('LineNo', FormatoNumero(RecInventario."Entry No."));
+                VJsonObjectInventario.Add('ItemNo', RecInventario.ItemNo);
+                VJsonObjectInventario.Add('Description', RecInventario.Description);
+                VJsonObjectInventario.Add('TipoSeguimimento', Format(TipoSeguimientoProducto(RecInventario.ItemNo)));
+                VJsonObjectInventario.Add('Zone', RecInventario.Zone);
+                VJsonObjectInventario.Add('Bin', RecInventario.Bin);
+                VJsonObjectInventario.Add('LotNo', RecInventario.LotNo);
+                VJsonObjectInventario.Add('SerialNo', RecInventario.SerialNo);
+                VJsonObjectInventario.Add('PackagelNo', RecInventario.PackageNo);
+                VJsonObjectInventario.Add('TipoTrack', RecInventario.TipoTrack);
+                VJsonObjectInventario.Add('TrackNo', RecInventario.TrackNo);
 
-                VJsonObjectInventario.Add('Date', FormatoFecha(RecItemJournalLine."Posting Date"));
-                VJsonObjectInventario.Add('Calculada', FormatoNumero(RecItemJournalLine."Qty. (Calculated)"));
-                VJsonObjectInventario.Add('Real', FormatoNumero(RecItemJournalLine."Qty. (Phys. Inventory)"));
-                VJsonObjectInventario.Add('Diferencia', FormatoNumero(RecItemJournalLine.Quantity));
-                VJsonObjectInventario.Add('Unit', RecItemJournalLine."Unit of Measure Code");
+                VJsonObjectInventario.Add('Date', FormatoFecha(RecInventario."Create Date"));
+                VJsonObjectInventario.Add('Calculada', FormatoNumero(RecInventario.Quantity));
+                VJsonObjectInventario.Add('Real', FormatoNumero(RecInventario.QuantityRead));
+                VJsonObjectInventario.Add('Diferencia', FormatoNumero(RecInventario.Quantity - RecInventario.QuantityRead));
+                VJsonObjectInventario.Add('Unit', '');
 
-                VJsonObjectInventario.Add('Leido', FormatoBoolean(RecItemJournalLine.Leido));
+                VJsonObjectInventario.Add('Leido', FormatoBoolean(RecInventario.Read));
 
                 VJsonArrayInventario.Add(VJsonObjectInventario.Clone());
                 Clear(VJsonObjectInventario);
 
-            until RecItemJournalLine.Next() = 0;
+            until RecInventario.Next() = 0;
 
         end;
 
@@ -4268,7 +4274,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
             exit('');
     end;
 
-    local procedure Descripcion_ItemNo(xItem: Code[50]): Text
+    procedure Descripcion_ItemNo(xItem: Code[50]): Text
     var
         RecItem: Record Item;
     begin
