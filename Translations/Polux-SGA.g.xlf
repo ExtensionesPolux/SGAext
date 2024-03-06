@@ -3,6 +3,51 @@
   <file datatype="xml" source-language="en-US" target-language="en-US" original="Polux-SGA">
     <body>
       <group id="body">
+        <trans-unit id="Report 3744796316 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Crear Reg. Inventario Físico con Trazabilidad</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - NamedType 3831665571" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 different orders has been created.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = counter</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - NamedType DifferentOrdersMsg</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - NamedType 731289405" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Physical inventory recording %1 %2 has been created.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = Order No. %2 = Recording No.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - NamedType NewOrderCreatedMsg</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - NamedType 3027491954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A physical inventory recording was not created because no valid physical inventory order lines exist.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - NamedType NewOrderNotCreatedMsg</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Options</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control Options - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 416030689 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that recording lines are automatically created for items that do not exist on the physical inventory order. This can only happen if none of the values in these four fields exist for an item on the order: Item No., Variant Code, Location Code, and Bin Code.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control AllowRecWithoutOrder - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 416030689 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permitir Registro sin pedido</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control AllowRecWithoutOrder - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 347408959 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that a new physical inventory recording lines are only created when the data does not exist on any other physical inventory recording line. This is useful when you want to make sure that different recordings do not contain the same items.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control OnlyLinesNotInRecordings - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 347408959 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Solo líneas no existen en registro</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control OnlyLinesNotInRecordings - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 2006825773 - Field 400793991 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bin</source>
           <note from="Developer" annotates="general" priority="2">ESP="Ubicación"</note>
@@ -418,6 +463,11 @@
           <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Phys. Inventory Journal - Control Leido - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="PageExtension 274825734 - Action 2922789772 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2431002931">
+          <source>Crear Nuevo Registro Para App Móvil</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Phys_Inv_Order_Laqtia - Action Diario - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>Aplicación SGA</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -622,6 +672,11 @@
           <source>Vendor</source>
           <note from="Developer" annotates="general" priority="2">ESP=Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field Proveedor - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1395915454 - Field 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2932055751">
+          <source>App Móvil</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Phys_Invt_record_Header - Field App - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 1518918944 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
           <source>Copy Allow</source>

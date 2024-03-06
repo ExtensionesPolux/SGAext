@@ -1,3 +1,7 @@
+namespace Microsoft.Inventory.Counting.Recording;
+
+using Microsoft.Inventory.Counting.Document;
+
 report 50100 "Make Phys. Invt. Rec. Track"
 {
     Caption = 'Crear Reg. Inventario Físico con Trazabilidad';
@@ -139,19 +143,20 @@ report 50100 "Make Phys. Invt. Rec. Track"
             "Location Code" := PhysInvtOrderHeader."Location Code";
             "Bin Code" := PhysInvtOrderHeader."Bin Code";
             "Allow Recording Without Order" := AllowRecWithoutOrder;
+            App := True;
             Insert(true);
         end;
     end;
 
     procedure InsertRecordingLine(PhysInvtOrderLine: Record "Phys. Invt. Order Line")
     var
-        Tracking: record "Exp. Phys. Invt. Tracking";
+        Tracking: record 5886;
     begin
         IF PhysInvtOrderLine."Use Item Tracking" then begin
             Tracking.Reset;
             Tracking.SetRange("Order No", PhysInvtOrderLine."Document No.");
             Tracking.SetRange("Order Line No.", PhysInvtOrderLine."Line No.");
-            IF Tracking.Findset(False, False) then
+            IF Tracking.Findset(False) then
                 repeat
                     InsertRecordingLineDetail(PhysInvtOrderLine, Tracking."Lot No.", Tracking."Serial No.", Tracking."Quantity (Base)");
                 until Tracking.Next = 0;
