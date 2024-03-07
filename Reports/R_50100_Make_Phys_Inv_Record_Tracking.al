@@ -183,10 +183,10 @@ report 50100 "Make Phys. Invt. Rec. Track"
             "Use Item Tracking" := PhysInvtOrderLine."Use Item Tracking";
             "Shelf No." := PhysInvtOrderLine."Shelf No.";
             Validate("Unit of Measure Code", PhysInvtOrderLine."Base Unit of Measure Code");
-            Recorded := false;
             "Lot No." := LotNo;
             "Serial No." := SerialNo;
             validate(Quantity, Qty);
+            Recorded := false;
             Insert;
             NextLineNo := "Line No." + 10000;
         end;
