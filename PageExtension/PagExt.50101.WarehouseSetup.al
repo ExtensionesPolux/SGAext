@@ -12,6 +12,11 @@ pageextension 50101 "Warehouse Setup" extends "Warehouse Setup"
                 {
                     ApplicationArea = all;
                 }
+
+                field("Numero Serie Inventario"; Rec."Numero Serie Inventario")
+                {
+                    ApplicationArea = all;
+                }
                 group(AppActivar)
                 {
                     Caption = 'Activar';

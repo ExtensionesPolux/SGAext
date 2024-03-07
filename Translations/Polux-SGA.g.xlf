@@ -3,6 +3,7 @@
   <file datatype="xml" source-language="en-US" target-language="en-US" original="Polux-SGA">
     <body>
       <group id="body">
+<<<<<<< HEAD
         <trans-unit id="Report 3744796316 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Crear Reg. Inventario Físico con Trazabilidad</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -133,6 +134,8 @@
           <note from="Developer" annotates="general" priority="2">ESP="Subfamilia"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventario - Field Subfamily - Property Caption</note>
         </trans-unit>
+=======
+>>>>>>> 38ef2c7df8a1fe6813e43da30ba38c99f85838f4
         <trans-unit id="Table 1456375839 - Field 3212038148 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Device</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -303,6 +306,11 @@
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el serie</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSerie</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 3992898100" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Internal Serial No %1 was not found in the system</source>
+          <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado el serie interno %1 en el sistema</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSerieInternoNoExiste</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 1690454790" size-unit="char" translate="yes" xml:space="preserve">
           <source>Put-away not found</source>
           <note from="Developer" annotates="general" priority="2">ESP="Almacenamiento no encontrado"</note>
@@ -378,6 +386,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page AlertaSerieFactBox - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1550665627 - Control 3891454143 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Almacen</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Filtro Inventario - Control Location - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1456375839 - Control 3212038148 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Id Dispositivo</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -422,6 +435,51 @@
           <source>Series Internos</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Series Internos - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Crear Reg. Inventario Físico con Trazabilidad</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - NamedType 3831665571" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 different orders has been created.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = counter</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - NamedType DifferentOrdersMsg</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - NamedType 731289405" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Physical inventory recording %1 %2 has been created.</source>
+          <note from="Developer" annotates="general" priority="2">%1 = Order No. %2 = Recording No.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - NamedType NewOrderCreatedMsg</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - NamedType 3027491954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A physical inventory recording was not created because no valid physical inventory order lines exist.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - NamedType NewOrderNotCreatedMsg</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Options</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control Options - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 416030689 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that recording lines are automatically created for items that do not exist on the physical inventory order. This can only happen if none of the values in these four fields exist for an item on the order: Item No., Variant Code, Location Code, and Bin Code.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control AllowRecWithoutOrder - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 416030689 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permitir Registro sin pedido</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control AllowRecWithoutOrder - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 347408959 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that a new physical inventory recording lines are only created when the data does not exist on any other physical inventory recording line. This is useful when you want to make sure that different recordings do not contain the same items.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control OnlyLinesNotInRecordings - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Report 3744796316 - Control 347408959 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Solo líneas no existen en registro</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control OnlyLinesNotInRecordings - Property Caption</note>
         </trans-unit>
         <trans-unit id="Query 874675787 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot Numbers by Bin</source>
@@ -762,6 +820,11 @@
           <source>Mandatory Lot No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº. Lote Obligatorio</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Lote Interno Obligatorio - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 1689496183 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>Inventory No Serial</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Nº Serie Inventario</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Numero Serie Inventario - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 2342576406 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Automatic Serial No</source>

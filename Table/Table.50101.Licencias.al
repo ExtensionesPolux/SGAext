@@ -1,4 +1,4 @@
-table 50101 Licencias
+table 50102 Licencias
 {
     DataClassification = ToBeClassified;
     TableType = Temporary;
