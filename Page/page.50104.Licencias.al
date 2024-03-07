@@ -87,6 +87,19 @@ page 50104 Licencias
                 end;
 
             }
+
+            action(TestError)
+            {
+                ApplicationArea = All;
+                Caption = 'Test Error';
+                Image = TestFile;
+                trigger OnAction()
+                var
+                    cuWS: Codeunit WsApplicationStandard;
+                begin
+                    cuWS.Login('{"PIN":"2222","Location":"0"}');
+                end;
+            }
         }
     }
 

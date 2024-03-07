@@ -32,12 +32,13 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         IF NOT RecRecursos.FindFirst() THEN
             exit(lblErrorRecurso);
 
-        if (lLocation = '') then lLocation := App_Location();
-        if (lLocation = '') then ERROR(lblErrorAlmacen);
+
+        if NOT App_Location(lLocation) then
+            exit(GetLastErrorText());
+
         Clear(RecLocation);
         RecLocation.SetRange(RecLocation.Code, lLocation);
-        if NOT RecLocation.FindFirst() then ERROR(lblErrorAlmacen);
-
+        if NOT RecLocation.FindFirst() then exit(lblErrorAlmacen);
 
 
         VJsonObjectRecurso.Add('No', RecRecursos."No.");
@@ -151,11 +152,13 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         //RecWarehouseSetup: Record "Warehouse Setup";
         RecLocation: Record Location;
         RecWarehouseJournalLine: Record "Warehouse Journal Line";
-        RecPhyInvetRecordLine: Record "Phys. Invt. Record Line";
+        RecPhyInvetRecordHeader: Record "Phys. Invt. Record Header";
     begin
         //RecWarehouseSetup.Get();
 
         RecLocation.Get(xLocation);
+
+        if (xLocation = '') then exit(0);
 
         if (RecLocation."Almacen Avanzado") then begin
             Clear(RecWarehouseJournalLine);
@@ -164,9 +167,10 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
             RecWarehouseJournalLine.SetRange("Journal Batch Name", RecLocation.AppInvJournalBatchName);
             exit(RecWarehouseJournalLine.Count());
         end else begin
-            Clear(RecPhyInvetRecordLine);
-            RecPhyInvetRecordLine.SetRange("Location Code", xLocation);
-            exit(RecPhyInvetRecordLine.Count());
+            Clear(RecPhyInvetRecordHeader);
+            RecPhyInvetRecordHeader.SetRange(RecPhyInvetRecordHeader.App, true);
+            RecPhyInvetRecordHeader.SetRange("Location Code", xLocation);
+            exit(RecPhyInvetRecordHeader.Count());
 
         end;
 
@@ -217,11 +221,11 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         VJsonText: Text;
     begin
         If not VJsonObjectDato.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lLocation := DatoJsonTexto(VJsonObjectDato, 'Location');
 
-        if (lLocation = '') THEN ERROR(lblErrorAlmacen);
+        if (lLocation = '') THEN exit(lblErrorAlmacen);
 
         Clear(RecWhsReceiptHeader);
         RecWhsReceiptHeader.SetFilter("Document Status", '<>%1', RecWhsReceiptHeader."Document Status"::"Completely Received");
@@ -250,7 +254,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
 
@@ -271,7 +275,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
 
@@ -294,7 +298,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
 
@@ -317,7 +321,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jLinea: Integer;
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
         jLinea := DatoJsonInteger(VJsonObjectContenedor, 'LineNo');
@@ -356,7 +360,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jTrackNoAux: Text;
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         jTrackNo := DatoJsonTexto(VJsonObjectContenedor, 'ItemNo');
         jBin := DatoJsonTexto(VJsonObjectContenedor, 'Bin');
@@ -468,7 +472,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     begin
 
         If not VJsonObjectContenedor.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lNo := DatoJsonTexto(VJsonObjectContenedor, 'No');
         lLocation := DatoJsonTexto(VJsonObjectContenedor, 'Location');
@@ -489,7 +493,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     begin
 
         If not VJsonObjectContenedor.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lNo := DatoJsonTexto(VJsonObjectContenedor, 'No');
         lLocation := DatoJsonTexto(VJsonObjectContenedor, 'Location');
@@ -519,7 +523,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            ERROR(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecurso := DatoJsonTexto(VJsonObjectDatos, 'ResourceNo');
         jLocation := DatoJsonTexto(VJsonObjectDatos, 'Location');
@@ -553,7 +557,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lTrackNo := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
         lItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
@@ -575,11 +579,11 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     begin
 
         If not VJsonObjectDato.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lLocation := DatoJsonTexto(VJsonObjectDato, 'Location');
 
-        if (lLocation = '') THEN ERROR(lblErrorAlmacen);
+        if (lLocation = '') THEN exit(lblErrorAlmacen);
 
         Clear(RecWhsShipmentHeader);
         RecWhsShipmentHeader.SetFilter("Document Status", '<>%1', RecWhsShipmentHeader."Document Status"::"Completely Shipped");
@@ -618,7 +622,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         VJsonText: Text;
     begin
         If not VJsonObjectDato.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lNo := DatoJsonTexto(VJsonObjectDato, 'No');
         lLineNo := DatoJsonInteger(VJsonObjectDato, 'LineNo');
@@ -638,7 +642,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         Clear(RecWhsShipmentLine);
         RecWhsShipmentLine.SetRange("No.", lNo);
         RecWhsShipmentLine.SetRange("Line No.", lLineNo);
-        IF NOT RecWhsShipmentLine.FindFirst() THEN ERROR(lblErrorEnvio);
+        IF NOT RecWhsShipmentLine.FindFirst() THEN exit(lblErrorEnvio);
 
         RecWhsShipmentLine.Validate("Qty. to Ship", RecWhsShipmentLine."Qty. to Ship" + lCantidad);
         RecWhsShipmentLine.Modify();
@@ -668,7 +672,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         VJsonText: Text;
     begin
         If not VJsonObjectDato.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lNo := DatoJsonTexto(VJsonObjectDato, 'No');
         lLineNo := DatoJsonInteger(VJsonObjectDato, 'LineNo');
@@ -682,7 +686,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         Clear(RecWhsShipmentLine);
         RecWhsShipmentLine.SetRange("No.", lNo);
         RecWhsShipmentLine.SetRange("Line No.", lLineNo);
-        IF NOT RecWhsShipmentLine.FindFirst() THEN ERROR(lblErrorEnvio);
+        IF NOT RecWhsShipmentLine.FindFirst() THEN exit(lblErrorEnvio);
 
         RecWhsShipmentLine.Validate("Qty. to Ship", RecWhsShipmentLine."Qty. to Ship" - lCantidad);
         RecWhsShipmentLine.Modify();
@@ -712,7 +716,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         VJsonText: Text;
     begin
         If not VJsonObjectDato.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lNo := DatoJsonTexto(VJsonObjectDato, 'No');
         lLineNo := DatoJsonInteger(VJsonObjectDato, 'LineNo');
@@ -723,7 +727,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         Clear(RecWhsShipmentLine);
         RecWhsShipmentLine.SetRange("No.", lNo);
         RecWhsShipmentLine.SetRange("Line No.", lLineNo);
-        IF NOT RecWhsShipmentLine.FindFirst() THEN ERROR(lblErrorEnvio);
+        IF NOT RecWhsShipmentLine.FindFirst() THEN exit(lblErrorEnvio);
 
         RecWhsShipmentLine.Validate("Qty. to Ship", RecWhsShipmentLine."Qty. to Ship" - lCantidad);
         RecWhsShipmentLine.Modify();
@@ -742,7 +746,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jLinea: Integer;
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         jEnvio := DatoJsonTexto(VJsonObjectContenedor, 'No');
         jLinea := DatoJsonInteger(VJsonObjectContenedor, 'LineNo');
@@ -774,7 +778,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            ERROR(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecurso := DatoJsonTexto(VJsonObjectDatos, 'ResourceNo');
         jLocation := DatoJsonTexto(VJsonObjectDatos, 'Location');
@@ -811,7 +815,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            ERROR(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecurso := DatoJsonTexto(VJsonObjectDatos, 'ResourceNo');
         jLocation := DatoJsonTexto(VJsonObjectDatos, 'Location');
@@ -862,7 +866,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            Error('Respuesta no valida. Se esperaba un Json');
+            exit('Respuesta no valida. Se esperaba un Json');
 
         lContenedor := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
         lItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
@@ -897,7 +901,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     begin
 
         If not VJsonObjectContenedor.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lNo := DatoJsonTexto(VJsonObjectContenedor, 'No');
         lLocation := DatoJsonTexto(VJsonObjectContenedor, 'Location');
@@ -933,7 +937,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     begin
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            ERROR(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecurso := DatoJsonTexto(VJsonObjectDatos, 'ResourceNo');
         jLocation := DatoJsonTexto(VJsonObjectDatos, 'Location');
@@ -980,11 +984,11 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     begin
 
         If not VJsonObjectDato.ReadFrom(xJson) then
-            Error(lblErrorJson);
+            exit(lblErrorJson);
 
         lLocation := DatoJsonTexto(VJsonObjectDato, 'Location');
 
-        if (lLocation = '') THEN ERROR(lblErrorAlmacen);
+        if (lLocation = '') THEN exit(lblErrorAlmacen);
 
         Clear(RecRegistroInventario);
         RecRegistroInventario.SetRange("Location Code", lLocation);
@@ -1010,7 +1014,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
         VJsonObjectDatos: JsonObject;
 
-        VJsonText: Text;
+        vJsonText: Text;
         jRecurso: Text;
         jLocation: Text;
         jOrderNo: Text;
@@ -1019,15 +1023,20 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            ERROR(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecurso := DatoJsonTexto(VJsonObjectDatos, 'ResourceNo');
+
+        if (jRecurso = '') then exit(lblErrorRecurso);
+
         jLocation := DatoJsonTexto(VJsonObjectDatos, 'Location');
         jOrderNo := DatoJsonTexto(VJsonObjectDatos, 'OrderNo');
         jRecordingNo := DatoJsonInteger(VJsonObjectDatos, 'RecordingNo');
 
-        exit(Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo));
-
+        IF Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo, vJsonText) THEN
+            EXIT(vJsonText)
+        ELSE
+            EXIT(GetLastErrorText());
     end;
 
     procedure WsAgregarLineaRegistroInventario(xJson: Text): Text
@@ -1037,8 +1046,8 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectDatos: JsonObject;
 
         RecLocation: Record Location;
-
-        VJsonText: Text;
+        RecBin: Record Bin;
+        vJsonText: Text;
         jRecurso: Text;
         jLocation: Text;
         jReferencia: Text;
@@ -1053,13 +1062,17 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jOrderNo: Text;
         jRecordingNo: Integer;
         jLineNo: Integer;
+
     begin
 
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            ERROR(lblErrorJson);
+            exit(lblErrorJson);
 
         jRecurso := DatoJsonTexto(VJsonObjectDatos, 'ResourceNo');
+
+        if (jRecurso = '') then exit(lblErrorRecurso);
+
         jLocation := DatoJsonTexto(VJsonObjectDatos, 'Location');
 
         jOrderNo := DatoJsonTexto(VJsonObjectDatos, 'OrderNo');
@@ -1071,17 +1084,88 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jBin := DatoJsonTexto(VJsonObjectDatos, 'Bin');
         jQuantity := DatoJsonDecimal(VJsonObjectDatos, 'Quantity');
 
+        Clear(RecBin);
+        RecBin.SetRange(RecBin.Code, jBin);
+        if Not RecBin.FindFirst() then EXIT(StrSubstNo(lblErrorUbicacion, jBin));
 
-        Agregar_Linea_Registro_Inventario(jTrackType, jTrackNo, jBin, jQuantity, jItemNo, jLocation, jOrderNo, jRecordingNo);
+        IF NOT Agregar_Linea_Registro_Inventario(jTrackType, jTrackNo, jBin, jQuantity, jItemNo, jLocation, jOrderNo, jRecordingNo) THEN
+            EXIT(GetLastErrorText());
+
+        IF Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo, vJsonText) THEN
+            EXIT(vJsonText)
+        ELSE
+            EXIT(GetLastErrorText());
+
+    end;
 
 
-        exit(Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo));
+
+    procedure WsEliminarLineaRegistroInventario(xJson: Text): Text
+    var
+
+
+        VJsonObjectDatos: JsonObject;
+
+        RecLocation: Record Location;
+        RecPhyInvetRecordLine: Record "Phys. Invt. Record Line";
+
+        vJsonText: Text;
+        jRecurso: Text;
+        jLocation: Text;
+        jReferencia: Text;
+        jItemNo: Text;
+        jZone: Text;
+        jBin: Text;
+        jTrackNo: Text;
+        jTrackType: Text;
+
+        jQuantity: Decimal;
+
+        jOrderNo: Text;
+        jRecordingNo: Integer;
+        jLineNo: Integer;
+
+    begin
+
+
+        If not VJsonObjectDatos.ReadFrom(xJson) then
+            exit(lblErrorJson);
+
+        jRecurso := DatoJsonTexto(VJsonObjectDatos, 'ResourceNo');
+
+        if (jRecurso = '') then exit(lblErrorRecurso);
+
+        jLocation := DatoJsonTexto(VJsonObjectDatos, 'Location');
+
+        jOrderNo := DatoJsonTexto(VJsonObjectDatos, 'OrderNo');
+        jRecordingNo := DatoJsonInteger(VJsonObjectDatos, 'RecordingNo');
+        jLineNo := DatoJsonInteger(VJsonObjectDatos, 'LineNo');
+
+        Clear(RecPhyInvetRecordLine);
+        RecPhyInvetRecordLine.SetRange("Order No.", jOrderNo);
+        RecPhyInvetRecordLine.SetRange("Recording No.", jRecordingNo);
+        RecPhyInvetRecordLine.SetRange("Line No.", jLineNo);
+        if RecPhyInvetRecordLine.FindFirst() then begin
+
+            if (RecPhyInvetRecordLine."Recorded Without Order") then
+                RecPhyInvetRecordLine.delete()
+            else begin
+                RecPhyInvetRecordLine.Validate(Quantity, 0);
+                RecPhyInvetRecordLine.Validate(RecPhyInvetRecordLine.Recorded, false);
+                RecPhyInvetRecordLine.Modify();
+            end;
+        end;
+
+
+        IF Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo, vJsonText) THEN
+            EXIT(vJsonText)
+        ELSE
+            EXIT(GetLastErrorText());
 
     end;
 
 
     #endregion
-
 
     #region NUEVA SISTEMATICA
 
@@ -1105,7 +1189,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     begin
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            ERROR(lblErrorJson);
+            exit(lblErrorJson);
 
         jBusqueda := DatoJsonTexto(VJsonObjectDatos, 'Busqueda');
         jItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
@@ -1232,8 +1316,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
     #endregion
-
-
 
 
     #region MOVIMIENTOS ALMACEN
@@ -1602,6 +1684,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         end;
     end;*/
 
+    [TryFunction]
     local procedure Recepcionar_Objeto(VJsonObjectContenedor: JsonObject)
     var
         RecWarehouseSetup: Record "Warehouse Setup";
@@ -1614,7 +1697,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jLoteProveedor: Text;
         jLotePreasignado: Text;
         jSerie: Text;
-
+        jRecurso: Text;
         BaseNumeroContenedor: Text;
         NumeracionInicial: Integer;
         i: Integer;
@@ -1632,7 +1715,9 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jLoteProveedor := DatoJsonTexto(VJsonObjectContenedor, 'VendorLotNo');
         jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
         jImprimir := DatoJsonBoolean(VJsonObjectContenedor, 'Print');
+        jRecurso := DatoJsonTexto(VJsonObjectContenedor, 'ResourceNo');
 
+        if (jRecurso = '') then Error(lblErrorRecurso);
 
         //Comprobaciones
         //Referencia
@@ -1754,7 +1839,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
             Evaluate(FechaCaducidad, jFechaCaducidad);
         end;
 
-        if (jRecurso = '') then ERROR(lblErrorRecurso);
+
 
         //Comprobaciones
         //Referencia
@@ -2200,8 +2285,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-
-
     local procedure Eliminar_Cantidad_Recepcion(xJson: Text)
     var
 
@@ -2243,8 +2326,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         end;
 
     end;
-
-
 
     local procedure Registrar_Recepcion(xRecepcion: Text; xLinea: Integer)
     var
@@ -4242,9 +4323,8 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-
-
-    procedure Lineas_Registro_Inventario_Recurso(xResourceNo: Text; xLocation: Text; xOrderNo: Text; xRecordingNo: Integer): Text
+    [TryFunction]
+    procedure Lineas_Registro_Inventario_Recurso(xResourceNo: Text; xLocation: Text; xOrderNo: Text; xRecordingNo: Integer; var xJson: Text)
     var
 
         VJsonObjectInventario: JsonObject;
@@ -4262,8 +4342,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
         iTipoTrack: Integer;
     begin
-
-        if (xResourceNo = '') then ERROR(lblErrorRecurso);
 
         RecRecurso.Get(xResourceNo);
         //RecWarehouseSetup.get();
@@ -4341,14 +4419,12 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
         end;
 
-        VJsonArrayInventario.WriteTo(VJsonText);
-        exit(VJsonText);
+        VJsonArrayInventario.WriteTo(xJson);
 
     end;
 
-
-
-    procedure Agregar_Linea_Registro_Inventario(xTrackType: Text; xTrackNo: Text; xBin: Text; xQuantity: Decimal; xItemNo: Text; xLocation: Text; xOrderNo: Text; xRecordingNo: Integer): Text
+    [TryFunction]
+    procedure Agregar_Linea_Registro_Inventario(xTrackType: Text; xTrackNo: Text; xBin: Text; xQuantity: Decimal; xItemNo: Text; xLocation: Text; xOrderNo: Text; xRecordingNo: Integer)
     var
 
 
@@ -4436,7 +4512,8 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
                     end;
             end;
 
-            RecPhyInvetRecordLine.Quantity := xQuantity;
+            RecPhyInvetRecordLine.Validate(Quantity, xQuantity);
+            RecPhyInvetRecordLine."Recorded Without Order" := true;
             RecPhyInvetRecordLine.Recorded := true;
 
             RecPhyInvetRecordLine.Insert();
@@ -4662,14 +4739,18 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
-    local procedure App_Location(): Code[50]
+    [TryFunction]
+    local procedure App_Location(VAR xLocation: Text)
     var
         RecWarehouseSetup: Record "Warehouse Setup";
     begin
         RecWarehouseSetup.GET();
-        if (RecWarehouseSetup."App Location" = '') then Error(lblErrorAlmacen);
+        if (RecWarehouseSetup."App Location" = '') then
+            Error(lblErrorAlmacen)
+        else
+            xLocation := RecWarehouseSetup."App Location";
 
-        exit(RecWarehouseSetup."App Location");
+
     end;
 
     /// <summary>
