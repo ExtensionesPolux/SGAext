@@ -1054,7 +1054,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jTrackNo: Text;
         jTrackType: Text;
 
-        jBinInv: Text;
         jQuantity: Decimal;
 
         jOrderNo: Text;
@@ -1075,7 +1074,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
         jTrackNo := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
         jTrackType := DatoJsonTexto(VJsonObjectDatos, 'TrackType');
-        jBinInv := DatoJsonTexto(VJsonObjectDatos, 'Bin');
+        jBin := DatoJsonTexto(VJsonObjectDatos, 'Bin');
         jQuantity := DatoJsonDecimal(VJsonObjectDatos, 'Quantity');
 
 
