@@ -993,6 +993,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         if (lLocation = '') THEN ERROR(lblErrorAlmacen);
 
         Clear(RecRegistroInventario);
+        RecRegistroInventario.SetRange("Location Code", lLocation);
         RecRegistroInventario.SetRange(App, true);
         if RecRegistroInventario.FindSet() then begin
             repeat
