@@ -4581,7 +4581,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         RecItemReference: Record "Item Reference";
     begin
         clear(RecItemReference);
-        RecItemReference.SetRange("Item No.", xItem);
+        RecItemReference.SetRange("Reference No.", xItem);
         if (xVendor <> '') then begin
             RecItemReference.SetRange("Reference Type", RecItemReference."Reference Type"::Vendor);
             RecItemReference.SetRange("Reference Type No.", xVendor);
@@ -4589,7 +4589,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
             RecItemReference.SetRange("Reference Type", RecItemReference."Reference Type"::"Bar Code");
 
         IF RecItemReference.FindFirst() then
-            exit(RecItemReference."Reference No.")
+            exit(RecItemReference."Item No.")
         ELSE
             exit('');
     end;
