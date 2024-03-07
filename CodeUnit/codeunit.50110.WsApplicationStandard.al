@@ -151,7 +151,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         //RecWarehouseSetup: Record "Warehouse Setup";
         RecLocation: Record Location;
         RecWarehouseJournalLine: Record "Warehouse Journal Line";
-        RecItemJournalLine: Record "Item Journal Line";
+        RecPhyInvetRecordLine: Record "Phys. Invt. Record Line";
     begin
         //RecWarehouseSetup.Get();
 
@@ -164,11 +164,9 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
             RecWarehouseJournalLine.SetRange("Journal Batch Name", RecLocation.AppInvJournalBatchName);
             exit(RecWarehouseJournalLine.Count());
         end else begin
-            Clear(RecItemJournalLine);
-            RecItemJournalLine.SetRange("Location Code", xLocation);
-            RecItemJournalLine.SetRange("Journal Template Name", RecLocation.AppInvJournalTemplateName);
-            RecItemJournalLine.SetRange("Journal Batch Name", RecLocation.AppInvJournalBatchName);
-            exit(RecItemJournalLine.Count());
+            Clear(RecPhyInvetRecordLine);
+            RecPhyInvetRecordLine.SetRange("Location Code", xLocation);
+            exit(RecPhyInvetRecordLine.Count());
 
         end;
 
@@ -736,7 +734,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         exit(VJsonText);
     end;
 
-
     procedure WsRegistrarEnvio(xJson: Text): Text
     var
         VJsonObjectContenedor: JsonObject;
@@ -760,7 +757,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
     end;
-
 
     procedure WsInventario(xJson: Text): Text
     var
@@ -789,7 +785,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         exit(Inventario_Recurso(jRecurso, jLocation, jZone, jBin, jItemNo));
 
     end;
-
 
     procedure WsAgregarLineaInventario(xJson: Text): Text
     var
@@ -843,7 +838,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         exit(Inventario_Recurso(jRecurso, jLocation, jZoneFilter, jBinFilter, jItemNoFilter));
 
     end;
-
 
     procedure WsMover(xJson: Text): Text
     var
