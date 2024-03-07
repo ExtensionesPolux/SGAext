@@ -807,8 +807,11 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jZone: Text;
         jBin: Text;
         jTrackNo: Text;
-        jBinInv: Text;
         jQuantity: Decimal;
+
+        jItemNoFilter: Text;
+        jZoneFilter: Text;
+        jBinFilter: Text;
     begin
 
 
@@ -822,11 +825,13 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
         jItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
         jTrackNo := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
-        jBinInv := DatoJsonTexto(VJsonObjectDatos, 'BinInv');
-        jQuantity := DatoJsonDecimal(VJsonObjectDatos, 'Real');
+        jBin := DatoJsonTexto(VJsonObjectDatos, 'Bin');
+        jQuantity := DatoJsonDecimal(VJsonObjectDatos, 'Quantity');
 
-
-        Validar_Linea_Inventario_Almacen_Avanzado(jTrackNo, jBinInv, jQuantity, jItemNo, jLocation);
+        jItemNoFilter := DatoJsonTexto(VJsonObjectDatos, 'ItemNoFilter');
+        jZoneFilter := DatoJsonTexto(VJsonObjectDatos, 'ZoneFilter');
+        jBinFilter := DatoJsonTexto(VJsonObjectDatos, 'BinFilter');
+        Validar_Linea_Inventario_Almacen_Avanzado(jTrackNo, jBin, jQuantity, jItemNo, jLocation);
 
         /*Clear(RecLocation);
         RecLocation.Get(jLocation);
@@ -835,7 +840,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         ELSE
             Validar_Linea_Inventario_Almacen_Basico(jTrackNo, jBinInv, jQuantity, jItemNo, jLocation);*/
 
-        exit(Inventario_Recurso(jRecurso, jLocation, jZone, jBin, jReferencia));
+        exit(Inventario_Recurso(jRecurso, jLocation, jZoneFilter, jBinFilter, jItemNoFilter));
 
     end;
 
@@ -4318,9 +4323,16 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
                     VJsonObjectInventario.Add('Real', FormatoNumero(RecPhyInvetRecordLine.Quantity));
                     VJsonObjectInventario.Add('Diferencia', FormatoNumero(RecPhyInvetRecordLine.Quantity));
                 end else begin
-                    VJsonObjectInventario.Add('Calculada', FormatoNumero(0));
-                    VJsonObjectInventario.Add('Real', FormatoNumero(0));
-                    VJsonObjectInventario.Add('Diferencia', FormatoNumero(0));
+                    if (RecPhyInvetRecordLine.Recorded) then begin
+                        VJsonObjectInventario.Add('Calculada', FormatoNumero(RecPhyInvetRecordLine.Quantity));
+                        VJsonObjectInventario.Add('Real', FormatoNumero(RecPhyInvetRecordLine.Quantity));
+                        VJsonObjectInventario.Add('Diferencia', FormatoNumero(RecPhyInvetRecordLine.Quantity));
+                    end else begin
+                        VJsonObjectInventario.Add('Calculada', FormatoNumero(0));
+                        VJsonObjectInventario.Add('Real', FormatoNumero(0));
+                        VJsonObjectInventario.Add('Diferencia', FormatoNumero(0));
+                    end;
+
                 end;
 
 
