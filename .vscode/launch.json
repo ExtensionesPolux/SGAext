@@ -2,18 +2,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Attach to online sandbox",
+            "name": "Debug",
             "type": "al",
             "request": "attach",
-            "environmentType": "Sandbox",
-            "environmentName": "Sandbox",
+            "environmentType": "OnPrem",
+            "server": "http://192.168.3.122:8080/BC230",
+            "serverInstance": "BC230",
+            "authentication": "Windows",
             "breakOnError": true,
             "breakOnRecordWrite": false,
             "enableSqlInformationDebugger": true,
             "enableLongRunningSqlStatements": true,
             "longRunningSqlStatementsThreshold": 500,
             "numberOfSqlStatements": 10,
-            "breakOnNext": "Background"
+            "breakOnNext": "WebServiceClient"
         }, 
 
         {
@@ -35,10 +37,11 @@
             "schemaUpdateMode": "ForceSync"
         },
         {
-            "name": "Sandbox",
+            "name": "Sandbox AURA",
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
+            "environmentName": "AURA",
             "startupObjectId": 20,
             "startupObjectType": "Page",
             "breakOnError": "All",
