@@ -1035,10 +1035,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         jOrderNo := DatoJsonTexto(VJsonObjectDatos, 'OrderNo');
         jRecordingNo := DatoJsonInteger(VJsonObjectDatos, 'RecordingNo');
 
-        IF Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo, vJsonText) THEN
-            EXIT(vJsonText)
-        ELSE
-            EXIT(GetLastErrorText());
+        EXIT(Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo));
     end;
 
     procedure WsAgregarLineaRegistroInventario(xJson: Text): Text
@@ -1090,13 +1087,10 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         RecBin.SetRange(RecBin.Code, jBin);
         if Not RecBin.FindFirst() then EXIT(StrSubstNo(lblErrorUbicacion, jBin));
 
-        IF NOT Agregar_Linea_Registro_Inventario(jTrackType, jTrackNo, jBin, jQuantity, jItemNo, jLocation, jOrderNo, jRecordingNo) THEN
-            EXIT(GetLastErrorText());
+        Agregar_Linea_Registro_Inventario(jTrackType, jTrackNo, jBin, jQuantity, jItemNo, jLocation, jOrderNo, jRecordingNo);
 
-        IF Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo, vJsonText) THEN
-            EXIT(vJsonText)
-        ELSE
-            EXIT(GetLastErrorText());
+        EXIT(Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo));
+
 
     end;
 
@@ -1159,10 +1153,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         end;
 
 
-        IF Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo, vJsonText) THEN
-            EXIT(vJsonText)
-        ELSE
-            EXIT(GetLastErrorText());
+        EXIT(Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo));
 
     end;
 
@@ -1686,7 +1677,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         end;
     end;*/
 
-    [TryFunction]
     local procedure Recepcionar_Objeto(VJsonObjectContenedor: JsonObject)
     var
         RecWarehouseSetup: Record "Warehouse Setup";
@@ -4334,8 +4324,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-    [TryFunction]
-    procedure Lineas_Registro_Inventario_Recurso(xResourceNo: Text; xLocation: Text; xOrderNo: Text; xRecordingNo: Integer; var xJson: Text)
+    procedure Lineas_Registro_Inventario_Recurso(xResourceNo: Text; xLocation: Text; xOrderNo: Text; xRecordingNo: Integer): Text
     var
 
         VJsonObjectInventario: JsonObject;
@@ -4345,7 +4334,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
         RecLocation: Record Location;
         RecRecurso: Record Resource;
-        VJsonText: Text;
+        vJsonText: Text;
 
         lContenedor: Text;
         lSoloEnAlmacen: Integer;
@@ -4430,11 +4419,11 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
         end;
 
-        VJsonArrayInventario.WriteTo(xJson);
+        VJsonArrayInventario.WriteTo(vJsonText);
+        exit(vJsonText);
 
     end;
 
-    [TryFunction]
     procedure Agregar_Linea_Registro_Inventario(xTrackType: Text; xTrackNo: Text; xBin: Text; xQuantity: Decimal; xItemNo: Text; xLocation: Text; xOrderNo: Text; xRecordingNo: Integer)
     var
 
