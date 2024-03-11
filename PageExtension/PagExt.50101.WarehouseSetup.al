@@ -41,6 +41,10 @@ pageextension 50101 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
+                    field("Numero Serie Paquete"; Rec."Numero Serie Paquete")
+                    {
+                        ApplicationArea = all;
+                    }
                 }
                 group(AppLote)
                 {

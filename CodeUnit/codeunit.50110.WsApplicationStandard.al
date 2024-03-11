@@ -974,7 +974,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-
     procedure WsRegistrosInventario(xJson: Text): Text
     var
         RecRegistroInventario: Record "Phys. Invt. Record Header";
@@ -1094,8 +1093,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-
-
     procedure WsEliminarLineaRegistroInventario(xJson: Text): Text
     var
 
@@ -1158,7 +1155,52 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
+    procedure WsCrearPaquete(): Text
+    var
+        VJsonObjectPaquete: JsonObject;
+
+        numPaquete: Text;
+        vJsonText: Text;
+    begin
+
+        numPaquete := Crear_Paquete();
+
+        VJsonObjectPaquete.Add('PackageNo', numPaquete);
+
+        VJsonObjectPaquete.WriteTo(vJsonText);
+        exit(vJsonText);
+    end;
+
+
     #endregion
+
+
+    #region PAQUETE
+
+    local procedure Crear_Paquete(): Text
+    var
+        RecWarehouseSetup: Record "Warehouse Setup";
+        RecPackages: Record "Package No. Information";
+        cuNoSeriesManagement: Codeunit NoSeriesManagement;
+        numPaquete: Text;
+    begin
+        Clear(RecWarehouseSetup);
+        RecWarehouseSetup.Get();
+
+        if (RecWarehouseSetup."Numero Serie Paquete" = '') then error(lblErrorSinSeriePaquete);
+        numPaquete := cuNoSeriesManagement.GetNextNo(RecWarehouseSetup."Numero Serie Paquete", WorkDate, true);
+
+        Clear(RecPackages);
+        RecPackages.Init();
+        RecPackages."Package No." := numPaquete;
+        RecPackages.Insert();
+
+        exit(RecPackages."Package No.");
+
+    end;
+
+    #endregion
+
 
     #region NUEVA SISTEMATICA
 
@@ -1309,7 +1351,6 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
 
 
     #endregion
-
 
     #region MOVIMIENTOS ALMACEN
 
@@ -5054,6 +5095,7 @@ codeunit 50110 WsApplicationStandard //Cambios 2024.02.16
         lblErrorSegProd: Label 'Product tracking definition error', comment = 'ESP="Error en la definición del seguimiento de producto"';
         lblErrorSerialDuplicado: Label 'The serial number already exists in the systemr', comment = 'ESP="El número de serie ya existe en el sistema"';
         lblErrorSerialDuplicadoEnvio: Label 'The serial number already exists in one shipment', comment = 'ESP="El número de serie ya existe en un envío"';
+        lblErrorSinSeriePaquete: Label 'Package Serial No not define on Warehouse Setup', comment = 'ESP=No se ha definido el nº de serie del en la configuración de almacén';
 
         lblErrorEnvio: Label 'Shipment Not Found', Comment = 'ESP=No se ha encontrado en envío';
 

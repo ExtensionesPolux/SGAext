@@ -130,6 +130,14 @@ tableextension 50101 "Warehouse Setup" extends "Warehouse Setup"
             Caption = 'Inventory No Serial', Comment = 'ESP=Nº Serie Inventario';
 
         }
+
+        field(50250; "Numero Serie Paquete"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "No. Series".Code;
+            Caption = 'Package No Serial', Comment = 'ESP=Nº Serie Paquete';
+
+        }
     }
 
 }
