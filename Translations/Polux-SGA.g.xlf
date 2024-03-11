@@ -243,6 +243,11 @@
           <note from="Developer" annotates="general" priority="2">ESP=El campo referencia está vacio</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSinReferencia</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 3385541537" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Package Serial No not define on Warehouse Setup</source>
+          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el nº de serie del en la configuración de almacén</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSinSeriePaquete</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2273248168" size-unit="char" translate="yes" xml:space="preserve">
           <source>Track No. Not Found</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado la trazabilidad</note>
@@ -353,10 +358,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Series Internos - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Query 874675787 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Query 3664961965 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot Numbers by Bin</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Query Lot Numbers by Location - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Query Lot Numbers by Location 2 - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1825673968 - Action 416955536 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3469146285">
           <source>Test URL SGA</source>
@@ -697,6 +702,11 @@
           <source>Inventory No Serial</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº Serie Inventario</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Numero Serie Inventario - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 747811521 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>Package No Serial</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Nº Serie Paquete</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Numero Serie Paquete - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 2342576406 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Automatic Serial No</source>
