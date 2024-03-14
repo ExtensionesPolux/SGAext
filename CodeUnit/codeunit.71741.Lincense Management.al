@@ -71,7 +71,7 @@ codeunit 71741 "SGA License Management"
 
         JsonRegistroPoluxOut.Add('Licencia_BC', CompanyInfo."License BC");
         JsonRegistroPoluxOut.Add('ID_Polux', CompanyInfo."License Aura-SGA");
-        JsonRegistroPoluxOut.Add('App', Encriptado);
+        JsonRegistroPoluxOut.Add('Mensaje_App', Encriptado);
 
         JsonRegistroPoluxOut.WriteTo(json);
 
@@ -166,14 +166,16 @@ codeunit 71741 "SGA License Management"
         Client: HttpClient;
         Content: HttpContent;
         ResponseMessage: HttpResponseMessage;
-        Stream: InStream;
+        JObject: JsonObject;
+        InStream: InStream;
+        OutStream: OutStream;
+        TempBlob: Codeunit "Temp Blob";
         Url: Text;
-        t: text;
         sw9: Boolean;
         Identificador: guid;
 
     begin
-        Respuesta := 'Error de Conexión';
+        Respuesta := '';
         sw9 := True;
 
         Get_CompanyInfo(CompanyInfo);
@@ -182,20 +184,93 @@ codeunit 71741 "SGA License Management"
         url := CompanyInfo."URL API" + '?Code=' + CompanyInfo."Azure Code" + '&Command=' + Comando + '&ID=' + format(Identificador);
         if Value <> '' then url += '&Value=' + Value;
 
+        //url := 'https://polux-sga20240312191807.azurewebsites.net/api/Inicio?Command=REGISTRAR&Code=U-RKusNG8dP6CNOvAhwUWDG_dk36RJhPgoYqup3JSlvDAzFudpADYQ==&ID={DE5B33C4-C500-4B75-B0C1-DADB3A0B81B2}&Value={"Licencia_BC":"Polux-Solutions","ID_Polux":"POL#123456","Mensaje_App":"SEFdb1Vg2OnXJyaHFEgRtxHAWj34du/7oTLxrA7t9uhrVwPGSfT7Kt1qiGk9Od8TP3Sli+u7v77zaUbIUjyFzwv0M/FFEbq7NchK+L0mAkk="}';
         sw9 := client.Post(Url, Content, ResponseMessage);
         IF sw9 then sw9 := ResponseMessage.IsSuccessStatusCode();
 
-        if sw9 then begin
-            ResponseMessage.Content().ReadAs(Stream);
-            Respuesta := '';
+        if sw9 then sw9 := ResponseMessage.Content().ReadAs(InStream);
+        if sw9 then sw9 := JObject.ReadFrom(InStream);
 
-            while not (Stream.EOS) do begin
-                Stream.ReadText(t, 100);
-                Respuesta += t;
+
+        TempBlob.CreateOutStream(OutStream);
+        CopyStream(OutStream, InStream);
+        OutStream.WriteText(Respuesta);
+
+        if sw9 then JObject.WriteTo(Respuesta);
+    end;
+
+    [TryFunction]
+    procedure CreateRequest_POST(RequestUrl: Text; json: Text; var Respuesta: text)
+    var
+        TempBlob: Codeunit "Temp Blob";
+        Client: HttpClient;
+        RequestHeaders: HttpHeaders;
+        ResponseHeader: HttpResponseMessage;
+        MailContentHeaders: HttpHeaders;
+        Content: HttpContent;
+        HttpHeadersContent: HttpHeaders;
+        ResponseMessage: HttpResponseMessage;
+        RequestMessage: HttpRequestMessage;
+        JObject: JsonObject;
+        ResponseStream: InStream;
+        APICallResponseMessage: Text;
+        StatusCode: Text;
+        IsSuccessful: Boolean;
+
+        JsonObjectRespuesta: JsonObject;
+        TokenJson: JsonToken;
+    begin
+        //BODY
+        Respuesta := '';
+
+        RequestMessage.GetHeaders(RequestHeaders);
+        RequestHeaders.Clear();
+
+        Content.WriteFrom(json);
+
+        //GET HEADERS
+        Content.GetHeaders(HttpHeadersContent);
+        HttpHeadersContent.Clear();
+        HttpHeadersContent.Remove('Content-Type');
+        HttpHeadersContent.Add('Content-Type', 'application/json');
+
+        //POST METHOD
+        RequestMessage.Content := Content;
+        RequestMessage.SetRequestUri(RequestUrl);
+        RequestMessage.Method := 'POST';
+
+        Clear(TempBlob);
+        TempBlob.CreateInStream(ResponseStream);
+
+        IsSuccessful := Client.Send(RequestMessage, ResponseMessage);
+
+        if not IsSuccessful then error('An API call with the provided header has failed.');
+        if not ResponseMessage.IsSuccessStatusCode() then begin
+            StatusCode := Format(ResponseMessage.HttpStatusCode()) + ' - ' + ResponseMessage.ReasonPhrase;
+            error('The request has failed with status code ' + StatusCode);
+        end;
+
+        if not ResponseMessage.Content().ReadAs(ResponseStream) then error('The response message cannot be processed.');
+        if not JObject.ReadFrom(ResponseStream) then error('Cannot read JSON response.');
+
+        //API response
+        JObject.WriteTo(APICallResponseMessage);
+
+        Respuesta := APICallResponseMessage;
+
+        //APICallResponseMessage := APICallResponseMessage.Replace(',', '\');
+
+        if JsonObjectRespuesta.ReadFrom(APICallResponseMessage) then begin
+            if JsonObjectRespuesta.Get('detail', TokenJson) then begin
+                Respuesta := TokenJson.AsValue().AsText();
             end;
-            Respuesta := Respuesta;
         end;
     end;
+
+
+
+
+
 
     local procedure DatoJsonTexto(xObjeto: JsonObject; xNodo: Text): text
     var

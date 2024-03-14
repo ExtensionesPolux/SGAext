@@ -69,7 +69,7 @@ page 71744 Licencias
                 Image = TestFile;
                 trigger OnAction()
                 var
-                    LicenseMgt: Codeunit "SGA License Management";
+                    LicenseMgt: Codeunit "SGA License Management2";
                 begin
                     LicenseMgt.Test_Registro();
                 end;
