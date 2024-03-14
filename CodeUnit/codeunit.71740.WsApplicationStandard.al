@@ -1834,6 +1834,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jRecurso: Text;
         jMultiSerie: Boolean;
         jFechaCaducidad: Text;
+        jPaquete: Text;
         FechaCaducidad: Date;
 
         vArraySeries: JsonArray;
@@ -1868,6 +1869,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jImprimir := DatoJsonBoolean(VJsonObjectContenedor, 'Print');
 
         jFechaCaducidad := DatoJsonTexto(VJsonObjectContenedor, 'ExpirationText');
+
+        jPaquete := DatoJsonTexto(VJsonObjectContenedor, 'PackageNo');
+
+
         if (jFechaCaducidad <> '') then begin
             Evaluate(FechaCaducidad, jFechaCaducidad);
         end;
@@ -1949,7 +1954,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                             END;
                         end;
                         Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
-                        Crear_Reserva(xContenedor, '', '', jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
+                        Crear_Reserva(xContenedor, '', jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
                     end;
                 2://Serie
                     begin
@@ -1965,12 +1970,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                                 vJsonObjectSerie := vTokenSerie.AsObject();
                                 jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
                                 Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
-                                Crear_Reserva('', jSerie, '', jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
+                                Crear_Reserva('', jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
                             end;
                         end else begin
                             jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
                             Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
-                            Crear_Reserva('', jSerie, '', jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
+                            Crear_Reserva('', jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
                         end;
 
                     end;
@@ -1997,13 +2002,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                                 jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
                                 Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
                                 Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
-                                Crear_Reserva(xContenedor, jSerie, '', jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
+                                Crear_Reserva(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
                             end;
                         end else begin
                             Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
                             jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
                             Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
-                            Crear_Reserva(xContenedor, jSerie, '', jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
+                            Crear_Reserva(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
                         end;
 
                     end;
@@ -2201,6 +2206,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecReservationEntry.Quantity := xQuantity;
         RecReservationEntry."Qty. to Handle (Base)" := xQuantity;
         RecReservationEntry."Qty. to Invoice (Base)" := xQuantity;
+
+        if xPackageNo <> '' then
+            RecReservationEntry."Package No." := xPackageNo;
+
         case xTipoSeguimiento of
             0://Sin Seguimiento
                 begin
