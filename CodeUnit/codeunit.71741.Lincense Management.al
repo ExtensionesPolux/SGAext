@@ -7,19 +7,33 @@ codeunit 71741 "SGA License Management"
     end;
 
     procedure Test()
+    var
+        Respuesta: text;
     begin
-        Message(Enviar_Mensaje('TEST', ''));
-    end;
-
-    procedure Test_Encriptado()
-    begin
-        Message(Enviar_Mensaje('TEST-CRYPT', 'RjkuP/hLI8vN6T9CpFptkA=='));
+        if Enviar_Mensaje('TEST', '', Respuesta) then
+            MESSAGE(Respuesta)
+        else
+            MESSAGE('Errro Envío: ' + GetLastErrorText());
     end;
 
     procedure Test_Registro()
+    var
+        Mensaje: text;
     begin
-        MESSAGE(Registro('{Registro:"+0tH/qy6Ag8su817wu2HkUeCp7BgD6cWaJn+1aSjWJ95CaWufpIQc8UW08OCh2KtJWio4SIId4TnB0LEOfQ9EYTCLPjU+mo487X7qmKo6CRytlHXEG9Ldjf1O4i6xAyt"}'));
+
+        Mensaje := '{"Registro":"SEFdb1Vg2OnXJyaHFEgRtxHAWj34du/7oTLxrA7t9uhrVwPGSfT7Kt1qiGk9Od8TP3Sli+u7v77zaUbIUjyFzwv0M/FFEbq7NchK+L0mAkk="}';
+        MESSAGE(Registro(Mensaje));
     end;
+
+
+
+    procedure MOTD(xJson: text) Respuesta: Text
+    var
+        JsonMOTDIn: JsonObject;
+    begin
+        If not JsonMOTDIn.ReadFrom(xJson) then EXIT(lblErrorJson);
+    end;
+
 
     procedure Vector_AES() Respuesta: text
     var
@@ -38,12 +52,13 @@ codeunit 71741 "SGA License Management"
     end;
 
 
-    procedure Registro(xJson: Text): Text
+    procedure Registro(xJson: Text) Respuesta: Text
     var
         JsonRegistroIn: JsonObject;
         JsonRegistroOut: JsonObject;
         JsonRegistroPoluxOut: JsonObject;
         JsonRegistroPoluxIn: JsonObject;
+        JsonAzure: JsonObject;
         CompanyInfo: record "Company Information";
         Encriptado: text;
         json: text;
@@ -54,12 +69,19 @@ codeunit 71741 "SGA License Management"
 
         Encriptado := DatoJsonTexto(JsonRegistroIn, 'Registro');
 
-        JsonRegistroPoluxOut.Add('Licencia_BC', 'Licencia 12');
-        JsonRegistroPoluxOut.Add('ID_Polux', CompanyInfo."License Polux SGA");
+        JsonRegistroPoluxOut.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonRegistroPoluxOut.Add('ID_Polux', CompanyInfo."License Aura-SGA");
         JsonRegistroPoluxOut.Add('App', Encriptado);
 
         JsonRegistroPoluxOut.WriteTo(json);
-        MESSAGE(Enviar_Mensaje('REGISTRAR', json));
+
+        if NOT Enviar_Mensaje('REGISTRAR', json, Respuesta) then Error('Error Envío mensaje: ' + GetLastErrorText());
+
+        If not JsonAzure.ReadFrom(Respuesta) then EXIT(lblErrorJson);
+        IF CompanyInfo."License BC" <> DatoJsonTexto(JsonAzure, 'Licencia_BC') then error('Mensaje Recibido con destinatario incorrecto');
+        IF CompanyInfo."License Aura-SGA" <> DatoJsonTexto(JsonAzure, 'ID_Polux') then error('Mensaje Recibido con ID Aura incorrecto');
+
+        Respuesta := DatoJsonTexto(JsonAzure, 'Mensaje_App');
     end;
 
 
@@ -84,11 +106,11 @@ codeunit 71741 "SGA License Management"
         Licencias.Reset;
         Licencias.deleteall;
 
-        JsonInfoOut.Add('Licencia_BC', 'Polux-Solutions');
-        JsonInfoOut.Add('ID_Polux', CompanyInfo."License Polux SGA");
+        JsonInfoOut.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonInfoOut.Add('ID_Polux', CompanyInfo."License Aura-SGA");
         JsonInfoOut.WriteTo(json);
 
-        Respuesta := Enviar_Mensaje('INFORMACION', json);
+        // KKK Respuesta := Enviar_Mensaje('INFORMACION', json);
 
         if jsonInfo.ReadFrom(respuesta) then begin
             Licencias.Id := 0;
@@ -130,12 +152,15 @@ codeunit 71741 "SGA License Management"
     begin
         CompanyInfo.Reset;
         IF not CompanyInfo.findfirst then error('No Existe Información Empresa');
+        IF CompanyInfo."License BC" = '' then error('No se ha indicado Licencia BC -Información Empresa');
+        IF CompanyInfo."License Aura-SGA" = '' then error('No se ha indicado Licencia Aura-SGA  -Información Empresa');
         IF CompanyInfo."URL API" = '' then error('No se ha definido URL para accesso -Información Empresa-');
         IF CompanyInfo."Azure Code" = '' then error('No se ha definido Azure Code -Información Empresa-');
         IF CompanyInfo."Vector AES" = '' then error('No se ha indicado Vector AES -Información Empresa-');
     end;
 
-    local procedure Enviar_Mensaje(Comando: text; Value: text) Respuesta: text
+    [TryFunction]
+    local procedure Enviar_Mensaje(Comando: text; Value: text; var Respuesta: text)
     var
         CompanyInfo: record "Company Information";
         Client: HttpClient;

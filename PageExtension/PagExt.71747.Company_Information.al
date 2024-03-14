@@ -6,29 +6,35 @@ pageextension 71747 Company_Info_SGA extends "Company Information"
         {
             group(SGA)
             {
-                Caption = 'SGA';
+                Caption = 'AURA-SGA';
 
-                grid(Grid2)
+
+                field("License BC"; rec."License BC")
                 {
-                    GridLayout = Columns;
+                    ApplicationArea = all;
+                }
 
-                    field("License Polux SGA"; rec."License Polux SGA")
-                    {
-                        ApplicationArea = all;
-                    }
-                    field("URL API"; rec."URL API")
-                    {
-                        ApplicationArea = all;
-                    }
-                    field("Azure Code"; rec."Azure Code")
-                    {
-                        ApplicationArea = all;
-                    }
-                    field("Vector AES"; rec."Vector AES")
-                    {
-                        ApplicationArea = all;
-                        ExtendedDatatype = Masked;
-                    }
+                field("License Aura-SGA"; rec."License Aura-SGA")
+                {
+                    ApplicationArea = all;
+                    MultiLine = True;
+                }
+                field("URL API"; rec."URL API")
+                {
+                    ApplicationArea = all;
+                    MultiLine = True;
+                }
+                field("Azure Code"; rec."Azure Code")
+                {
+                    ApplicationArea = all;
+                    ExtendedDatatype = Masked;
+                    MultiLine = True;
+                }
+                field("Vector AES"; rec."Vector AES")
+                {
+                    ApplicationArea = all;
+                    ExtendedDatatype = Masked;
+                    MultiLine = True;
                 }
             }
         }
