@@ -45,6 +45,10 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
+                    field("Codigo Sin Paquete"; Rec."Codigo Sin Paquete")
+                    {
+                        ApplicationArea = all;
+                    }
                 }
                 group(AppLote)
                 {

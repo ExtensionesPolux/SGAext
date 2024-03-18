@@ -850,6 +850,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     var
 
         RecLocation: Record Location;
+        RecWarehouseSetup: Record "Warehouse Setup";
+        QueryContPaquete: Query "Lot Numbers by Bin";
 
         VJsonObjectDatos: JsonObject;
 
@@ -864,14 +866,17 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         lLotNo: Text;
         lSerialNo: Text;
         lPackageNo: Text;
-
+        newPackageNo: Text;
+        ltipo: Text;
+        lTrackNo: Text;
     begin
-
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
             exit('Respuesta no valida. Se esperaba un Json');
 
         lContenedor := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
+        lTipo := DatoJsonTexto(VJsonObjectDatos, 'Tipo');
+
         lItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
         lUbicadionDesde := DatoJsonTexto(VJsonObjectDatos, 'BinFrom');
         lUbicacionHasta := DatoJsonTexto(VJsonObjectDatos, 'BinTo');
@@ -883,12 +888,47 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         lPackageNo := DatoJsonTexto(VJsonObjectDatos, 'PackageNo');
 
 
-        Clear(RecLocation);
-        RecLocation.Get(lAlmacen);
-        if RecLocation."Almacen Avanzado" then
-            AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, lCantidad, lContenedor, lResource, lItemNo, lLotNo, lSerialNo, lPackageNo);
+        if (ltipo = 'P') THEN begin
+
+            Clear(QueryContPaquete);
+            QueryContPaquete.SetFilter(QueryContPaquete.Location_Code, lAlmacen);
+            QueryContPaquete.SetFilter(QueryContPaquete.Package_No, lContenedor);
+            QueryContPaquete.SetFilter(QueryContPaquete.Sum_Qty_Base, '>%1', 0);
+            QueryContPaquete.Open();
+            while QueryContPaquete.READ do begin
+
+                lTrackNo := '';
+                if (QueryContPaquete.Lot_No <> '') then lTrackNo := QueryContPaquete.Lot_No;
+                if (QueryContPaquete.Serial_No <> '') then lTrackNo := QueryContPaquete.Serial_No;
+
+                AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, QueryContPaquete.Sum_Qty_Base, lTrackNo, lResource, QueryContPaquete.Item_No, QueryContPaquete.Lot_No, QueryContPaquete.Serial_No, lContenedor, lContenedor);
+
+            end;
 
 
+        END ELSE BEGIN
+
+            RecWarehouseSetup.Get();
+            IF (lPackageNo <> '') then begin
+                IF (RecWarehouseSetup."Codigo Sin Paquete" = '') THEN ERROR(lblErrorPaqueteGenerico);
+
+                if (lPackageNo <> RecWarehouseSetup."Codigo Sin Paquete") then
+                    newPackageNo := RecWarehouseSetup."Codigo Sin Paquete"
+                else
+                    newPackageNo := lPackageNo;
+            END;
+            //Comprobar si se está metiendo en un paquete
+            IF Existe_Paquete(lUbicacionHasta) then begin
+                newPackageNo := lUbicacionHasta;
+                lUbicacionHasta := Ubicacion_Paquete(newPackageNo, lAlmacen);
+            end;
+
+            Clear(RecLocation);
+            RecLocation.Get(lAlmacen);
+            if RecLocation."Almacen Avanzado" then
+                AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, lCantidad, lContenedor, lResource, lItemNo, lLotNo, lSerialNo, lPackageNo, newPackageNo);
+
+        END;
         exit('OK');
 
     end;
@@ -2014,6 +2054,18 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     end;
                 4://Lote y Paquete
                     begin
+                        if (NOT RecWhseSetup."Lote Automatico") then begin
+                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                            jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
+                            if (jLotePreasignado <> '') THEN
+                                xContenedor := jLotePreasignado
+                            ELSE BEGIN
+                                IF (jLote = '') THEN ERROR(lblErrorLote);
+                                xContenedor := jLote;
+                            END;
+                        end;
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                        Crear_Reserva(xContenedor, '', jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
 
                     end;
                 5://Serie y Paquete
@@ -2206,9 +2258,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecReservationEntry.Quantity := xQuantity;
         RecReservationEntry."Qty. to Handle (Base)" := xQuantity;
         RecReservationEntry."Qty. to Invoice (Base)" := xQuantity;
-
-        if xPackageNo <> '' then
-            RecReservationEntry."Package No." := xPackageNo;
 
         case xTipoSeguimiento of
             0://Sin Seguimiento
@@ -2408,8 +2457,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-
-
     procedure Registrar_Almacenamiento(xRecepcion: Text)
     var
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
@@ -2459,8 +2506,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             cuWarehouseActivityRegister.run(RecWarehouseActivityLine);
 
     end;
-
-
 
 
 
@@ -2804,7 +2849,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
-    procedure AppCreateReclassWarehouse_Avanzado(xLocation: Text; xFromBin: code[20]; xToBin: code[20]; xQty: decimal; xTrackNo: code[20]; xResourceNo: code[20]; xItemNo: code[20]; xLotNo: Text; xSerialNo: Text; xPackageNo: Text);
+    procedure AppCreateReclassWarehouse_Avanzado(xLocation: Text; xFromBin: code[20]; xToBin: code[20]; xQty: decimal; xTrackNo: code[20]; xResourceNo: code[20]; xItemNo: code[20]; xLotNo: Text; xSerialNo: Text; xPackageNo: Text; newPackageNo: Text);
     var
         RecLocation: Record Location;
         WhseJnlTemplate: record "Warehouse Journal Template";
@@ -2846,7 +2891,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         Clear(RecBin);
         RecBin.SetRange(Code, xFromBin);
-        IF NOT RecBin.FindFirst() THEN Error(lblErrorUbicacion);
+        IF NOT RecBin.FindFirst() THEN Error(StrSubstNo(lblErrorUbicacion, xFromBin));
 
         LineNo := 10001;
         WhseJnlLineLast.Reset;
@@ -2871,7 +2916,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         Clear(RecBin);
         RecBin.SetRange(Code, xToBin);
-        IF NOT RecBin.FindFirst() THEN Error(lblErrorUbicacion);
+        IF NOT RecBin.FindFirst() THEN Error(StrSubstNo(lblErrorUbicacion, xToBin));
 
 
         WhseJnlLine.validate("To Zone Code", RecBin."Zone Code");
@@ -2913,7 +2958,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
             if ((sTipo = 4) OR (sTipo = 5) OR (sTipo = 6)) THEN begin
                 WhseItemTrackingLine."Package No." := xPackageNo;
-                WhseItemTrackingLine."New Package No." := xPackageNo;
+                WhseItemTrackingLine."New Package No." := newPackageNo;
             end;
 
             WhseItemTrackingLine.insert;
@@ -3913,6 +3958,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         iTipoTrack: Integer;
     begin
 
+        RecWarehouseSetup.Get();
 
         lTipo := Tipo_Trazabilidad(xTrackNo);
 
@@ -3944,7 +3990,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         if (xItemNo <> '') then
             QueryLotInventory.SetRange(QueryLotInventory.Item_No, xItemNo);
 
-        QueryLotInventory.Open();
+        //QueryLotInventory.Open();
         //Inventario por ubicación
 
         QueryLotInventory.SetFilter(QueryLotInventory.Location_Code, xLocation);
@@ -3998,6 +4044,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             VJsonObjectInventario.Add('LotNo', QueryLotInventory.Lot_No);
             VJsonObjectInventario.Add('SerialNo', QueryLotInventory.Serial_No);
             VJsonObjectInventario.Add('PackageNo', QueryLotInventory.Package_No);
+
+            if ((RecWarehouseSetup."Codigo Sin Paquete" <> '') AND (RecWarehouseSetup."Codigo Sin Paquete" <> QueryLotInventory.Package_No)) then
+                VJsonObjectInventario.Add('InPackage', FormatoBoolean(True))
+            else
+                VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
+
             VJsonObjectInventario.Add('Zone', QueryLotInventory.Zone_Code);
             VJsonObjectInventario.Add('Bin', QueryLotInventory.Bin_Code);
             VJsonObjectInventario.Add('BinInventory', FormatoNumero(QueryLotInventory.Sum_Qty_Base));
@@ -4008,6 +4060,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         END;
 
         VJsonObjectTrazabilidad.Add('Bins', VJsonArrayInventario.Clone());
+
+        QueryLotInventory.Close();
 
         VJsonObjectTrazabilidad.WriteTo(VJsonText);
         exit(VJsonText);
@@ -4292,7 +4346,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecLocation.Get(RecBin."Location Code");
         Clear(RecBin);
         RecBin.SetRange(code, RecLocation."Adjustment Bin Code");
-        IF NOT RecBin.FindFirst() then Error(lblErrorUbicacionAjuste);
+        IF NOT RecBin.FindFirst() then Error(StrSubstNo(lblErrorUbicacion, RecLocation."Adjustment Bin Code"));
 
         RecWarehouseJournalLine."From Zone Code" := RecBin."Zone Code";
         RecWarehouseJournalLine."From Bin Code" := RecBin.Code;
@@ -4685,6 +4739,25 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         else
             exit(true);
     end;
+
+    local procedure Ubicacion_Paquete(xPackageNo: Text; xLocation: Text): Text
+    var
+        QueryLotInventory: Query "Lot Numbers by Bin";
+    begin
+
+        Clear(QueryLotInventory);
+        QueryLotInventory.SetFilter(QueryLotInventory.Location_Code, xLocation);
+        QueryLotInventory.SetFilter(QueryLotInventory.Package_No, xPackageNo);
+
+        QueryLotInventory.Open();
+        if QueryLotInventory.READ then
+            exit(QueryLotInventory.Bin_Code)
+        else
+            exit('');
+
+
+    end;
+
 
 
     /// <summary>
@@ -5080,6 +5153,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         lblErrorLote: Label 'Lot No not defined', comment = 'ESP=No se ha definido el lote';
         lblErrorSerie: Label 'Serial No not defined', comment = 'ESP=No se ha definido el serie';
         lblErrorPaquete: Label 'Package No not defined', comment = 'ESP=No se ha definido el paquete';
+        lblErrorPaqueteGenerico: Label 'Empty Package code not defined', comment = 'ESP=No se ha definido el código de paquete vacío';
 
         lblErrorLoteInternoNoExiste: Label 'Internal Lot No %1 was not found in the system', Comment = 'ESP=No se ha encontrado el lote interno %1 en el sistema';
         lblErrorSerieInternoNoExiste: Label 'Internal Serial No %1 was not found in the system', Comment = 'ESP=No se ha encontrado el serie interno %1 en el sistema';

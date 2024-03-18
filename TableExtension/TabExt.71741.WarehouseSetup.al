@@ -99,6 +99,12 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             Caption = 'Package No Serial', Comment = 'ESP=Nº Serie Paquete';
 
         }
+        field(71781; "Codigo Sin Paquete"; Code[10])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Without Package Code', Comment = 'ESP=Código Sin Paquete';
+
+        }
     }
 
 }
