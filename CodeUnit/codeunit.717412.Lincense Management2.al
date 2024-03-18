@@ -10,10 +10,10 @@ codeunit 71742 "SGA License Management2"
     var
         Respuesta: text;
     begin
-        if Enviar_Mensaje('TEST', '', Respuesta) then
-            MESSAGE(Respuesta)
-        else
-            MESSAGE('Errro Envío: ' + GetLastErrorText());
+        //if Enviar_Mensaje('TEST', '', Respuesta) then
+        //    MESSAGE(Respuesta)
+        //else
+        //    MESSAGE('Errro Envío: ' + GetLastErrorText());
     end;
 
     procedure Test_Registro()
@@ -31,61 +31,63 @@ codeunit 71742 "SGA License Management2"
         AzureFunctionsResponse: Codeunit "Azure Functions Response";
         AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
         IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
-        JsonRegistroIn: JsonObject;
-        JsonRegistroPoluxOut: JsonObject;
+        jsonEntrada: JsonObject;
+        JsonBC: JsonObject;
+        JsonAzure: JsonObject;
         Encriptado: Text;
-        RequestBody: Text;
+        MensajeBC: Text;
+        RespuestaAzure: text;
+        RequestBody: text;
         CompanyInfo: record "Company Information";
+        Identificador: Guid;
     begin
-        If not JsonRegistroIn.ReadFrom(xJson) then EXIT('ERROR Json');
+        If not jsonEntrada.ReadFrom(xJson) then EXIT('ERROR Json');
 
         Get_CompanyInfo(CompanyInfo);
+        Identificador := CreateGuid();
 
-        Encriptado := DatoJsonTexto(JsonRegistroIn, 'Registro');
+        Encriptado := DatoJsonTexto(jsonEntrada, 'Registro');
 
-        JsonRegistroPoluxOut.Add('Licencia_BC', CompanyInfo."License BC");
-        JsonRegistroPoluxOut.Add('ID_Polux', CompanyInfo."License Aura-SGA");
-        JsonRegistroPoluxOut.Add('Mensaje_App', Encriptado);
+        JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.WriteTo(MensajeBC);
 
-        JsonRegistroPoluxOut.WriteTo(RequestBody);
+        JsonAzure.add('Commando', 'REGISTRAR');
+        JsonAzure.Add('ID', Identificador);
+        JsonAzure.add('Mensaje_BC', MensajeBC);
+        JsonAzure.add('Mensaje_App', Encriptado);
+        JsonAzure.WriteTo(RequestBody);
 
         IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
         AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
         if AzureFunctionsResponse.IsSuccessful() then begin
-            Message('Post request successful.');
-            AzureFunctionsResponse.GetResultAsText(Respuesta);
-            Message(Respuesta);
+            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
+            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
+
+            JsonEntrada.ReadFrom(RespuestaAzure);
+            Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_App');
         end
         else
             Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
     end;
 
-    [TryFunction]
-    local procedure Enviar_Mensaje(Comando: text; Value: text; var Respuesta: text)
+
+    local procedure Verificar_Mensaje(CompanyInfo: record "Company Information"; Mensaje: Text)
     var
-        CompanyInfo: record "Company Information";
-        Client: HttpClient;
-        Content: HttpContent;
-        ResponseMessage: HttpResponseMessage;
-        JObject: JsonObject;
-        Url: Text;
-        sw9: Boolean;
-        Identificador: guid;
-
+        jsonEntrada: JsonObject;
+        jsonBC: JsonObject;
     begin
-        Respuesta := '';
-        sw9 := True;
+        JsonEntrada.ReadFrom(Mensaje);
 
-        Get_CompanyInfo(CompanyInfo);
-        Identificador := CreateGuid();
-
-        url := CompanyInfo."URL API" + '?Code=' + CompanyInfo."Azure Code" + '&Command=' + Comando + '&ID=' + format(Identificador);
-        if Value <> '' then url += '&Value=' + Value;
-
-        //url := 'https://polux-sga20240312191807.azurewebsites.net/api/Inicio?Command=REGISTRAR&Code=U-RKusNG8dP6CNOvAhwUWDG_dk36RJhPgoYqup3JSlvDAzFudpADYQ==&ID={DE5B33C4-C500-4B75-B0C1-DADB3A0B81B2}&Value={"Licencia_BC":"Polux-Solutions","ID_Polux":"POL#123456","Mensaje_App":"SEFdb1Vg2OnXJyaHFEgRtxHAWj34du/7oTLxrA7t9uhrVwPGSfT7Kt1qiGk9Od8TP3Sli+u7v77zaUbIUjyFzwv0M/FFEbq7NchK+L0mAkk="}';
-
-        SendRequest('POST', url);
+        Mensaje := DatoJsonTexto(jsonEntrada, 'Mensaje_BC');
+        JsonBC.ReadFrom(Mensaje);
+        IF (text.UpperCase(DatoJsonTexto(JsonBC, 'Licencia_BC')) <> text.UpperCase(CompanyInfo."License BC")) or
+           (text.UpperCase(DatoJsonTexto(JsonBC, 'ID_Polux')) <> text.UpperCase(CompanyInfo."License Aura-SGA")) then
+            error('Destinatario del mensaje erróneo');
     end;
+
+
+
 
     local procedure SendRequest(HttpMethod: Text[6]; Url: text) ResponseText: Text
     var
