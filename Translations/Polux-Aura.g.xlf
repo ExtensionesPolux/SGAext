@@ -333,23 +333,13 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Control Device - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 1456375839 - Control 3510957723 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>IP Registro</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Control IP - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 1456375839 - Control 3710982960 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Fecha Registro</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Control Posting Date - Property Caption</note>
-        </trans-unit>
         <trans-unit id="Page 1456375839 - Action 240497149 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cargar Datos</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action Informacion - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1456375839 - Action 3231099658 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Test API Polux</source>
+          <source>Hello Word</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action TestAPI - Property Caption</note>
         </trans-unit>
@@ -637,6 +627,21 @@
           <source>App Móvil</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Phys_Invt_record_Header - Field App - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 348912950 - Field 2258878130 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
+          <source>Mobile Device</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Dispositivo Móvil</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Resource - Field Dispositivo Movil - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 348912950 - Field 3903370750 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
+          <source>Posting Date</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Fecha Registro</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Resource - Field Fecha Registro - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 348912950 - Field 3510957723 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
+          <source>IP</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Resource - Field IP - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 1518918944 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
           <source>Copy Allow</source>

@@ -116,17 +116,17 @@ page 71744 Licencias
 
     local procedure Cargar_Datos()
     var
-        Licencias: record Licencias;
-        LicenseMgt: Codeunit "SGA License Management";
+        Recursos: record Resource;
+        LicenseMgt: Codeunit "SGA License Management2";
     begin
-        Licencias.reset;
-        Licencias.deleteall;
+        Recursos.reset;
+        Recursos.SetRange("Dispositivo Movil", true);
+        Recursos.deleteall;
 
-        //LicenseMgt.Informacion(rec);
+        LicenseMgt.Informacion();
 
         rec.reset;
-        if rec.Findfirst then LicenciasDatos.copy(rec);
-        //rec.setfilter(Id, '>%1', 0);
+        rec.Setrange("Dispositivo Movil", True);
     end;
 
 }

@@ -100,6 +100,110 @@ codeunit 71742 "SGA License Management2"
             Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
     end;
 
+    procedure Informacion()
+    var
+        AzureFunctions: Codeunit "Azure Functions";
+        AzureFunctionsResponse: Codeunit "Azure Functions Response";
+        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
+        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
+        CompanyInfo: record "Company Information";
+        JsonBC: JsonObject;
+        JsonAzure: JsonObject;
+        JsonInfo: JsonObject;
+        JsonEntrada: JsonObject;
+        RequestBody: text;
+
+        JsonInfoOut: JsonObject;
+        MensajeBC: text;
+        respuestaAzure: Text;
+        respuesta: Text;
+        jsonToken: JsonToken;
+        jsonTokenLines: JsonToken;
+        jsonDetalle: JsonObject;
+        jsonResponse: JsonObject;
+        jsonArrayLines: JsonArray;
+        n: integer;
+        Identificador: Guid;
+
+    begin
+        Get_CompanyInfo(CompanyInfo);
+
+        Get_CompanyInfo(CompanyInfo);
+        Identificador := CreateGuid();
+
+
+        JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.WriteTo(MensajeBC);
+
+        JsonAzure.add('Commando', 'REGISTRAR');
+        JsonAzure.Add('ID', Identificador);
+        JsonAzure.add('Mensaje_BC', MensajeBC);
+        JsonAzure.add('Mensaje_App', '');
+        JsonAzure.WriteTo(RequestBody);
+
+        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
+        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
+        if AzureFunctionsResponse.IsSuccessful() then begin
+            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
+            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
+
+            JsonEntrada.ReadFrom(RespuestaAzure);
+            MensajeBC := DatoJsonTexto(jsonEntrada, 'Mensaje_BC');
+        end
+        else
+            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
+
+        /*
+
+        Licencias.Reset;
+        Licencias.deleteall;
+
+        JsonInfoOut.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonInfoOut.Add('ID_Polux', CompanyInfo."License Aura-SGA");
+        JsonInfoOut.WriteTo(json);
+
+        // KKK Respuesta := Enviar_Mensaje('INFORMACION', json);
+
+        if jsonInfo.ReadFrom(respuesta) then begin
+            Licencias.Id := 0;
+
+            jsonInfo.Get('Estado', jsonToken);
+            Licencias.Estado := jsonToken.AsValue().AsText();
+            jsonInfo.Get('Error', jsonToken);
+            Licencias.Error := jsonToken.AsValue().AsText();
+            jsonInfo.Get('Licencias_Activas', jsonToken);
+            Licencias."Licencias Activas" := jsonToken.AsValue().AsInteger();
+            jsonInfo.Get('Licencias_Usadas', jsonToken);
+            Licencias."Licencias Usadas" := jsonToken.AsValue().AsInteger();
+            Licencias.Insert;
+
+            jsonInfo.get('Devices', jsonTokenLines);
+            jsonArrayLines := jsonTokenLines.AsArray();
+
+            n := 0;
+            foreach jsonTokenLines in jsonArrayLines do begin
+                if jsonDetalle.ReadFrom(FORMAT(jsonTokenLines)) then begin
+                    n += 1;
+                    Licencias.Id := n;
+                    jsonDetalle.Get('Id_Dispositivo', jsonToken);
+                    Licencias.Device := jsonToken.AsValue().AsText();
+                    jsonDetalle.Get('IP', jsonToken);
+                    Licencias.IP := jsonToken.AsValue().AsText();
+                    jsonDetalle.Get('Fecha_Registro', jsonToken);
+                    //Licencias."Posting Date" := jsonToken.AsValue().AsText();
+                    Licencias.Insert;
+                end;
+            end;
+        end;
+        */
+
+    end;
+
+
+
+
+
 
     local procedure Verificar_Mensaje(CompanyInfo: record "Company Information"; Mensaje: Text)
     var
