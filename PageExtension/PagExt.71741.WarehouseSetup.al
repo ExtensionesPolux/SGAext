@@ -37,10 +37,10 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
-                    field("Usar paquetes"; Rec."Usar paquetes")
+                    /*field("Usar paquetes"; Rec."Usar paquetes")
                     {
                         ApplicationArea = all;
-                    }
+                    }*/
                     field("Numero Serie Paquete"; Rec."Numero Serie Paquete")
                     {
                         ApplicationArea = all;

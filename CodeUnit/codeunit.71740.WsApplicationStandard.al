@@ -50,7 +50,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectRecurso.Add('Inventario', FormatoBoolean(RecRecursos."Ver cantidad inventario"));
 
         RecWarehouseSetup.Get();
-        VJsonObjectRecurso.Add('UsarPaquete', FormatoBoolean(RecWarehouseSetup."Usar paquetes"));
+        //VJsonObjectRecurso.Add('UsarPaquete', FormatoBoolean(RecWarehouseSetup."Usar paquetes"));
         VJsonObjectRecurso.Add('VerRecepcion', FormatoBoolean(RecWarehouseSetup."Ver Recepcion"));
         VJsonObjectRecurso.Add('VerSalidas', FormatoBoolean(RecWarehouseSetup."Ver Salidas"));
         VJsonObjectRecurso.Add('VerInventario', FormatoBoolean(RecWarehouseSetup."Ver Inventario"));
@@ -2064,16 +2064,74 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                                 xContenedor := jLote;
                             END;
                         end;
+
+                        IF (jPaquete = '') THEN jPaquete := RecWhseSetup."Codigo Sin Paquete";
+
                         Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
                         Crear_Reserva(xContenedor, '', jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
 
                     end;
                 5://Serie y Paquete
                     begin
+                        if (RecWhseSetup."Lote Interno Obligatorio") then begin
+                            ERROR(lblErrorSegProd);
+                        end;
+                        jMultiSerie := DatoJsonBoolean(VJsonObjectContenedor, 'Multiserie');
+
+                        IF (jPaquete = '') THEN jPaquete := RecWhseSetup."Codigo Sin Paquete";
+
+                        if jMultiSerie then begin
+                            jUnidades := 1;
+                            vArraySeries := DatoArrayJsonTexto(VJsonObjectContenedor, 'ObcSeries');
+                            foreach vTokenSerie in vArraySeries do begin
+                                vJsonObjectSerie := vTokenSerie.AsObject();
+                                jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
+                                Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                                Crear_Reserva('', jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
+                            end;
+                        end else begin
+                            jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
+                            Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                            Crear_Reserva('', jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
+                        end;
 
                     end;
                 6://Lote, Serie y Paquete
                     begin
+
+
+                        if (NOT RecWhseSetup."Lote Automatico") then begin
+                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                            jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
+                            if (jLotePreasignado <> '') THEN
+                                xContenedor := jLotePreasignado
+                            ELSE BEGIN
+                                IF (jLote = '') THEN ERROR(lblErrorLote);
+                                xContenedor := jLote;
+                            END;
+                        end;
+
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+
+                        jMultiSerie := DatoJsonBoolean(VJsonObjectContenedor, 'Multiserie');
+
+                        IF (jPaquete = '') THEN jPaquete := RecWhseSetup."Codigo Sin Paquete";
+
+                        if jMultiSerie then begin
+                            jUnidades := 1;
+                            vArraySeries := DatoArrayJsonTexto(VJsonObjectContenedor, 'ObcSeries');
+                            foreach vTokenSerie in vArraySeries do begin
+                                vJsonObjectSerie := vTokenSerie.AsObject();
+                                jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
+                                Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                                Crear_Reserva(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
+                            end;
+                        end else begin
+                            jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
+                            Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                            Crear_Reserva(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
+                        end;
+
 
                     end;
 
@@ -2265,34 +2323,52 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 end;
             1://Lote
                 begin
+                    if (xLotNo = '') then error(lblErrorLotNoEmpty);
+
                     RecReservationEntry."Lot No." := xLotNo;
                     RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Lot No.";
                 end;
             2://Serie
                 begin
+                    if (xSerialNo = '') then error(lblErrorSerialNoEmpty);
+
                     RecReservationEntry."Serial No." := xSerialNo;
                     RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Serial No.";
                 end;
             3://Lote y Serie
                 begin
+                    if (xSerialNo = '') then error(lblErrorSerialNoEmpty);
+                    if (xLotNo = '') then error(lblErrorLotNoEmpty);
+
+
                     RecReservationEntry."Lot No." := xLotNo;
                     RecReservationEntry."Serial No." := xSerialNo;
                     RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Lot and Serial No.";
                 end;
             4://Lote y Paquete
                 begin
+                    if (xLotNo = '') then error(lblErrorLotNoEmpty);
+                    if (xPackageNo = '') then error(lblErrorPackageNoEmpty);
+
                     RecReservationEntry."Lot No." := xLotNo;
                     RecReservationEntry."Package No." := xPackageNo;
                     RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Lot and Package No.";
                 end;
             5://Serie y Paquete
                 begin
+                    if (xSerialNo = '') then error(lblErrorSerialNoEmpty);
+                    if (xPackageNo = '') then error(lblErrorPackageNoEmpty);
+
                     RecReservationEntry."Serial No." := xSerialNo;
                     RecReservationEntry."Package No." := xPackageNo;
                     RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Serial and Package No.";
                 end;
             6://Lote, Serie y Paquete
                 begin
+                    if (xSerialNo = '') then error(lblErrorSerialNoEmpty);
+                    if (xLotNo = '') then error(lblErrorLotNoEmpty);
+                    if (xPackageNo = '') then error(lblErrorPackageNoEmpty);
+
                     RecReservationEntry."Lot No." := xLotNo;
                     RecReservationEntry."Serial No." := xSerialNo;
                     RecReservationEntry."Package No." := xPackageNo;
@@ -4045,10 +4121,22 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             VJsonObjectInventario.Add('SerialNo', QueryLotInventory.Serial_No);
             VJsonObjectInventario.Add('PackageNo', QueryLotInventory.Package_No);
 
-            if ((RecWarehouseSetup."Codigo Sin Paquete" <> '') AND (RecWarehouseSetup."Codigo Sin Paquete" <> QueryLotInventory.Package_No)) then
-                VJsonObjectInventario.Add('InPackage', FormatoBoolean(True))
-            else
-                VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
+            if (RecWarehouseSetup."Codigo Sin Paquete" <> '') then begin
+                if (RecWarehouseSetup."Codigo Sin Paquete" <> QueryLotInventory.Package_No) then begin
+                    VJsonObjectInventario.Add('InPackage', FormatoBoolean(True));
+                end else begin
+                    VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
+                end;
+            end ELSE begin
+                if (QueryLotInventory.Package_No <> '') then begin
+                    VJsonObjectInventario.Add('InPackage', FormatoBoolean(True));
+                end else begin
+                    VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
+                end;
+            end;
+
+
+
 
             VJsonObjectInventario.Add('Zone', QueryLotInventory.Zone_Code);
             VJsonObjectInventario.Add('Bin', QueryLotInventory.Bin_Code);
@@ -5161,6 +5249,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         lblErrorRegistrar: Label 'Error posting', Comment = 'ESP=Error al registrar';
         lblErrorAlmacen: Label 'App Warehouse not defined', comment = 'ESP=No se ha definido el almacén de la App';
         lblErrorTrackNo: Label 'Track No. Not Found', Comment = 'ESP=No se ha encontrado la trazabilidad';
+        lblErrorSerialNoEmpty: Label 'Serial No. has not been indicated', Comment = 'ESP=El Nº de Serie no se ha indicado';
+        lblErrorLotNoEmpty: Label 'Lot No. has not been indicated', Comment = 'ESP=El Nº de Lote no se ha indicado';
+        lblErrorPackageNoEmpty: Label 'Package No. has not been indicated', Comment = 'ESP=El Nº de Paquete no se ha indicado';
+
         lblPaquete: Label 'Package', Comment = 'ESP=Paquete';
         lblLote: Label 'Lot No', Comment = 'ESP=Lote';
         lblSerie: Label 'Serial No', Comment = 'ESP=Serie';
