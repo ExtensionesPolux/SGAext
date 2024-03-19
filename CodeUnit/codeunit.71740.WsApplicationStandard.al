@@ -1636,6 +1636,15 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             end;
 
             repeat
+
+                IF RecWhsReceiptLine."Source Document" = RecWhsReceiptLine."Source Document"::"Inbound Transfer" THEN begin
+                    VJsonObjectLines.Add('Type', 'T');
+                end;
+                //Pedido Compra
+                IF RecWhsReceiptLine."Source Document" = RecWhsReceiptLine."Source Document"::"Purchase Order" THEN begin
+                    VJsonObjectLines.Add('Type', 'P');
+                end;
+
                 VJsonObjectLines.Add('LineNo', RecWhsReceiptLine."Line No.");
                 VJsonObjectLines.Add('ProdOrderNo', '');
                 VJsonObjectLines.Add('Reference', RecWhsReceiptLine."Item No.");
@@ -1668,6 +1677,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     VJsonObjectLines.Add('Complete', true);
                     VJsonObjectLines.Add('Partial', false);
                 end;
+
                 //Se busca si tiene lote predefinido
                 /*clear(RecPurchaseLine);
                 RecPurchaseLine.SetRange("Document No.", RecWhsReceiptLine."Source No.");
@@ -1704,14 +1714,33 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecReservationEntry: Record "Reservation Entry";
         VJsonObjectReservas: JsonObject;
         VJsonArrayReservas: JsonArray;
+        vTipo: Code[1];
     begin
+
+        vTipo := '';
+
         Clear(RecReservationEntry);
+        RecReservationEntry.SetRange("Location Code", RecWhseReceiptLine."Location Code");
         RecReservationEntry.SetFilter("Item Tracking", '<>%1', RecReservationEntry."Item Tracking"::None);
         RecReservationEntry.SETRANGE("Source ID", RecWhseReceiptLine."Source No.");
-        RecReservationEntry.SETRANGE("Source Ref. No.", RecWhseReceiptLine."Source Line No.");
+
+        //Transferencia
+        IF RecWhseReceiptLine."Source Document" = RecWhseReceiptLine."Source Document"::"Inbound Transfer" THEN begin
+            RecReservationEntry.SETRANGE("Source Prod. Order Line", RecWhseReceiptLine."Source Line No.");
+            RecReservationEntry.SETRANGE("Source Type", 5741);
+            vTipo := 'T';
+        end;
+        //Pedido Compra
+        IF RecWhseReceiptLine."Source Document" = RecWhseReceiptLine."Source Document"::"Purchase Order" THEN begin
+            RecReservationEntry.SETRANGE("Source Ref. No.", RecWhseReceiptLine."Source Line No.");
+            vTipo := 'P';
+
+        end;
+
         RecReservationEntry.SETRANGE("Item No.", RecWhseReceiptLine."Item No.");
         IF RecReservationEntry.FINDSET THEN BEGIN
             REPEAT
+                VJsonObjectReservas.Add('Type', vTipo);
                 VJsonObjectReservas.Add('LineNo', RecWhseReceiptLine."Line No.");
                 VJsonObjectReservas.Add('EntryNo', RecReservationEntry."Entry No.");
                 VJsonObjectReservas.Add('LotNo', RecReservationEntry."Lot No.");
