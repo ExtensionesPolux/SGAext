@@ -30,6 +30,21 @@ tableextension 71740 Resource extends Resource
             Caption = 'View inventory quantity', Comment = 'ESP=Mostrar Cantidad inventario';
         }
 
+        field(71744; "Dispositivo Movil"; Boolean)
+        {
+            Caption = 'Mobile Device', Comment = 'ESP=Dispositivo Móvil';
+            Editable = False;
+        }
+        field(71745; "IP"; code[20])
+        {
+            Caption = 'IP';
+            Editable = False;
+        }
+        field(71746; "Fecha Registro"; date)
+        {
+            Caption = 'Posting Date', Comment = 'ESP=Fecha Registro';
+            Editable = false;
+        }
     }
 
 }

@@ -3,6 +3,14 @@ pageextension 71740 "Resource Card" extends "Resource Card"
 {
     layout
     {
+        addafter(Type)
+        {
+            field("Dispositivo Movil"; rec."Dispositivo Movil")
+            {
+                ApplicationArea = All;
+                Editable = False;
+            }
+        }
         addafter("Personal Data")
         {
             group(App)
