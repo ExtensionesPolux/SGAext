@@ -3,8 +3,8 @@ page 71744 Licencias
     PageType = list;
     ApplicationArea = All;
     UsageCategory = Tasks;
-    SourceTable = Licencias;
-
+    SourceTable = Resource;
+    Permissions = tabledata Resource = RMID;
 
     layout
     {
@@ -27,19 +27,21 @@ page 71744 Licencias
             }
             repeater(Control1)
             {
-                field(Device; rec.Device)
+                field(Device; rec."No.")
                 {
                     Caption = 'Id Dispositivo';
                     ApplicationArea = all;
                 }
+                field(Name; rec.Name)
+                {
+                    ApplicationArea = All;
+                }
                 field(IP; rec.IP)
                 {
-                    Caption = 'IP Registro';
                     ApplicationArea = all;
                 }
-                field("Posting Date"; rec."Posting Date")
+                field("Posting Date"; rec."Fecha Registro")
                 {
-                    Caption = 'Fecha Registro';
                     ApplicationArea = all;
                 }
             }
@@ -53,13 +55,13 @@ page 71744 Licencias
             action(TestAPI)
             {
                 ApplicationArea = All;
-                Caption = 'Test API Polux';
+                Caption = 'Hello Word';
                 image = LinkWeb;
                 trigger OnAction()
                 var
-                    LicenseMgt: Codeunit "SGA License Management";
+                    LicenseMgt: Codeunit "SGA License Management2";
                 begin
-                    LicenseMgt.Test();
+                    LicenseMgt.Test_Hola();
                 end;
             }
             action(TestRegistro)
@@ -110,7 +112,6 @@ page 71744 Licencias
 
     var
         LicenciasDatos: record Licencias;
-        d: Report "Make Phys. Invt. Recording";
 
 
     local procedure Cargar_Datos()
@@ -121,11 +122,11 @@ page 71744 Licencias
         Licencias.reset;
         Licencias.deleteall;
 
-        LicenseMgt.Informacion(rec);
+        //LicenseMgt.Informacion(rec);
 
         rec.reset;
         if rec.Findfirst then LicenciasDatos.copy(rec);
-        rec.setfilter(Id, '>%1', 0);
+        //rec.setfilter(Id, '>%1', 0);
     end;
 
 }

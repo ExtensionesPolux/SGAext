@@ -103,11 +103,6 @@
           <note from="Developer" annotates="general" priority="2">ESP=Formato incorrecto. Se esperaba un Json</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SGA License Management - NamedType lblErrorJson</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3555168697 - Method 2843000185 - NamedType 2466045198" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Web service call failed.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SGA License Management2 - Method GetRequest - NamedType ServiceCallErr</note>
-        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3168196109" size-unit="char" translate="yes" xml:space="preserve">
           <source>App Warehouse not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el almacén de la App</note>
