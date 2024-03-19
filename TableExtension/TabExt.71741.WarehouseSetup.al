@@ -17,12 +17,12 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             Caption = 'Use Vendor Lot No', Comment = 'ESP=Usar Nº. Lote Proveedor';
         }
 
-        field(71742; "Usar paquetes"; Boolean)
+        /*field(71742; "Usar paquetes"; Boolean)
         {
             DataClassification = ToBeClassified;
             Caption = 'Use Package', Comment = 'ESP=Usar Paquete';
 
-        }
+        }*/
 
         field(71743; "Lote Interno Obligatorio"; Boolean)
         {
@@ -97,6 +97,12 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
             Caption = 'Package No Serial', Comment = 'ESP=Nº Serie Paquete';
+
+        }
+        field(71781; "Codigo Sin Paquete"; Code[10])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Without Package Code', Comment = 'ESP=Código Sin Paquete';
 
         }
     }

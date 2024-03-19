@@ -153,6 +153,11 @@
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado el lote interno %1 en el sistema</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLoteInternoNoExiste</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 2170364747" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Lot No. has not been indicated</source>
+          <note from="Developer" annotates="general" priority="2">ESP=El Nº de Lote no se ha indicado</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLotNoEmpty</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 41991427" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error when moving</source>
           <note from="Developer" annotates="general" priority="2">ESP="Error al mover"</note>
@@ -168,10 +173,20 @@
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido un nº de serie para generar el lote</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorNSerieLote</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 3246465920" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Package No. has not been indicated</source>
+          <note from="Developer" annotates="general" priority="2">ESP=El Nº de Paquete no se ha indicado</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorPackageNoEmpty</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 1652318197" size-unit="char" translate="yes" xml:space="preserve">
           <source>Package No not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el paquete</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorPaquete</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 30562039" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Empty Package code not defined</source>
+          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el código de paquete vacío</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorPaqueteGenerico</note>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 1143900519" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot prefix not defined</source>
@@ -212,6 +227,11 @@
           <source>The serial number already exists in one shipment</source>
           <note from="Developer" annotates="general" priority="2">ESP="El número de serie ya existe en un envío"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSerialDuplicadoEnvio</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 9733994" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Serial No. has not been indicated</source>
+          <note from="Developer" annotates="general" priority="2">ESP=El Nº de Serie no se ha indicado</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSerialNoEmpty</note>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3754081590" size-unit="char" translate="yes" xml:space="preserve">
           <source>Serial No not defined</source>
@@ -693,6 +713,11 @@
           <note from="Developer" annotates="general" priority="2">ESP=Crear Recepciones sin cantidad</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Cantidad recepcion a cero - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 3565850144 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>Without Package Code</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Código Sin Paquete</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Codigo Sin Paquete - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 453237732 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Automatic Lot No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº. Lote Automático</note>
@@ -727,11 +752,6 @@
           <source>Use Vendor Lot No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Usar Nº. Lote Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Usar Lote Proveedor - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 182827633 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>Use Package</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Usar Paquete</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Usar paquetes - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 2680708721 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Use Vendor Serial No</source>
