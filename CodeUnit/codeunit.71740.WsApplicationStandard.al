@@ -1792,6 +1792,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseSetup: Record "Warehouse Setup";
         RecItem: Record Item;
 
+        jTrackNo: Text;
         jReferencia: Text;
         jRecepcion: Text;
         jUnidades: Integer;
@@ -1805,6 +1806,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         i: Integer;
         NumContedor: Text;
         TextoContenedorFinal: Text;
+        jTipo: Text;
 
         jImprimir: Boolean;
 
@@ -1819,59 +1821,73 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jImprimir := DatoJsonBoolean(VJsonObjectContenedor, 'Print');
         jRecurso := DatoJsonTexto(VJsonObjectContenedor, 'ResourceNo');
 
-        if (jRecurso = '') then Error(lblErrorRecurso);
+        jTipo := DatoJsonTexto(VJsonObjectContenedor, 'Type');
 
-        //Comprobaciones
-        //Referencia
-        Existe_Referencia(jReferencia, false);
+        //Si es un pedido de transferenc
+        if (jTipo = 'T') then begin
 
-        RecWarehouseSetup.Get();
+            jTrackNo := DatoJsonTexto(VJsonObjectContenedor, 'TrackNo');
 
-        BaseNumeroContenedor := '';
-        iTipoSeguimiento := TipoSeguimientoProducto(jReferencia);
-        case iTipoSeguimiento of
-            1, 3, 4, 6://Lote
-                begin
-                    //Base para la creación del Nº Contenedor      
-                    if (RecWarehouseSetup."Usar Lote Proveedor") then
-                        BaseNumeroContenedor := jLoteProveedor
-                    else
-                        if (RecWarehouseSetup."Lote Automatico") then
-                            BaseNumeroContenedor := Base_Numero_Contenedor(1, jReferencia);
-                end;
-        end;
-
-        //Si es un contenedor unitario se añade 00 si son varios 01,02....
-        if jTotalContenedores = 1 then
-            NumeracionInicial := 0
-        else
-            NumeracionInicial := 1;
-
-        for i := 1 to jTotalContenedores do begin
-
-            if (BaseNumeroContenedor <> '') then begin
-                NumContedor := Format(NumeracionInicial);
-                if (StrLen(NumContedor) = 1) then
-                    NumContedor := '00' + NumContedor;
-                if (StrLen(NumContedor) = 2) then
-                    NumContedor := '0' + NumContedor;
-
-                TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
-            end else
-                TextoContenedorFinal := '';
+            Recepcionar_Contenedor_Transferencia(jTrackNo, jRecepcion, jUnidades);
 
 
-            //Si lleva un lote preasignado utilizamos ese
-            if jLotePreasignado <> '' then begin
-                TextoContenedorFinal := jLotePreasignado;
-                jImprimir := false;
+        end else begin
+
+            if (jRecurso = '') then Error(lblErrorRecurso);
+
+            //Comprobaciones
+            //Referencia
+            Existe_Referencia(jReferencia, false);
+
+            RecWarehouseSetup.Get();
+
+            BaseNumeroContenedor := '';
+            iTipoSeguimiento := TipoSeguimientoProducto(jReferencia);
+            case iTipoSeguimiento of
+                1, 3, 4, 6://Lote
+                    begin
+                        //Base para la creación del Nº Contenedor      
+                        if (RecWarehouseSetup."Usar Lote Proveedor") then
+                            BaseNumeroContenedor := jLoteProveedor
+                        else
+                            if (RecWarehouseSetup."Lote Automatico") then
+                                BaseNumeroContenedor := Base_Numero_Contenedor(1, jReferencia);
+                    end;
             end;
 
-            Recepcionar_Contenedor(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
+            //Si es un contenedor unitario se añade 00 si son varios 01,02....
+            if jTotalContenedores = 1 then
+                NumeracionInicial := 0
+            else
+                NumeracionInicial := 1;
 
-            NumeracionInicial += 1;
+            for i := 1 to jTotalContenedores do begin
 
+                if (BaseNumeroContenedor <> '') then begin
+                    NumContedor := Format(NumeracionInicial);
+                    if (StrLen(NumContedor) = 1) then
+                        NumContedor := '00' + NumContedor;
+                    if (StrLen(NumContedor) = 2) then
+                        NumContedor := '0' + NumContedor;
+
+                    TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
+                end else
+                    TextoContenedorFinal := '';
+
+
+                //Si lleva un lote preasignado utilizamos ese
+                if jLotePreasignado <> '' then begin
+                    TextoContenedorFinal := jLotePreasignado;
+                    jImprimir := false;
+                end;
+
+                Recepcionar_Contenedor(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
+
+                NumeracionInicial += 1;
+
+            end;
         end;
+
     end;
 
     local procedure Recepcionar_Contenedor(VJsonObjectContenedor: JsonObject; xContenedor: Text; xOmitirImpresion: Boolean; xTipoSeguimiento: Integer)
@@ -2234,6 +2250,86 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
+
+    local procedure Recepcionar_Contenedor_Transferencia(xTrackNo: Text; xShipmentNo: Text; xQuantity: Decimal)
+    var
+        RecWhseReceiptHeader: Record "Warehouse Receipt Header";
+        RecWhseReceiptLine: Record "Warehouse Receipt Line";
+        RecWhseSetup: Record "Warehouse Setup";
+        RecReservationEntry: Record "Reservation Entry";
+
+
+        vTipo: Text;
+
+    begin
+
+        RecWhseSetup.GeT();
+
+        vTipo := Tipo_Dato(xTrackNo);
+
+        Clear(RecWhseReceiptHeader);
+        RecWhseReceiptHeader.Get(xShipmentNo);
+
+
+        if (vTipo = 'I') then begin
+
+            clear(RecWhseReceiptLine);
+            RecWhseReceiptLine.RESET();
+            RecWhseReceiptLine.SETRANGE("No.", xShipmentNo);
+            RecWhseReceiptLine.SETRANGE("Item No.", xTrackNo);
+            RecWhseReceiptLine.SETFILTER(RecWhseReceiptLine."Qty. Outstanding", '=%1', xQuantity);
+            IF NOT RecWhseReceiptLine.FindSet() THEN Error(lblErrorLineasCantidad);
+
+            RecWhseReceiptLine.Validate("Qty. to Receive", xQuantity);
+            RecWhseReceiptLine.Modify();
+
+        end else begin
+            Clear(RecReservationEntry);
+            RecReservationEntry.SetRange("Location Code", RecWhseReceiptHeader."Location Code");
+            RecReservationEntry.SetFilter("Item Tracking", '<>%1', RecReservationEntry."Item Tracking"::None);
+            RecReservationEntry.SETRANGE("Source Type", 5741);
+            case vTipo of
+                'L':
+                    RecReservationEntry.SetRange("Lot No.", xTrackNo);
+                'S':
+                    RecReservationEntry.SetRange("Serial No.", xTrackNo);
+                'P':
+                    RecReservationEntry.SetRange("Package No.", xTrackNo);
+            end;
+
+            RecReservationEntry.SetFilter("Source Prod. Order Line", '>%1', 0);
+
+            IF RecReservationEntry.FINDSET THEN BEGIN
+                REPEAT
+
+                    RecReservationEntry.SETRANGE("Source Prod. Order Line", RecWhseReceiptLine."Source Line No.");
+
+                    clear(RecWhseReceiptLine);
+                    RecWhseReceiptLine.RESET();
+                    RecWhseReceiptLine.SETRANGE("No.", xShipmentNo);
+                    RecWhseReceiptLine.SETRANGE("Source No.", RecReservationEntry."Source ID");
+                    RecWhseReceiptLine.SETRANGE("Line No.", RecReservationEntry."Source Prod. Order Line");
+                    RecWhseReceiptLine.SETFILTER(RecWhseReceiptLine."Qty. Outstanding", '>=%1', 0);
+                    IF NOT RecWhseReceiptLine.FindSet() THEN Error(lblErrorLineasCantidad);
+
+                    RecWhseReceiptLine.Validate("Qty. to Receive", RecReservationEntry.Quantity);
+                    RecWhseReceiptLine.Modify();
+
+                UNTIL RecReservationEntry.NEXT = 0;
+            END;
+
+        END;
+
+
+
+
+    end;
+
+
+
+
+
+
     local procedure Vaciar_Cantidad_Recibir(xRecepcion: Text)
     var
         RecWhseReceiptLine: Record "Warehouse Receipt Line";
@@ -2277,7 +2373,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         end;
     end;
-
 
     local procedure Crear_Serie(xSerialNo: Text; xItemNo: Text; xQuantity: Decimal; xAlbaran: Text; xVendorLotNo: Text)
     var
