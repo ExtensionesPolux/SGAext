@@ -74,6 +74,11 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             DataClassification = ToBeClassified;
             Caption = 'See Movements', Comment = 'ESP=Movimientos';
         }
+        field(71753; "Ver Subcontratacion"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'See Subcontracting', Comment = 'ESP=Ver Subcontratación';
+        }
         // Envíos y recepciones
         field(71760; "Cantidad envio a cero"; Boolean)
         {

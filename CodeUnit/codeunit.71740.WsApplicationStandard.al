@@ -52,6 +52,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseSetup.Get();
         //VJsonObjectRecurso.Add('UsarPaquete', FormatoBoolean(RecWarehouseSetup."Usar paquetes"));
         VJsonObjectRecurso.Add('VerRecepcion', FormatoBoolean(RecWarehouseSetup."Ver Recepcion"));
+        VJsonObjectRecurso.Add('VerSubcontratacion', FormatoBoolean(RecWarehouseSetup."Ver Subcontratacion"));
+
         VJsonObjectRecurso.Add('VerSalidas', FormatoBoolean(RecWarehouseSetup."Ver Salidas"));
         VJsonObjectRecurso.Add('VerInventario', FormatoBoolean(RecWarehouseSetup."Ver Inventario"));
         VJsonObjectRecurso.Add('VerMovimientos', FormatoBoolean(RecWarehouseSetup."Ver Movimientos"));
@@ -76,6 +78,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectRecurso.Add('RequierePicking', FormatoBoolean(RecLocation."Require Pick"));
 
         VJsonObjectRecurso.Add('ContRecepciones', FormatoNumero(Contador_Recepciones(lLocation)));
+        VJsonObjectRecurso.Add('ContSubcontrataciones', FormatoNumero(Contador_Subcontrataciones(lLocation)));
+
         VJsonObjectRecurso.Add('ContAlmacenamiento', FormatoNumero(Contador_Trabajos(lLocation, 1)));
         VJsonObjectRecurso.Add('ContPicking', FormatoNumero(Contador_Trabajos(lLocation, 2)));
         VJsonObjectRecurso.Add('ContInventario', FormatoNumero(Contador_Inventario(lLocation)));
@@ -102,6 +106,16 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWhsReceiptLine.SetFilter("Qty. Outstanding", '>%1', 0);
         RecWhsReceiptLine.SetRange("Location Code", xLocation);
         exit(RecWhsReceiptLine.Count());
+    end;
+
+    local procedure Contador_Subcontrataciones(xLocation: Text): Integer
+    var
+        RecPurchaseLine: Record "Purchase Line";
+    begin
+        Clear(RecPurchaseLine);
+        RecPurchaseLine.SetFilter(RecPurchaseLine."Prod. Order No.", '>%1', '');
+        RecPurchaseLine.SetRange("Location Code", xLocation);
+        exit(RecPurchaseLine.Count());
     end;
 
 
@@ -186,6 +200,57 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     #endregion
 
     #region WEB SERVICES
+    procedure WsSubcontrataciones(xJson: Text): Text
+    var
+        RecPurchaseHeader: Record "Purchase Header";
+        RecPurchaseLine: Record "Purchase Line";
+        VJsonObjectDato: JsonObject;
+        VJsonObjectReceipts: JsonObject;
+        VJsonArrayReceipts: JsonArray;
+        lLocation: Text;
+        VJsonText: Text;
+        iPurchaseHeaderNo: Text;
+    begin
+        If not VJsonObjectDato.ReadFrom(xJson) then
+            ERROR(lblErrorJson);
+
+        lLocation := DatoJsonTexto(VJsonObjectDato, 'Location');
+
+        if (lLocation = '') THEN exit(lblErrorAlmacen);
+
+        iPurchaseHeaderNo := '';
+        Clear(RecPurchaseLine);
+        RecPurchaseLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
+        RecPurchaseLine.SetFilter("Prod. Order No.", '<>%1', '');
+        RecPurchaseLine.SetFilter("Outstanding Quantity", '>%1', 0);
+        if RecPurchaseLine.FindSet() then
+            repeat
+
+                if (iPurchaseHeaderNo <> RecPurchaseLine."Document No.") then begin
+                    iPurchaseHeaderNo := RecPurchaseLine."Document No.";
+
+                    Clear(RecPurchaseHeader);
+                    RecPurchaseHeader.SetFilter(RecPurchaseHeader.Status, '=%1', RecPurchaseHeader.Status::Released);
+                    RecPurchaseHeader.SetFilter("Location Code", lLocation);
+                    if RecPurchaseHeader.FindSet() then begin
+                        repeat
+
+                            VJsonObjectReceipts := Objeto_Subcontratacion(RecPurchaseHeader."No.");
+                            VJsonArrayReceipts.Add(VJsonObjectReceipts.Clone());
+                            clear(VJsonObjectReceipts);
+                        until RecPurchaseHeader.Next() = 0;
+
+                    end;
+                end;
+
+
+            until RecPurchaseLine.Next() = 0;
+
+
+        VJsonArrayReceipts.WriteTo(VJsonText);
+        exit(VJsonText);
+
+    end;
 
     procedure WsAlmacenes(): Text
     var
@@ -1566,10 +1631,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         VJsonText: Text;
 
+        vQuitarCantidadManipular: Boolean;
+
         CR: Char;
 
     begin
 
+        vQuitarCantidadManipular := false;
         RecWarehouseSetup.Get();
 
         CR := 13;
@@ -1639,6 +1707,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
                 IF RecWhsReceiptLine."Source Document" = RecWhsReceiptLine."Source Document"::"Inbound Transfer" THEN begin
                     VJsonObjectLines.Add('Type', 'T');
+                    if (RecWhsReceiptLine."Qty. to Receive" = 0) then
+                        vQuitarCantidadManipular := true;
                 end;
                 //Pedido Compra
                 IF RecWhsReceiptLine."Source Document" = RecWhsReceiptLine."Source Document"::"Purchase Order" THEN begin
@@ -1689,7 +1759,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 */
 
                 Clear(VJsonArrayReservas);
-                VJsonArrayReservas := Reservas(RecWhsReceiptLine);
+                VJsonArrayReservas := Reservas(RecWhsReceiptLine, vQuitarCantidadManipular);
                 VJsonObjectLines.Add('Reservations', VJsonArrayReservas);
 
                 VJsonArrayLines.Add(VJsonObjectLines.Clone());
@@ -1709,7 +1779,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-    local procedure Reservas(RecWhseReceiptLine: Record "Warehouse Receipt Line"): JsonArray
+    local procedure Reservas(RecWhseReceiptLine: Record "Warehouse Receipt Line"; xQuitarCantidadManipular: Boolean): JsonArray
     var
         RecReservationEntry: Record "Reservation Entry";
         VJsonObjectReservas: JsonObject;
@@ -1740,12 +1810,25 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecReservationEntry.SETRANGE("Item No.", RecWhseReceiptLine."Item No.");
         IF RecReservationEntry.FINDSET THEN BEGIN
             REPEAT
+
+                if (xQuitarCantidadManipular) then begin
+                    RecReservationEntry.Validate("Qty. to Handle (Base)", 0);
+                    RecReservationEntry.Modify();
+                end;
+
                 VJsonObjectReservas.Add('Type', vTipo);
                 VJsonObjectReservas.Add('LineNo', RecWhseReceiptLine."Line No.");
                 VJsonObjectReservas.Add('EntryNo', RecReservationEntry."Entry No.");
                 VJsonObjectReservas.Add('LotNo', RecReservationEntry."Lot No.");
                 VJsonObjectReservas.Add('SerialNo', RecReservationEntry."Serial No.");
+                VJsonObjectReservas.Add('PackageNo', RecReservationEntry."Package No.");
+
                 VJsonObjectReservas.Add('Quantity', FormatoNumero(RecReservationEntry."Quantity (Base)"));
+                VJsonObjectReservas.Add('QuantityToHadle', FormatoNumero(RecReservationEntry."Qty. to Handle (Base)"));
+                if ((vTipo = 'T') and (RecReservationEntry."Quantity (Base)" > RecReservationEntry."Qty. to Handle (Base)")) then
+                    VJsonObjectReservas.Add('Marcar', FormatoBoolean(True))
+                else
+                    VJsonObjectReservas.Add('Marcar', FormatoBoolean(false));
 
                 VJsonArrayReservas.Add(VJsonObjectReservas.Clone());
                 Clear(VJsonObjectReservas);
@@ -2277,7 +2360,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecWhseReceiptLine.RESET();
             RecWhseReceiptLine.SETRANGE("No.", xShipmentNo);
             RecWhseReceiptLine.SETRANGE("Item No.", xTrackNo);
-            RecWhseReceiptLine.SETFILTER(RecWhseReceiptLine."Qty. Outstanding", '=%1', xQuantity);
+            RecWhseReceiptLine.SETFILTER(RecWhseReceiptLine."Qty. Outstanding", '>%1', xQuantity);
             IF NOT RecWhseReceiptLine.FindSet() THEN Error(lblErrorLineasCantidad);
 
             RecWhseReceiptLine.Validate("Qty. to Receive", xQuantity);
@@ -2302,7 +2385,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             IF RecReservationEntry.FINDSET THEN BEGIN
                 REPEAT
 
-                    RecReservationEntry.SETRANGE("Source Prod. Order Line", RecWhseReceiptLine."Source Line No.");
+                    //RecReservationEntry.SETRANGE("Source Prod. Order Line", RecWhseReceiptLine."Source Line No.");
 
                     clear(RecWhseReceiptLine);
                     RecWhseReceiptLine.RESET();
@@ -2312,8 +2395,15 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     RecWhseReceiptLine.SETFILTER(RecWhseReceiptLine."Qty. Outstanding", '>=%1', 0);
                     IF NOT RecWhseReceiptLine.FindSet() THEN Error(lblErrorLineasCantidad);
 
-                    RecWhseReceiptLine.Validate("Qty. to Receive", RecReservationEntry.Quantity);
+                    IF (vTipo = 'P') then
+                        xQuantity := RecReservationEntry."Quantity (Base)";
+
+                    RecWhseReceiptLine.Validate("Qty. to Receive", (RecWhseReceiptLine."Qty. to Receive" + xQuantity));
+
                     RecWhseReceiptLine.Modify();
+
+                    RecReservationEntry.Validate("Qty. to Handle (Base)", (RecReservationEntry."Qty. to Handle (Base)" + xQuantity));
+                    RecReservationEntry.Modify();
 
                 UNTIL RecReservationEntry.NEXT = 0;
             END;
@@ -2737,6 +2827,149 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;*/
 
     #endregion
+
+
+    #region RECEPCIONES SUBCONTRATACION
+
+    local procedure Objeto_Subcontratacion(xNo: code[20]): JsonObject
+    var
+        RecPurchaseHeader: Record "Purchase Header";
+        RecSalesHeader: Record "Sales Header";
+        RecItemReference: Record "Item Reference";
+        RecWarehouseSetup: Record "Warehouse Setup";
+        RecPurchaseLine: Record "Purchase Line";
+        RecComentarios: Record "Warehouse Comment Line";
+        RecItem: Record Item;
+        RecItemTrackingCode: Record "Item Tracking Code";
+        Comentarios: Text;
+
+        //RecItem: Record Item;
+        VJsonObjectReceipts: JsonObject;
+        VJsonArrayReceipts: JsonArray;
+        VJsonObjectLines: JsonObject;
+        VJsonArrayLines: JsonArray;
+        VJsonArrayReservas: JsonArray;
+
+        VJsonText: Text;
+
+        vQuitarCantidadManipular: Boolean;
+
+        CR: Char;
+
+    begin
+
+        vQuitarCantidadManipular := false;
+        RecWarehouseSetup.Get();
+
+        CR := 13;
+
+        Clear(RecPurchaseHeader);
+        RecPurchaseHeader.SetRange("Document Type", RecPurchaseHeader."Document Type"::Order);
+        RecPurchaseHeader.SetRange("No.", xNo);
+        if RecPurchaseHeader.FindFirst() then;
+
+        //Actualizar_Cantidad_Recibir(RecWhsReceiptHeader."No.");
+
+        Clear(VJsonObjectReceipts);
+
+        VJsonObjectReceipts.Add('No', RecPurchaseHeader."No.");
+        IF RecPurchaseHeader."Posting Date" <> 0D THEN
+            VJsonObjectReceipts.Add('Date', Format(RecPurchaseHeader."Posting Date", 10, '<day,2>/<month,2>/<year4>'))
+        ELSE
+            VJsonObjectReceipts.Add('Date', '01/01/1900');
+
+        VJsonObjectReceipts.Add('VendorShipmentNo', RecPurchaseHeader."Vendor Shipment No.");
+        //VJsonObjectReceipts.Add('ProdOrderNo', RecPurchaseLine."Prod. Order No.");
+        VJsonObjectReceipts.Add('Name', RecPurchaseHeader."Buy-from Vendor Name");
+        VJsonObjectReceipts.Add('Return', 'False');
+        VJsonObjectReceipts.Add('EsSubcontratacion', 'True');
+        VJsonObjectReceipts.Add('TieneComentarios', 'false');
+        VJsonObjectReceipts.Add('Comentarios', '');
+
+        Clear(RecPurchaseLine);
+        RecPurchaseLine.SetRange(RecPurchaseLine."Document Type", RecPurchaseLine."Document Type"::Order);
+        RecPurchaseLine.SetRange(RecPurchaseLine."Document No.", xNo);
+        RecPurchaseLine.SetFilter(RecPurchaseLine."Outstanding Quantity", '>%1', 0);
+        if RecPurchaseLine.FindSet() then begin
+            repeat
+
+                if RecPurchaseLine."Prod. Order No." <> '' then begin
+
+                    VJsonObjectLines.Add('Line', RecPurchaseLine."Line No.");
+                    VJsonObjectLines.Add('ProdOrderNo', RecPurchaseLine."Prod. Order No.");
+                    VJsonObjectLines.Add('Reference', RecPurchaseLine."No.");
+                    VJsonObjectLines.Add('Description', RecPurchaseLine.Description);
+
+                    CLEAR(RecItem);
+                    RecItem.GET(RecPurchaseLine."No.");
+
+                    VJsonObjectLines.Add('ItemReference', Buscar_Referencia_Cruzada(RecPurchaseLine."No.", ''));
+
+                    VJsonObjectLines.Add('Quantity', RecPurchaseLine."Outstanding Quantity");
+                    VJsonObjectLines.Add('ToReceive', RecPurchaseLine."Qty. to Receive");
+
+                    if (RecPurchaseLine."Qty. to Receive" < RecPurchaseLine."Outstanding Quantity") then
+                        VJsonObjectLines.Add('Complete', false)
+                    else
+                        VJsonObjectLines.Add('Complete', true);
+
+                    Clear(VJsonArrayReservas);
+                    VJsonArrayReservas := Reservas_Subcontratacion(RecPurchaseLine);
+                    VJsonObjectLines.Add('Reservations', VJsonArrayReservas);
+
+                    VJsonArrayLines.Add(VJsonObjectLines.Clone());
+                    Clear(VJsonObjectLines);
+
+                end;
+
+            until RecPurchaseLine.Next() = 0;
+
+            VJsonObjectReceipts.Add('Lines', VJsonArrayLines);
+
+            Clear(VJsonArrayLines);
+
+
+        end;
+
+
+        exit(VJsonObjectReceipts);
+
+    end;
+
+    local procedure Reservas_Subcontratacion(RecPurchaseLine: Record "Purchase Line"): JsonArray
+    var
+        RecReservationEntry: Record "Reservation Entry";
+        VJsonObjectReservas: JsonObject;
+        VJsonArrayReservas: JsonArray;
+    begin
+
+        //Buscar en las reservas de la Orden de Producción
+
+        Clear(RecReservationEntry);
+        RecReservationEntry.SETRANGE("Source ID", RecPurchaseLine."Prod. Order No.");
+        RecReservationEntry.SETRANGE("Item No.", RecPurchaseLine."No.");
+        RecReservationEntry.SetRange(Description, Format(RecPurchaseLine."Line No."));
+        RecReservationEntry.SetFilter("Lot No.", '<>%1', '');
+        IF RecReservationEntry.FINDSET THEN BEGIN
+            REPEAT
+                VJsonObjectReservas.Add('EntryNo', RecReservationEntry."Entry No.");
+                VJsonObjectReservas.Add('LotNo', RecReservationEntry."Lot No.");
+                VJsonObjectReservas.Add('SerialNo', RecReservationEntry."Serial No.");
+                VJsonObjectReservas.Add('Quantity', QuitarPunto(format(RecReservationEntry.Quantity)));
+
+                VJsonArrayReservas.Add(VJsonObjectReservas.Clone());
+                Clear(VJsonObjectReservas);
+
+            UNTIL RecReservationEntry.NEXT = 0;
+        END;
+
+        exit(VJsonArrayReservas);
+    end;
+
+
+
+    #endregion
+
 
     #region INFORMACION
 

@@ -25,6 +25,10 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
+                    field("Ver Subcontratacion"; Rec."Ver Subcontratacion")
+                    {
+                        ApplicationArea = all;
+                    }
                     field("Ver Salidas"; Rec."Ver Salidas")
                     {
                         ApplicationArea = all;
@@ -37,6 +41,7 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
+
                     /*field("Usar paquetes"; Rec."Usar paquetes")
                     {
                         ApplicationArea = all;
