@@ -164,6 +164,7 @@ codeunit 71742 "SGA License Management"
                     Codigo := jsonToken.AsValue().AsText();
 
                     IF (Codigo <> '') then begin
+                        Recursos."No." := Codigo;
                         jsonDetalle.Get('IP', jsonToken);
                         Recursos.IP := jsonToken.AsValue().AsText();
 
