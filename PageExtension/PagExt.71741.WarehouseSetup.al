@@ -76,10 +76,10 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
 
                         ApplicationArea = all;
                     }
-                    field("Serie Interno Obligatorio"; Rec."Serie Interno Obligatorio")
+                    /*field("Serie Interno Obligatorio"; Rec."Serie Interno Obligatorio")
                     {
                         ToolTip = 'All products must have a unique internal lot no', comment = 'ESP="Todos los productos tienen que llevar un Nº de Serie interno único"';
-                        ApplicationArea = all;
+                    /    ApplicationArea = all;
                     }
                     field("Usar Serie Proveedor"; Rec."Usar Serie Proveedor")
                     {
@@ -91,7 +91,7 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                         ToolTip = 'Automatic lot no', comment = 'ESP="Crear el Nº. de Serie automáticamente"';
 
                         ApplicationArea = all;
-                    }
+                    }*/
                 }
 
                 group(AppEnviosRecepciones)

@@ -2355,10 +2355,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                             Crear_Reserva(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
                         end;
 
-
                     end;
-
-
 
             end;
 
