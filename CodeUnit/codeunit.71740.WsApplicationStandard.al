@@ -2971,7 +2971,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         VJsonObjectReceipts.Add('Date', FormatoFecha(RecPurchaseHeader."Posting Date"));
 
-        VJsonObjectReceipts.Add('VendorShipmentNo', RecPurchaseHeader."Vendor Shipment No.");
+        VJsonObjectReceipts.Add('VendorName', RecPurchaseHeader."Buy-from Vendor Name");
         //VJsonObjectReceipts.Add('ProdOrderNo', RecPurchaseLine."Prod. Order No.");
         VJsonObjectReceipts.Add('Name', RecPurchaseHeader."Buy-from Vendor Name");
         VJsonObjectReceipts.Add('Return', 'False');
