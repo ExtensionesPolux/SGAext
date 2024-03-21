@@ -123,7 +123,7 @@ codeunit 71742 "SGA License Management"
         jsonResponse: JsonObject;
         jsonArrayLines: JsonArray;
         Identificador: Guid;
-
+        Codigo: code[20];
     begin
         Get_CompanyInfo(CompanyInfo);
         Identificador := CreateGuid();
@@ -161,15 +161,17 @@ codeunit 71742 "SGA License Management"
                     CLEAR(Recursos);
 
                     jsonDetalle.Get('Id_Dispositivo', jsonToken);
-                    Recursos."No." := jsonToken.AsValue().AsText();
+                    Codigo := jsonToken.AsValue().AsText();
 
-                    jsonDetalle.Get('IP', jsonToken);
-                    Recursos.IP := jsonToken.AsValue().AsText();
+                    IF (Codigo <> '') then begin
+                        jsonDetalle.Get('IP', jsonToken);
+                        Recursos.IP := jsonToken.AsValue().AsText();
 
-                    jsonDetalle.Get('Fecha_Registro', jsonToken);
-                    Recursos."Fecha Registro" := String2Date(jsonToken.AsValue().AsText());
-                    Recursos."Dispositivo Movil" := True;
-                    Recursos.Insert(true);
+                        jsonDetalle.Get('Fecha_Registro', jsonToken);
+                        Recursos."Fecha Registro" := String2Date(jsonToken.AsValue().AsText());
+                        Recursos."Dispositivo Movil" := True;
+                        Recursos.Insert(true);
+                    end;
                 end;
             end;
         end

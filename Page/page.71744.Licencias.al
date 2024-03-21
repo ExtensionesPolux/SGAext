@@ -106,7 +106,6 @@ page 71744 Licencias
         Cargar_Datos();
         CompanyInfo.Reset;
         CompanyInfo.Findfirst;
-
     end;
 
     var
