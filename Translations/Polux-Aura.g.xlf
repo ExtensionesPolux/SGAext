@@ -418,25 +418,10 @@
           <note from="Developer" annotates="general" priority="2">ESP="Todos los productos tienen que llevar un lote interno único"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Lote Interno Obligatorio - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="PageExtension 3213244558 - Control 2342576406 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
-          <source>Automatic lot no</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Crear el Nº. de Serie automáticamente"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Serie Automatico - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 3213244558 - Control 3320095096 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
-          <source>All products must have a unique internal lot no</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Todos los productos tienen que llevar un Nº de Serie interno único"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Serie Interno Obligatorio - Property ToolTip</note>
-        </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 4288541063 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>For products with lot no, use the vendors lot no</source>
           <note from="Developer" annotates="general" priority="2">ESP="Para los productos con lote usar el lote del proveedor"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Usar Lote Proveedor - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 3213244558 - Control 2680708721 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
-          <source>For products with serial no, use the vendors serial no</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Para los productos con serie usar el serie del proveedor"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Usar Serie Proveedor - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 3288470611 - Control 4283809525 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3288470611">
           <source>Read</source>
@@ -708,25 +693,10 @@
           <note from="Developer" annotates="general" priority="2">ESP=Nº Serie Paquete</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Numero Serie Paquete - Property Caption</note>
         </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 2342576406 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>Automatic Serial No</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Nº. Serie Automático</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Serie Automatico - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 3320095096 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>Mandatory Serial No</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Nº. Serie Obligatorio</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Serie Interno Obligatorio - Property Caption</note>
-        </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 4288541063 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Use Vendor Lot No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Usar Nº. Lote Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Usar Lote Proveedor - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 2680708721 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>Use Vendor Serial No</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Usar Nº. Serie del Proveedor</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Usar Serie Proveedor - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 1163754742 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>See Inventory</source>

@@ -30,11 +30,11 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             Caption = 'Mandatory Lot No', Comment = 'ESP=Nº. Lote Obligatorio';
         }
 
-        field(71744; "Usar Serie Proveedor"; Boolean)
+        /*field(71744; "Usar Serie Proveedor"; Boolean)
         {
             DataClassification = ToBeClassified;
             Caption = 'Use Vendor Serial No', Comment = 'ESP=Usar Nº. Serie del Proveedor';
-        }
+        }*/
 
         field(71745; "Lote Automatico"; Boolean)
         {
@@ -42,7 +42,7 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             Caption = 'Automatic Lot No', Comment = 'ESP=Nº. Lote Automático';
 
         }
-        field(71746; "Serie Automatico"; Boolean)
+        /*field(71746; "Serie Automatico"; Boolean)
         {
             DataClassification = ToBeClassified;
             Caption = 'Automatic Serial No', Comment = 'ESP=Nº. Serie Automático';
@@ -52,7 +52,7 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
         {
             DataClassification = ToBeClassified;
             Caption = 'Mandatory Serial No', Comment = 'ESP=Nº. Serie Obligatorio';
-        }
+        }*/
 
         field(71749; "Ver Recepcion"; Boolean)
         {
