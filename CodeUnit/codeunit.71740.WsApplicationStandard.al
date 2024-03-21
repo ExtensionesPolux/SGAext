@@ -200,57 +200,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     #endregion
 
     #region WEB SERVICES
-    procedure WsSubcontrataciones(xJson: Text): Text
-    var
-        RecPurchaseHeader: Record "Purchase Header";
-        RecPurchaseLine: Record "Purchase Line";
-        VJsonObjectDato: JsonObject;
-        VJsonObjectReceipts: JsonObject;
-        VJsonArrayReceipts: JsonArray;
-        lLocation: Text;
-        VJsonText: Text;
-        iPurchaseHeaderNo: Text;
-    begin
-        If not VJsonObjectDato.ReadFrom(xJson) then
-            ERROR(lblErrorJson);
 
-        lLocation := DatoJsonTexto(VJsonObjectDato, 'Location');
-
-        if (lLocation = '') THEN exit(lblErrorAlmacen);
-
-        iPurchaseHeaderNo := '';
-        Clear(RecPurchaseLine);
-        RecPurchaseLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
-        RecPurchaseLine.SetFilter("Prod. Order No.", '<>%1', '');
-        RecPurchaseLine.SetFilter("Outstanding Quantity", '>%1', 0);
-        if RecPurchaseLine.FindSet() then
-            repeat
-
-                if (iPurchaseHeaderNo <> RecPurchaseLine."Document No.") then begin
-                    iPurchaseHeaderNo := RecPurchaseLine."Document No.";
-
-                    Clear(RecPurchaseHeader);
-                    RecPurchaseHeader.SetFilter(RecPurchaseHeader.Status, '=%1', RecPurchaseHeader.Status::Released);
-                    RecPurchaseHeader.SetFilter("Location Code", lLocation);
-                    if RecPurchaseHeader.FindSet() then begin
-                        repeat
-
-                            VJsonObjectReceipts := Objeto_Subcontratacion(RecPurchaseHeader."No.");
-                            VJsonArrayReceipts.Add(VJsonObjectReceipts.Clone());
-                            clear(VJsonObjectReceipts);
-                        until RecPurchaseHeader.Next() = 0;
-
-                    end;
-                end;
-
-
-            until RecPurchaseLine.Next() = 0;
-
-
-        VJsonArrayReceipts.WriteTo(VJsonText);
-        exit(VJsonText);
-
-    end;
+    //Datos Básicos
 
     procedure WsAlmacenes(): Text
     var
@@ -278,6 +229,149 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit(VJsonText);
 
     end;
+
+    //Subcontratación
+
+    procedure WsSubcontrataciones(xJson: Text): Text
+    var
+        RecPurchaseHeader: Record "Purchase Header";
+        RecPurchaseLine: Record "Purchase Line";
+        VJsonObjectDato: JsonObject;
+        VJsonObjectReceipts: JsonObject;
+        VJsonArrayReceipts: JsonArray;
+        lLocation: Text;
+        VJsonText: Text;
+        iPurchaseHeaderNo: Text;
+    begin
+        If not VJsonObjectDato.ReadFrom(xJson) then
+            ERROR(lblErrorJson);
+
+        lLocation := DatoJsonTexto(VJsonObjectDato, 'Location');
+
+        if (lLocation = '') THEN exit(lblErrorAlmacen);
+
+        iPurchaseHeaderNo := '';
+        Clear(RecPurchaseLine);
+        RecPurchaseLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
+        RecPurchaseLine.SetRange("Location Code", lLocation);
+        RecPurchaseLine.SetFilter("Prod. Order No.", '<>%1', '');
+        RecPurchaseLine.SetFilter("Outstanding Quantity", '>%1', 0);
+        if RecPurchaseLine.FindSet() then
+            repeat
+
+                if (iPurchaseHeaderNo <> RecPurchaseLine."Document No.") then begin
+                    iPurchaseHeaderNo := RecPurchaseLine."Document No.";
+
+                    Clear(RecPurchaseHeader);
+                    RecPurchaseHeader.SetFilter(RecPurchaseHeader.Status, '=%1', RecPurchaseHeader.Status::Released);
+                    RecPurchaseHeader.SetRange("No.", RecPurchaseLine."Document No.");
+                    RecPurchaseHeader.SetFilter("Location Code", lLocation);
+                    if RecPurchaseHeader.FindFirst() then begin
+                        VJsonObjectReceipts := Objeto_Subcontratacion(RecPurchaseHeader."No.");
+                        VJsonArrayReceipts.Add(VJsonObjectReceipts.Clone());
+                        clear(VJsonObjectReceipts);
+                    end;
+                end;
+
+            until RecPurchaseLine.Next() = 0;
+
+        VJsonArrayReceipts.WriteTo(VJsonText);
+        exit(VJsonText);
+
+    end;
+
+    procedure WsRecepcionarContenedorSub(xJson: Text): Text
+    var
+        VJsonObjectContenedor: JsonObject;
+        jPedidoCompra: Text;
+        VJsonText: Text;
+
+
+    begin
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            ERROR(lblErrorJson);
+
+        jPedidoCompra := DatoJsonTexto(VJsonObjectContenedor, 'No');
+
+        Previo_Recepcionar_Subcontratacion(VJsonObjectContenedor);
+
+
+        Objeto_Subcontratacion(jPedidoCompra).WriteTo(VJsonText);
+        //Se devolverá un Json con las líneas de reserva
+        EXIT(VJsonText);
+
+    end;
+
+    procedure WsEliminarContenedorSub(xJson: Text): Text
+    var
+        VJsonObjectContenedor: JsonObject;
+        VJsonText: Text;
+        jPedidoCompra: Text;
+
+    begin
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            ERROR(lblErrorJson);
+
+        jPedidoCompra := DatoJsonTexto(VJsonObjectContenedor, 'No');
+
+        Eliminar_Contenedor_Recepcion_Sub(xJson);
+
+        //Actualizar_Cantidad_Recibir(jRecepcion);
+        Objeto_Subcontratacion(jPedidoCompra).WriteTo(VJsonText);
+
+        //Se devolverá un Json con las líneas de reserva
+        EXIT(VJsonText);
+
+
+    end;
+
+    procedure WsEliminarCantidadRecepcionSub(xJson: Text): Text
+    var
+        VJsonObjectContenedor: JsonObject;
+        VJsonText: Text;
+        jPedidoCompra: Text;
+
+    begin
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            ERROR(lblErrorJson);
+
+        jPedidoCompra := DatoJsonTexto(VJsonObjectContenedor, 'No');
+
+        Eliminar_Cantidad_Recepcion_Sub(xJson);
+
+        //Actualizar_Cantidad_Recibir(jRecepcion);
+        Objeto_Subcontratacion(jPedidoCompra).WriteTo(VJsonText);
+
+        //Se devolverá un Json con las líneas de reserva
+        EXIT(VJsonText);
+
+
+    end;
+
+    procedure WsRegistrarRecepcionSub(xJson: Text): Text
+    var
+        VJsonObjectContenedor: JsonObject;
+        VJsonText: Text;
+        jPedidoCompra: Text;
+        jLinea: Integer;
+    begin
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            ERROR(lblErrorJson);
+
+        jPedidoCompra := DatoJsonTexto(VJsonObjectContenedor, 'No');
+
+        Registrar_Recepcion_Sub(jPedidoCompra);
+
+        //Actualizar_Cantidad_Recibir(jRecepcion);
+        Objeto_Subcontratacion(jPedidoCompra).WriteTo(VJsonText);
+
+        //Se devolverá un Json con las líneas de reserva
+        EXIT(VJsonText);
+
+
+    end;
+
+    //Recepciones
 
     procedure WsRecepciones(xJson: Text): Text
     var
@@ -326,7 +420,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
 
-        Recepcionar_Objeto(VJsonObjectContenedor);
+        Previo_Recepcionar(VJsonObjectContenedor);
 
 
         Objeto_Recepcion(jRecepcion).WriteTo(VJsonText);
@@ -363,7 +457,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectContenedor: JsonObject;
         VJsonText: Text;
         jRecepcion: Text;
-
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
             ERROR(lblErrorJson);
@@ -404,6 +497,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
 
     end;
+
+
 
     procedure WsContenidoUbicacion(xJson: Text): Text
     var
@@ -1870,7 +1965,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;
     end;*/
 
-    local procedure Recepcionar_Objeto(VJsonObjectContenedor: JsonObject)
+    local procedure Previo_Recepcionar(VJsonObjectContenedor: JsonObject)
     var
         RecWarehouseSetup: Record "Warehouse Setup";
         RecItem: Record Item;
@@ -2420,7 +2515,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
 
 
-    local procedure Vaciar_Cantidad_Recibir(xRecepcion: Text)
+    /*local procedure Vaciar_Cantidad_Recibir(xRecepcion: Text)
     var
         RecWhseReceiptLine: Record "Warehouse Receipt Line";
     begin
@@ -2432,7 +2527,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 RecWhseReceiptLine.Modify();
             until RecWhseReceiptLine.Next() = 0;
 
-    end;
+    end;*/
 
     local procedure Crear_Lote(xLotNo: Text; xItemNo: Text; xQuantity: Decimal; xAlbaran: Text; xVendorLotNo: Text)
     var
@@ -2739,7 +2834,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             if RecLocation."Almacenamiento automatico" then
                 Registrar_Almacenamiento(xRecepcion);
 
-            Vaciar_Cantidad_Recibir(xRecepcion);
+            //Vaciar_Cantidad_Recibir(xRecepcion);
 
         END ELSE
             Error(lblErrorRegistrar);
@@ -2873,10 +2968,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         Clear(VJsonObjectReceipts);
 
         VJsonObjectReceipts.Add('No', RecPurchaseHeader."No.");
-        IF RecPurchaseHeader."Posting Date" <> 0D THEN
-            VJsonObjectReceipts.Add('Date', Format(RecPurchaseHeader."Posting Date", 10, '<day,2>/<month,2>/<year4>'))
-        ELSE
-            VJsonObjectReceipts.Add('Date', '01/01/1900');
+
+        VJsonObjectReceipts.Add('Date', FormatoFecha(RecPurchaseHeader."Posting Date"));
 
         VJsonObjectReceipts.Add('VendorShipmentNo', RecPurchaseHeader."Vendor Shipment No.");
         //VJsonObjectReceipts.Add('ProdOrderNo', RecPurchaseLine."Prod. Order No.");
@@ -2887,15 +2980,17 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectReceipts.Add('Comentarios', '');
 
         Clear(RecPurchaseLine);
-        RecPurchaseLine.SetRange(RecPurchaseLine."Document Type", RecPurchaseLine."Document Type"::Order);
+        //RecPurchaseLine.SetRange(RecPurchaseLine."Document Type", RecPurchaseLine."Document Type"::Order);
         RecPurchaseLine.SetRange(RecPurchaseLine."Document No.", xNo);
-        RecPurchaseLine.SetFilter(RecPurchaseLine."Outstanding Quantity", '>%1', 0);
+        RecPurchaseLine.SetRange("Location Code", RecPurchaseHeader."Location Code");
+        RecPurchaseLine.SetFilter("Prod. Order No.", '<>%1', '');
+        RecPurchaseLine.SetFilter("Outstanding Quantity", '>%1', 0);
         if RecPurchaseLine.FindSet() then begin
             repeat
 
                 if RecPurchaseLine."Prod. Order No." <> '' then begin
 
-                    VJsonObjectLines.Add('Line', RecPurchaseLine."Line No.");
+                    VJsonObjectLines.Add('LineNo', RecPurchaseLine."Line No.");
                     VJsonObjectLines.Add('ProdOrderNo', RecPurchaseLine."Prod. Order No.");
                     VJsonObjectLines.Add('Reference', RecPurchaseLine."No.");
                     VJsonObjectLines.Add('Description', RecPurchaseLine.Description);
@@ -2905,7 +3000,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
                     VJsonObjectLines.Add('ItemReference', Buscar_Referencia_Cruzada(RecPurchaseLine."No.", ''));
 
-                    VJsonObjectLines.Add('Quantity', RecPurchaseLine."Outstanding Quantity");
+                    VJsonObjectLines.Add('Outstanding', RecPurchaseLine."Outstanding Quantity");
                     VJsonObjectLines.Add('ToReceive', RecPurchaseLine."Qty. to Receive");
 
                     if (RecPurchaseLine."Qty. to Receive" < RecPurchaseLine."Outstanding Quantity") then
@@ -2944,7 +3039,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     begin
 
         //Buscar en las reservas de la Orden de Producción
-
         Clear(RecReservationEntry);
         RecReservationEntry.SETRANGE("Source ID", RecPurchaseLine."Prod. Order No.");
         RecReservationEntry.SETRANGE("Item No.", RecPurchaseLine."No.");
@@ -2964,6 +3058,687 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         END;
 
         exit(VJsonArrayReservas);
+    end;
+
+
+    local procedure Previo_Recepcionar_Subcontratacion(VJsonObjectContenedor: JsonObject)
+    var
+        RecWarehouseSetup: Record "Warehouse Setup";
+        RecItem: Record Item;
+
+        jReferencia: Text;
+        jTotalContenedores: Integer;
+        jLoteProveedor: Text;
+        jLotePreasignado: Text;
+        jRecurso: Text;
+        BaseNumeroContenedor: Text;
+        NumeracionInicial: Integer;
+        i: Integer;
+        NumContedor: Text;
+        TextoContenedorFinal: Text;
+        jTipo: Text;
+
+        jImprimir: Boolean;
+
+        iTipoSeguimiento: Integer;
+    begin
+
+        jReferencia := DatoJsonTexto(VJsonObjectContenedor, 'ItemNo');
+        jTotalContenedores := DatoJsonInteger(VJsonObjectContenedor, 'Quantity');
+        jLoteProveedor := DatoJsonTexto(VJsonObjectContenedor, 'VendorLotNo');
+        jImprimir := DatoJsonBoolean(VJsonObjectContenedor, 'Print');
+        jRecurso := DatoJsonTexto(VJsonObjectContenedor, 'ResourceNo');
+
+
+        if (jRecurso = '') then Error(lblErrorRecurso);
+
+        //Comprobaciones
+        //Referencia
+        Existe_Referencia(jReferencia, false);
+
+        RecWarehouseSetup.Get();
+
+        BaseNumeroContenedor := '';
+        iTipoSeguimiento := TipoSeguimientoProducto(jReferencia);
+        case iTipoSeguimiento of
+            1, 3, 4, 6://Lote
+                begin
+                    //Base para la creación del Nº Contenedor      
+                    if (RecWarehouseSetup."Usar Lote Proveedor") then
+                        BaseNumeroContenedor := jLoteProveedor
+                    else
+                        if (RecWarehouseSetup."Lote Automatico") then
+                            BaseNumeroContenedor := Base_Numero_Contenedor(1, jReferencia);
+                end;
+        end;
+
+        //Si es un contenedor unitario se añade 00 si son varios 01,02....
+        if jTotalContenedores = 1 then
+            NumeracionInicial := 0
+        else
+            NumeracionInicial := 1;
+
+        for i := 1 to jTotalContenedores do begin
+
+            if (BaseNumeroContenedor <> '') then begin
+                NumContedor := Format(NumeracionInicial);
+                if (StrLen(NumContedor) = 1) then
+                    NumContedor := '00' + NumContedor;
+                if (StrLen(NumContedor) = 2) then
+                    NumContedor := '0' + NumContedor;
+
+                TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
+            end else
+                TextoContenedorFinal := '';
+
+
+            //Si lleva un lote preasignado utilizamos ese
+            if jLotePreasignado <> '' then begin
+                TextoContenedorFinal := jLotePreasignado;
+                jImprimir := false;
+            end;
+
+            Recepcionar_Contenedor_Subcontratacion(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
+
+            NumeracionInicial += 1;
+
+        end;
+
+    end;
+
+    local procedure Recepcionar_Contenedor_Subcontratacion(VJsonObjectContenedor: JsonObject; xContenedor: Text; xOmitirImpresion: Boolean; xTipoSeguimiento: Integer)
+    var
+        RecItem: Record Item;
+        RecLote: Record "Lot No. Information";
+        RecSerie: Record "Serial No. Information";
+        RecWhseSetup: Record "Warehouse Setup";
+        RecResource: Record Resource;
+        RecPurchaseHeader: Record "Purchase Header";
+        RecPurchaseLine: Record "Purchase Line";
+
+        vNumReserva: Integer;
+
+        jAlbaran: Text;
+        jReferencia: Text;
+        jPedidoCompra: Text;
+        jUnidades: Integer;
+        jLote: Text;
+        jSerie: Text;
+        jLoteProveedor: Text;
+        jLotePreasignado: Text;
+        jImprimir: Boolean;
+        jEnAlerta: Boolean;
+        jText: Text;
+        jFoto: Text;
+        jRecurso: Text;
+        jMultiSerie: Boolean;
+        jFechaCaducidad: Text;
+        jPaquete: Text;
+        FechaCaducidad: Date;
+
+        vArraySeries: JsonArray;
+        vJsonObjectSerie: JsonObject;
+        vTokenSerie: JsonToken;
+
+        vEncontrado: Boolean;
+        vDiferencia: Integer;
+        vDiferenciaActual: Integer;
+        vLinea: Integer;
+
+        cuBase64: Codeunit "Base64 Convert";
+        cuTempBlob: Codeunit "Temp Blob";
+        iStream: InStream;
+        oStream: OutStream;
+        NombreFoto: Text;
+
+    begin
+
+        RecWhseSetup.GeT();
+
+        //Lectura de datos del Json
+        jAlbaran := DatoJsonTexto(VJsonObjectContenedor, 'ShipmentNo');
+        jReferencia := DatoJsonTexto(VJsonObjectContenedor, 'ItemNo');
+        jPedidoCompra := DatoJsonTexto(VJsonObjectContenedor, 'No');
+        jUnidades := DatoJsonInteger(VJsonObjectContenedor, 'Units');
+        jLoteProveedor := DatoJsonTexto(VJsonObjectContenedor, 'VendorLotNo');
+        jImprimir := DatoJsonBoolean(VJsonObjectContenedor, 'Print');
+
+        jEnAlerta := DatoJsonBoolean(VJsonObjectContenedor, 'OnAlert');
+        jRecurso := DatoJsonTexto(VJsonObjectContenedor, 'ResourceNo');
+        jImprimir := DatoJsonBoolean(VJsonObjectContenedor, 'Print');
+
+        jFechaCaducidad := DatoJsonTexto(VJsonObjectContenedor, 'ExpirationText');
+
+        jPaquete := DatoJsonTexto(VJsonObjectContenedor, 'PackageNo');
+
+        if (jFechaCaducidad <> '') then begin
+            Evaluate(FechaCaducidad, jFechaCaducidad);
+        end;
+
+
+        //Buscar la línea de recepción
+        vEncontrado := false;
+        vDiferencia := 99999;
+        vLinea := 0;
+
+        clear(RecPurchaseLine);
+        RecPurchaseLine.RESET();
+        RecPurchaseLine.SETRANGE("Document No.", jPedidoCompra);
+        RecPurchaseLine.SETRANGE("No.", jReferencia);
+        RecPurchaseLine.SETFILTER("Outstanding Quantity", '>=%1', jUnidades);
+        IF NOT RecPurchaseLine.FindSet() THEN Error(lblErrorLineasCantidad);
+        repeat
+
+            //Se busca las lineas que aun tengan cantidad pendiente mayor que la cantidad a recepcionar
+            //Entre todas las líneas de la misma referencia se busca la que mejor se ajuste
+            IF ((RecPurchaseLine."Outstanding Quantity" - RecPurchaseLine."Qty. to Receive") >= jUnidades) THEN begin
+                vEncontrado := true;
+
+                vDiferenciaActual := (RecPurchaseLine."Outstanding Quantity" - RecPurchaseLine."Qty. to Receive") - jUnidades;
+
+                if (vDiferenciaActual < vDiferencia) then begin
+                    vLinea := RecPurchaseLine."Line No.";
+                    vDiferencia := vDiferenciaActual;
+                END;
+
+            end;
+        until ((RecPurchaseLine.Next() = 0));
+
+
+
+        if (vEncontrado) then begin
+
+            //Añadir Nº Albarán a la cabecera de la recepción
+            clear(RecPurchaseHeader);
+            RecPurchaseHeader.SetRange("No.", jPedidoCompra);
+            if not RecPurchaseHeader.FindFirst() then Error(StrSubstNo(lblErrorRecepcion, jPedidoCompra));
+            RecPurchaseHeader."Vendor Shipment No." := jAlbaran;
+            RecPurchaseHeader.Modify();
+
+            //Se coge la línea
+            clear(RecPurchaseLine);
+            RecPurchaseLine.RESET();
+            RecPurchaseLine.SETRANGE("Document No.", jPedidoCompra);
+            RecPurchaseLine.SETRANGE("No.", jReferencia);
+            RecPurchaseLine.SETRANGE("Line No.", vLinea);
+            if not RecPurchaseLine.FindFirst() then Error(lblErrorAlRecepcionar);
+
+            //Poner cantidad
+            RecPurchaseLine.Validate("Qty. to Receive", RecPurchaseLine."Qty. to Receive" + jUnidades);
+            RecPurchaseLine.MODIFY();
+
+            xTipoSeguimiento := TipoSeguimientoProducto(jReferencia);
+            case xTipoSeguimiento of
+                0://Sin Seguimiento
+                    begin
+                        if (RecWhseSetup."Lote Interno Obligatorio") then Error(StrSubstNo(lblErrorCodSeguimiento, jReferencia));
+                    end;
+                1://Lote
+                    begin
+                        if (NOT RecWhseSetup."Lote Automatico") then begin
+                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                            jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
+                            if (jLotePreasignado <> '') THEN
+                                xContenedor := jLotePreasignado
+                            ELSE BEGIN
+                                IF (jLote = '') THEN ERROR(lblErrorLote);
+                                xContenedor := jLote;
+                            END;
+                        end;
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                        Crear_Reserva_Sub(xContenedor, '', jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+                    end;
+                2://Serie
+                    begin
+                        if (RecWhseSetup."Lote Interno Obligatorio") then begin
+                            ERROR(lblErrorSegProd);
+                        end;
+                        jMultiSerie := DatoJsonBoolean(VJsonObjectContenedor, 'Multiserie');
+
+                        if jMultiSerie then begin
+                            jUnidades := 1;
+                            vArraySeries := DatoArrayJsonTexto(VJsonObjectContenedor, 'ObcSeries');
+                            foreach vTokenSerie in vArraySeries do begin
+                                vJsonObjectSerie := vTokenSerie.AsObject();
+                                jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
+                                Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                                Crear_Reserva_Sub('', jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+                            end;
+                        end else begin
+                            jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
+                            Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                            Crear_Reserva_Sub('', jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+                        end;
+
+                    end;
+                3://Lote y Serie
+                    begin
+                        if (NOT RecWhseSetup."Lote Automatico") then begin
+                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                            jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
+                            if (jLotePreasignado <> '') THEN
+                                xContenedor := jLotePreasignado
+                            ELSE BEGIN
+                                IF (jLote = '') THEN ERROR(lblErrorLote);
+                                xContenedor := jLote;
+                            END;
+                        end;
+
+                        jMultiSerie := DatoJsonBoolean(VJsonObjectContenedor, 'Multiserie');
+
+                        if jMultiSerie then begin
+                            jUnidades := 1;
+                            vArraySeries := DatoArrayJsonTexto(VJsonObjectContenedor, 'ObcSeries');
+                            foreach vTokenSerie in vArraySeries do begin
+                                vJsonObjectSerie := vTokenSerie.AsObject();
+                                jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
+                                Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                                Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                                Crear_Reserva_Sub(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+                            end;
+                        end else begin
+                            Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                            jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
+                            Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                            Crear_Reserva_Sub(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+                        end;
+
+                    end;
+                4://Lote y Paquete
+                    begin
+                        if (NOT RecWhseSetup."Lote Automatico") then begin
+                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                            jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
+                            if (jLotePreasignado <> '') THEN
+                                xContenedor := jLotePreasignado
+                            ELSE BEGIN
+                                IF (jLote = '') THEN ERROR(lblErrorLote);
+                                xContenedor := jLote;
+                            END;
+                        end;
+
+                        IF (jPaquete = '') THEN jPaquete := RecWhseSetup."Codigo Sin Paquete";
+
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                        Crear_Reserva_Sub(xContenedor, '', jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+
+                    end;
+                5://Serie y Paquete
+                    begin
+                        if (RecWhseSetup."Lote Interno Obligatorio") then begin
+                            ERROR(lblErrorSegProd);
+                        end;
+                        jMultiSerie := DatoJsonBoolean(VJsonObjectContenedor, 'Multiserie');
+
+                        IF (jPaquete = '') THEN jPaquete := RecWhseSetup."Codigo Sin Paquete";
+
+                        if jMultiSerie then begin
+                            jUnidades := 1;
+                            vArraySeries := DatoArrayJsonTexto(VJsonObjectContenedor, 'ObcSeries');
+                            foreach vTokenSerie in vArraySeries do begin
+                                vJsonObjectSerie := vTokenSerie.AsObject();
+                                jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
+                                Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                                Crear_Reserva_Sub('', jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+                            end;
+                        end else begin
+                            jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
+                            Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                            Crear_Reserva_Sub('', jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+                        end;
+
+                    end;
+                6://Lote, Serie y Paquete
+                    begin
+
+
+                        if (NOT RecWhseSetup."Lote Automatico") then begin
+                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                            jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
+                            if (jLotePreasignado <> '') THEN
+                                xContenedor := jLotePreasignado
+                            ELSE BEGIN
+                                IF (jLote = '') THEN ERROR(lblErrorLote);
+                                xContenedor := jLote;
+                            END;
+                        end;
+
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+
+                        jMultiSerie := DatoJsonBoolean(VJsonObjectContenedor, 'Multiserie');
+
+                        IF (jPaquete = '') THEN jPaquete := RecWhseSetup."Codigo Sin Paquete";
+
+                        if jMultiSerie then begin
+                            jUnidades := 1;
+                            vArraySeries := DatoArrayJsonTexto(VJsonObjectContenedor, 'ObcSeries');
+                            foreach vTokenSerie in vArraySeries do begin
+                                vJsonObjectSerie := vTokenSerie.AsObject();
+                                jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
+                                Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                                Crear_Reserva_Sub(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+                            end;
+                        end else begin
+                            jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
+                            Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                            Crear_Reserva_Sub(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
+                        end;
+
+
+                    end;
+
+
+
+            end;
+
+
+        end;
+
+
+        IF jEnAlerta THEN BEGIN
+            if (jSerie <> '') then begin
+                Clear(RecSerie);
+                RecSerie.SetRange("Item No.", jReferencia);
+                RecSerie.SetRange("Serial No.", jSerie);
+                if RecSerie.FindFirst() then begin
+                    jText := DatoJsonTexto(VJsonObjectContenedor, 'AlertText');
+                    jFoto := DatoJsonTexto(VJsonObjectContenedor, 'AlertPhoto');
+                    If (jFoto <> '') THEN BEGIN
+
+                        NombreFoto := 'A-' + jSerie + '.jpg';
+
+                        cuTempBlob.CreateOutStream(oStream);
+                        cuBase64.FromBase64(jFoto, oStream);
+
+                        cuTempBlob.CreateInStream(iStream);
+                        Clear(RecSerie.Foto);
+                        RecSerie.Foto.ImportStream(iStream, NombreFoto);
+
+                    END;
+                    RecSerie.Alerta := jText;
+                    RecSerie.Modify();
+                end;
+            end else begin
+                if (xContenedor <> '') then begin
+                    Clear(RecLote);
+                    RecLote.SetRange("Item No.", jReferencia);
+                    RecLote.SetRange("Lot No.", xContenedor);
+                    if RecLote.FindFirst() then begin
+                        jText := DatoJsonTexto(VJsonObjectContenedor, 'AlertText');
+                        jFoto := DatoJsonTexto(VJsonObjectContenedor, 'AlertPhoto');
+                        If (jFoto <> '') THEN BEGIN
+
+                            NombreFoto := 'A-' + xContenedor + '.jpg';
+
+                            cuTempBlob.CreateOutStream(oStream);
+                            cuBase64.FromBase64(jFoto, oStream);
+
+                            cuTempBlob.CreateInStream(iStream);
+                            Clear(RecLote.Foto);
+                            RecLote.Foto.ImportStream(iStream, NombreFoto);
+
+                        END;
+                        RecLote.Alerta := jText;
+                        RecLote.Modify();
+                    end;
+                end;
+            end;
+        END;
+
+
+
+        //Imprimir etiqueta
+        Clear(RecResource);
+        RecResource.SetRange("No.", jRecurso);
+        IF NOT RecResource.FindFirst() then ERROR(lblErrorRecurso);
+
+        /*if jImprimir and not xOmitirImpresion then
+            Imprimir_Componente(RecResource."Printer Name", 1, lReferencia, xContenedor);*/
+
+    end;
+
+
+    local procedure Crear_Reserva_Sub(xLotNo: Text; xSerialNo: Text; xPackageNo: Text; xItemNo: Text; xQuantity: Decimal; xAlbaran: Text; xVendorLotNo: Text; xRecPurchaseLine: Record "Purchase Line"; xTipoSeguimiento: Integer; xFechaCaducidad: Date)
+    var
+        RecReservationEntry: Record "Reservation Entry";
+        RecProdOrderLine: Record "Prod. Order Line";
+
+        vNumReserva: Integer;
+
+    begin
+        //Crear la reserva
+        Clear(RecReservationEntry);
+        if RecReservationEntry.FindLast() then
+            vNumReserva := RecReservationEntry."Entry No." + 1
+        else
+            vNumReserva := 1;
+        Clear(RecReservationEntry);
+
+        Clear(RecProdOrderLine);
+        RecProdOrderLine.SetRange("Prod. Order No.", xRecPurchaseLine."Prod. Order No.");
+        if not RecProdOrderLine.FindFirst() then ERROR('No se ha encontrado la OP %1', xRecPurchaseLine."Prod. Order No.");
+
+        RecReservationEntry.Init();
+
+        RecReservationEntry."Entry No." := vNumReserva;
+        RecReservationEntry.Positive := TRUE;
+        RecReservationEntry.validate("Item No.", xItemNo);
+        RecReservationEntry."Location Code" := xRecPurchaseLine."Location Code";
+        RecReservationEntry."Quantity (Base)" := xQuantity;
+        RecReservationEntry."Reservation Status" := RecReservationEntry."Reservation Status"::Surplus;
+        RecReservationEntry."Creation Date" := WORKDATE;
+        RecReservationEntry."Source Type" := 5406;
+        RecReservationEntry."Source Subtype" := 3;
+        RecReservationEntry."Source ID" := RecProdOrderLine."Prod. Order No.";
+        RecReservationEntry."Source Prod. Order Line" := RecProdOrderLine."Line No.";
+        RecReservationEntry."Source Ref. No." := 0;
+        RecReservationEntry."Expected Receipt Date" := WORKDATE;
+        RecReservationEntry."Created By" := USERID;
+        RecReservationEntry."Qty. per Unit of Measure" := xRecPurchaseLine."Qty. per Unit of Measure";
+        RecReservationEntry.Quantity := xQuantity;
+        RecReservationEntry."Qty. to Handle (Base)" := xQuantity;
+        RecReservationEntry."Qty. to Invoice (Base)" := xQuantity;
+
+        case xTipoSeguimiento of
+            0://Sin Seguimiento
+                begin
+                end;
+            1://Lote
+                begin
+                    if (xLotNo = '') then error(lblErrorLotNoEmpty);
+
+                    RecReservationEntry."Lot No." := xLotNo;
+                    RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Lot No.";
+                end;
+            2://Serie
+                begin
+                    if (xSerialNo = '') then error(lblErrorSerialNoEmpty);
+
+                    RecReservationEntry."Serial No." := xSerialNo;
+                    RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Serial No.";
+                end;
+            3://Lote y Serie
+                begin
+                    if (xSerialNo = '') then error(lblErrorSerialNoEmpty);
+                    if (xLotNo = '') then error(lblErrorLotNoEmpty);
+
+
+                    RecReservationEntry."Lot No." := xLotNo;
+                    RecReservationEntry."Serial No." := xSerialNo;
+                    RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Lot and Serial No.";
+                end;
+            4://Lote y Paquete
+                begin
+                    if (xLotNo = '') then error(lblErrorLotNoEmpty);
+                    if (xPackageNo = '') then error(lblErrorPackageNoEmpty);
+
+                    RecReservationEntry."Lot No." := xLotNo;
+                    RecReservationEntry."Package No." := xPackageNo;
+                    RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Lot and Package No.";
+                end;
+            5://Serie y Paquete
+                begin
+                    if (xSerialNo = '') then error(lblErrorSerialNoEmpty);
+                    if (xPackageNo = '') then error(lblErrorPackageNoEmpty);
+
+                    RecReservationEntry."Serial No." := xSerialNo;
+                    RecReservationEntry."Package No." := xPackageNo;
+                    RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Serial and Package No.";
+                end;
+            6://Lote, Serie y Paquete
+                begin
+                    if (xSerialNo = '') then error(lblErrorSerialNoEmpty);
+                    if (xLotNo = '') then error(lblErrorLotNoEmpty);
+                    if (xPackageNo = '') then error(lblErrorPackageNoEmpty);
+
+                    RecReservationEntry."Lot No." := xLotNo;
+                    RecReservationEntry."Serial No." := xSerialNo;
+                    RecReservationEntry."Package No." := xPackageNo;
+                    RecReservationEntry."Item Tracking" := RecReservationEntry."Item Tracking"::"Lot and Serial and Package No.";
+                end;
+        end;
+
+        if (xFechaCaducidad <> 0D) THEN
+            RecReservationEntry."Expiration Date" := xFechaCaducidad;
+
+        RecReservationEntry.INSERT;
+    end;
+
+
+
+    local procedure Eliminar_Contenedor_Recepcion_Sub(xJson: Text)
+    var
+
+        RecReservationEntry: Record "Reservation Entry";
+        RecPurchaseLine: Record "Purchase Line";
+        RecLotNoInf: Record "Lot No. Information";
+        VJsonObjectContenedor: JsonObject;
+
+        lParte: Text;
+        VJsonText: Text;
+        lNumeroContenedor: Text;
+        lRespuesta: Text;
+        jPedidoCompra: Text;
+        jLineNo: Integer;
+        jEntryNo: Integer;
+
+        jLoteInterno: Text;
+        jSerie: Text;
+        EsSubcontratacion: Boolean;
+    begin
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            Error(lblErrorJson);
+
+        jPedidoCompra := DatoJsonTexto(VJsonObjectContenedor, 'No');
+        jLineNo := DatoJsonInteger(VJsonObjectContenedor, 'LineNo');
+        jEntryNo := DatoJsonInteger(VJsonObjectContenedor, 'EntryNo');
+
+        CLEAR(RecReservationEntry);
+        RecReservationEntry.SetRange("Entry No.", jEntryNo);
+        IF NOT RecReservationEntry.FindFirst() THEN Error(StrSubstNo(lblErrorLoteInternoNoExiste, ''));
+
+        clear(RecPurchaseLine);
+        RecPurchaseLine.SETRANGE("Document No.", jPedidoCompra);
+        RecPurchaseLine.SETRANGE("Line No.", jLineNo);
+        IF RecPurchaseLine.findfirst THEN begin
+            RecPurchaseLine.Validate("Qty. to Receive", RecPurchaseLine."Qty. to Receive" - RecReservationEntry.Quantity);
+            if (RecPurchaseLine."Qty. to Receive" < 0) then
+                RecPurchaseLine.Validate("Qty. to Receive", 0);
+            RecPurchaseLine.MODIFY();
+        end;
+
+        RecReservationEntry.Delete();
+
+
+        //Eliminar el lote si no está en algún pedido de compra preasignado
+        /*Clear(RecPurchaseLine);
+        RecPurchaseLine.SetRange("Lote preasignado", lContenedor);
+        IF NOT RecPurchaseLine.FindFirst() THEN begin
+            clear(RecLotNoInf);
+            RecLotNoInf.SetRange("Lot No.", lContenedor);
+            if RecLotNoInf.FindFirst() then
+                RecLotNoInf.Delete();
+        end;*/
+
+
+        /*if (EsSubcontratacion) then begin
+            Actualizar_Cantidad_Recibir_Subcontratacion(lRecepcion);
+            Objeto_Recepcion_Sub(lRecepcion).WriteTo(VJsonText);
+        end else begin
+            Actualizar_Cantidad_Recibir(lRecepcion);
+            Objeto_Recepcion(lRecepcion).WriteTo(VJsonText);
+        end;*/
+
+
+
+
+    end;
+
+    local procedure Eliminar_Cantidad_Recepcion_Sub(xJson: Text)
+    var
+
+        RecReservationEntry: Record "Reservation Entry";
+        RecLotNoInf: Record "Lot No. Information";
+        RecPurchaseLine: Record "Purchase Line";
+        VJsonObjectContenedor: JsonObject;
+
+        lParte: Text;
+        VJsonText: Text;
+        lNumeroContenedor: Text;
+        lRespuesta: Text;
+        jPedidoCompra: Text;
+        jLineNo: Integer;
+        jLoteInterno: Text;
+        jSerie: Text;
+        EsSubcontratacion: Boolean;
+    begin
+
+
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            Error(lblErrorJson);
+
+        jPedidoCompra := DatoJsonTexto(VJsonObjectContenedor, 'No');
+        jLineNo := DatoJsonInteger(VJsonObjectContenedor, 'LineNo');
+
+        CLEAR(RecReservationEntry);
+        RecReservationEntry.SetRange("Source ID", jPedidoCompra);
+        RecReservationEntry.SetRange("Source Ref. No.", jLineNo);
+        IF RecReservationEntry.FINDSET() THEN RecReservationEntry.DELETEALL();
+
+        clear(RecPurchaseLine);
+        RecPurchaseLine.SETRANGE("Document No.", jPedidoCompra);
+        RecPurchaseLine.SETRANGE("Line No.", jLineNo);
+        IF RecPurchaseLine.findfirst THEN begin
+            RecPurchaseLine.Validate("Qty. to Receive", 0);
+            RecPurchaseLine.MODIFY();
+        end;
+
+    end;
+
+    local procedure Registrar_Recepcion_Sub(xPedidoCompra: Text)
+    var
+        pgWR: Page "Warehouse Receipt";
+        RecPurchaseHeader: Record "Purchase Header";
+        cuPurchPost: Codeunit "Purch.-Post";
+    //RecWarehouseSetup: Record "Warehouse Setup";
+    begin
+        Clear(RecPurchaseHeader);
+        RecPurchaseHeader.SetRange(RecPurchaseHeader."Document Type", RecPurchaseHeader."Document Type"::Order);
+        RecPurchaseHeader.SETRANGE(RecPurchaseHeader."No.", xPedidoCompra);
+
+
+        IF RecPurchaseHeader.FindFirst() THEN BEGIN
+            RecPurchaseHeader."Posting Date" := Today;
+            RecPurchaseHeader.Modify();
+            RecPurchaseHeader.Receive := true;
+            cuPurchPost.RUN(RecPurchaseHeader);
+
+            //Vaciar_Cantidad_Recibir_Sub(xRecepcion);
+
+        END ELSE
+            Error(lblErrorRegistrar);
+
+
     end;
 
 
@@ -3114,7 +3889,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit(VJsonArrayContenido);
 
     end;
-
 
     procedure Contenidos_Sin_Ubicacion(xItemNo: Text; xLocation: Text; xTipoDato: Code[1]; xDato: Text): Text
     var
