@@ -39,26 +39,4 @@ pageextension 71747 Company_Info_SGA extends "Company Information"
             }
         }
     }
-
-    actions
-    {
-        addafter("P&ayments")
-        {
-            action(SGA_Test)
-            {
-                Caption = 'Test URL SGA';
-                Image = TestFile;
-                ApplicationArea = all;
-                Promoted = true;
-
-                trigger OnAction()
-                var
-                    LicenseMgt: Codeunit "SGA License Management";
-                begin
-                    LicenseMgt.Test();
-                end;
-            }
-        }
-    }
-
 }

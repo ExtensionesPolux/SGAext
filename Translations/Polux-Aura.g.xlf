@@ -48,60 +48,15 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control OnlyLinesNotInRecordings - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 3212038148 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Device</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Device - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 2248886284 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Error</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Error - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 2950845476 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Estado</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Estado - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 415504711 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Id</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Id - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 3510957723 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>IP</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field IP - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 3723405985 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Licencia BC</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencia BC - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 618491676 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Licencia Polux</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencia Polux - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 1334820330 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Licencias Activas</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencias Activas - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 4092529168 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Licencias Usadas</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Licencias Usadas - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Table 1456375839 - Field 3710982960 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posting Date</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table Licencias - Field Posting Date - Property Caption</note>
-        </trans-unit>
         <trans-unit id="Codeunit 186058903 - NamedType 1304331942" size-unit="char" translate="yes" xml:space="preserve">
           <source>Incorrect format. A Json was expected</source>
           <note from="Developer" annotates="general" priority="2">ESP=Formato incorrecto. Se esperaba un Json</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SGA License Management - NamedType lblErrorJson</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1853919318 - NamedType 1304331942" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Incorrect format. A Json was expected</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Formato incorrecto. Se esperaba un Json</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SGA License Management OLD - NamedType lblErrorJson</note>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3168196109" size-unit="char" translate="yes" xml:space="preserve">
           <source>App Warehouse not defined</source>
@@ -373,11 +328,6 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Query Lot Numbers by Location 2 - Property Caption</note>
         </trans-unit>
-        <trans-unit id="PageExtension 1825673968 - Action 416955536 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3469146285">
-          <source>Test URL SGA</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Company_Info_SGA - Action SGA_Test - Property Caption</note>
-        </trans-unit>
         <trans-unit id="PageExtension 1825673968 - Control 2155719079 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3469146285">
           <source>AURA-SGA</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -497,6 +447,21 @@
           <source>Azure Code</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Azure Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2051808746 - Field 3569215515 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
+          <source>Fecha Vto. Licencias</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Fecha Vto Licencias - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2051808746 - Field 1334820330 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
+          <source>Licencias Activas</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Licencias Activas - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2051808746 - Field 4092529168 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
+          <source>Licencias Activas</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Licencias Usadas - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 1466686936 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Licencia SGA Polux</source>

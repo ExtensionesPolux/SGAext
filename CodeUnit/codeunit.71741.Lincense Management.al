@@ -1,4 +1,4 @@
-codeunit 71741 "SGA License Management"
+codeunit 71742 "SGA License Management"
 {
 
     trigger OnRun()
@@ -6,14 +6,11 @@ codeunit 71741 "SGA License Management"
 
     end;
 
-    procedure Test()
+    procedure Test_Hola()
     var
         Respuesta: text;
     begin
-        if Enviar_Mensaje('TEST', '', Respuesta) then
-            MESSAGE(Respuesta)
-        else
-            MESSAGE('Errro Envío: ' + GetLastErrorText());
+        Message(Hola());
     end;
 
     procedure Test_Registro()
@@ -26,127 +23,175 @@ codeunit 71741 "SGA License Management"
     end;
 
 
-
-    procedure MOTD(xJson: text) Respuesta: Text
+    procedure Hola() Respuesta: Text
     var
-        JsonMOTDIn: JsonObject;
-    begin
-        If not JsonMOTDIn.ReadFrom(xJson) then EXIT(lblErrorJson);
-    end;
-
-
-    procedure Vector_AES() Respuesta: text
-    var
-        CompanyInfo: Record "Company Information";
-        JsonObjectRecurso: JsonObject;
-        JsonText: Text;
+        AzureFunctions: Codeunit "Azure Functions";
+        AzureFunctionsResponse: Codeunit "Azure Functions Response";
+        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
+        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
+        JsonAzure: JsonObject;
+        jsonEntrada: JsonObject;
+        RespuestaAzure: text;
+        RequestBody: text;
+        CompanyInfo: record "Company Information";
+        Identificador: Guid;
     begin
         Get_CompanyInfo(CompanyInfo);
+        Identificador := CreateGuid();
 
+        JsonAzure.add('Commando', 'HOLA');
+        JsonAzure.Add('ID', Identificador);
+        JsonAzure.WriteTo(RequestBody);
 
-        Respuesta := CompanyInfo."Vector AES";
-
-        JsonObjectRecurso.Add('Vector', CompanyInfo."Vector AES");
-        JsonObjectRecurso.WriteTo(JsonText);
-        exit(JsonText);
+        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
+        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
+        if AzureFunctionsResponse.IsSuccessful() then begin
+            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
+            JsonEntrada.ReadFrom(RespuestaAzure);
+            Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_Salida');
+        end
+        else
+            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
     end;
-
 
     procedure Registro(xJson: Text) Respuesta: Text
     var
-        JsonRegistroIn: JsonObject;
-        JsonRegistroOut: JsonObject;
-        JsonRegistroPoluxOut: JsonObject;
-        JsonRegistroPoluxIn: JsonObject;
+        AzureFunctions: Codeunit "Azure Functions";
+        AzureFunctionsResponse: Codeunit "Azure Functions Response";
+        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
+        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
+        jsonEntrada: JsonObject;
+        JsonBC: JsonObject;
         JsonAzure: JsonObject;
+        Encriptado: Text;
+        MensajeBC: Text;
+        RespuestaAzure: text;
+        RequestBody: text;
         CompanyInfo: record "Company Information";
-        Encriptado: text;
-        json: text;
+        Identificador: Guid;
     begin
-        If not JsonRegistroIn.ReadFrom(xJson) then EXIT(lblErrorJson);
+        If not jsonEntrada.ReadFrom(xJson) then EXIT('ERROR Json');
 
         Get_CompanyInfo(CompanyInfo);
+        Identificador := CreateGuid();
 
-        Encriptado := DatoJsonTexto(JsonRegistroIn, 'Registro');
+        Encriptado := DatoJsonTexto(jsonEntrada, 'Registro');
 
-        JsonRegistroPoluxOut.Add('Licencia_BC', CompanyInfo."License BC");
-        JsonRegistroPoluxOut.Add('ID_Polux', CompanyInfo."License Aura-SGA");
-        JsonRegistroPoluxOut.Add('Mensaje_App', Encriptado);
+        JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.WriteTo(MensajeBC);
 
-        JsonRegistroPoluxOut.WriteTo(json);
+        JsonAzure.add('Commando', 'REGISTRAR');
+        JsonAzure.Add('ID', Identificador);
+        JsonAzure.add('Mensaje_BC', MensajeBC);
+        JsonAzure.add('Mensaje_App', Encriptado);
+        JsonAzure.WriteTo(RequestBody);
 
-        if NOT Enviar_Mensaje('REGISTRAR', json, Respuesta) then Error('Error Envío mensaje: ' + GetLastErrorText());
+        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
+        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
+        if AzureFunctionsResponse.IsSuccessful() then begin
+            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
+            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
 
-        If not JsonAzure.ReadFrom(Respuesta) then EXIT(lblErrorJson);
-        IF CompanyInfo."License BC" <> DatoJsonTexto(JsonAzure, 'Licencia_BC') then error('Mensaje Recibido con destinatario incorrecto');
-        IF CompanyInfo."License Aura-SGA" <> DatoJsonTexto(JsonAzure, 'ID_Polux') then error('Mensaje Recibido con ID Aura incorrecto');
-
-        Respuesta := DatoJsonTexto(JsonAzure, 'Mensaje_App');
+            JsonEntrada.ReadFrom(RespuestaAzure);
+            Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_App');
+        end
+        else
+            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
     end;
 
-
-
-    procedure Informacion(var Licencias: record Licencias)
+    procedure Informacion()
     var
+        AzureFunctions: Codeunit "Azure Functions";
+        AzureFunctionsResponse: Codeunit "Azure Functions Response";
+        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
+        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
         CompanyInfo: record "Company Information";
+        Recursos: record Resource;
+        JsonBC: JsonObject;
+        JsonAzure: JsonObject;
+        JsonRespuesta: JsonObject;
+        JsonInfo: JsonObject;
+        RequestBody: text;
         JsonInfoOut: JsonObject;
-        json: text;
+        MensajeBC: text;
+        respuestaAzure: Text;
         respuesta: Text;
         jsonToken: JsonToken;
         jsonTokenLines: JsonToken;
-        jsonInfo: JsonObject;
         jsonDetalle: JsonObject;
         jsonResponse: JsonObject;
         jsonArrayLines: JsonArray;
-        n: integer;
+        Identificador: Guid;
 
     begin
         Get_CompanyInfo(CompanyInfo);
+        Identificador := CreateGuid();
 
-        Licencias.Reset;
-        Licencias.deleteall;
 
-        JsonInfoOut.Add('Licencia_BC', CompanyInfo."License BC");
-        JsonInfoOut.Add('ID_Polux', CompanyInfo."License Aura-SGA");
-        JsonInfoOut.WriteTo(json);
+        JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.WriteTo(MensajeBC);
 
-        // KKK Respuesta := Enviar_Mensaje('INFORMACION', json);
+        JsonAzure.add('Commando', 'INFO');
+        JsonAzure.Add('ID', Identificador);
+        JsonAzure.add('Mensaje_BC', MensajeBC);
+        JsonAzure.WriteTo(RequestBody);
 
-        if jsonInfo.ReadFrom(respuesta) then begin
-            Licencias.Id := 0;
+        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
+        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
+        if AzureFunctionsResponse.IsSuccessful() then begin
+            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
+            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
 
-            jsonInfo.Get('Estado', jsonToken);
-            Licencias.Estado := jsonToken.AsValue().AsText();
-            jsonInfo.Get('Error', jsonToken);
-            Licencias.Error := jsonToken.AsValue().AsText();
-            jsonInfo.Get('Licencias_Activas', jsonToken);
-            Licencias."Licencias Activas" := jsonToken.AsValue().AsInteger();
-            jsonInfo.Get('Licencias_Usadas', jsonToken);
-            Licencias."Licencias Usadas" := jsonToken.AsValue().AsInteger();
-            Licencias.Insert;
+            jSonRespuesta.ReadFrom(RespuestaAzure);
+            jsonInfo.ReadFrom(DatoJsonTexto(jSonRespuesta, 'Mensaje_BC'));
+
+            CompanyInfo."Licencias Activas" := DatoJsonInteger(JsonInfo, 'Licencias_Activas');
+            CompanyInfo."Licencias Usadas" := DatoJsonInteger(JsonInfo, 'Licencias_Usadas');
+            CompanyInfo."Fecha Vto Licencias" := string2date(DatoJsonTexto(JsonInfo, 'Fecha_Vto'));
+            CompanyInfo.Modify;
+
 
             jsonInfo.get('Devices', jsonTokenLines);
             jsonArrayLines := jsonTokenLines.AsArray();
 
-            n := 0;
             foreach jsonTokenLines in jsonArrayLines do begin
                 if jsonDetalle.ReadFrom(FORMAT(jsonTokenLines)) then begin
-                    n += 1;
-                    Licencias.Id := n;
+                    CLEAR(Recursos);
+
                     jsonDetalle.Get('Id_Dispositivo', jsonToken);
-                    Licencias.Device := jsonToken.AsValue().AsText();
+                    Recursos."No." := jsonToken.AsValue().AsText();
+
                     jsonDetalle.Get('IP', jsonToken);
-                    Licencias.IP := jsonToken.AsValue().AsText();
+                    Recursos.IP := jsonToken.AsValue().AsText();
+
                     jsonDetalle.Get('Fecha_Registro', jsonToken);
-                    //Licencias."Posting Date" := jsonToken.AsValue().AsText();
-                    Licencias.Insert;
+                    Recursos."Fecha Registro" := String2Date(jsonToken.AsValue().AsText());
+                    Recursos."Dispositivo Movil" := True;
+                    Recursos.Insert(true);
                 end;
             end;
-        end;
+        end
+        else
+            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
 
     end;
 
-    #Region Funciones Auxiliares
+
+    local procedure Verificar_Mensaje(CompanyInfo: record "Company Information"; Mensaje: Text)
+    var
+        jsonEntrada: JsonObject;
+        jsonBC: JsonObject;
+    begin
+        JsonEntrada.ReadFrom(Mensaje);
+
+        Mensaje := DatoJsonTexto(jsonEntrada, 'Mensaje_BC');
+        JsonBC.ReadFrom(Mensaje);
+        IF (text.UpperCase(DatoJsonTexto(JsonBC, 'Licencia_BC')) <> text.UpperCase(CompanyInfo."License BC")) or
+           (text.UpperCase(DatoJsonTexto(JsonBC, 'ID_Polux')) <> text.UpperCase(CompanyInfo."License Aura-SGA")) then
+            error('Destinatario del mensaje erróneo');
+    end;
 
     local procedure Get_CompanyInfo(var CompanyInfo: record "Company Information")
     begin
@@ -159,119 +204,7 @@ codeunit 71741 "SGA License Management"
         IF CompanyInfo."Vector AES" = '' then error('No se ha indicado Vector AES -Información Empresa-');
     end;
 
-    [TryFunction]
-    local procedure Enviar_Mensaje(Comando: text; Value: text; var Respuesta: text)
-    var
-        CompanyInfo: record "Company Information";
-        Client: HttpClient;
-        Content: HttpContent;
-        ResponseMessage: HttpResponseMessage;
-        JObject: JsonObject;
-        InStream: InStream;
-        OutStream: OutStream;
-        TempBlob: Codeunit "Temp Blob";
-        Url: Text;
-        sw9: Boolean;
-        Identificador: guid;
-
-    begin
-        Respuesta := '';
-        sw9 := True;
-
-        Get_CompanyInfo(CompanyInfo);
-        Identificador := CreateGuid();
-
-        url := CompanyInfo."URL API" + '?Code=' + CompanyInfo."Azure Code" + '&Command=' + Comando + '&ID=' + format(Identificador);
-        if Value <> '' then url += '&Value=' + Value;
-
-        //url := 'https://polux-sga20240312191807.azurewebsites.net/api/Inicio?Command=REGISTRAR&Code=U-RKusNG8dP6CNOvAhwUWDG_dk36RJhPgoYqup3JSlvDAzFudpADYQ==&ID={DE5B33C4-C500-4B75-B0C1-DADB3A0B81B2}&Value={"Licencia_BC":"Polux-Solutions","ID_Polux":"POL#123456","Mensaje_App":"SEFdb1Vg2OnXJyaHFEgRtxHAWj34du/7oTLxrA7t9uhrVwPGSfT7Kt1qiGk9Od8TP3Sli+u7v77zaUbIUjyFzwv0M/FFEbq7NchK+L0mAkk="}';
-        sw9 := client.Post(Url, Content, ResponseMessage);
-        IF sw9 then sw9 := ResponseMessage.IsSuccessStatusCode();
-
-        if sw9 then sw9 := ResponseMessage.Content().ReadAs(InStream);
-        if sw9 then sw9 := JObject.ReadFrom(InStream);
-
-
-        TempBlob.CreateOutStream(OutStream);
-        CopyStream(OutStream, InStream);
-        OutStream.WriteText(Respuesta);
-
-        if sw9 then JObject.WriteTo(Respuesta);
-    end;
-
-    [TryFunction]
-    procedure CreateRequest_POST(RequestUrl: Text; json: Text; var Respuesta: text)
-    var
-        TempBlob: Codeunit "Temp Blob";
-        Client: HttpClient;
-        RequestHeaders: HttpHeaders;
-        ResponseHeader: HttpResponseMessage;
-        MailContentHeaders: HttpHeaders;
-        Content: HttpContent;
-        HttpHeadersContent: HttpHeaders;
-        ResponseMessage: HttpResponseMessage;
-        RequestMessage: HttpRequestMessage;
-        JObject: JsonObject;
-        ResponseStream: InStream;
-        APICallResponseMessage: Text;
-        StatusCode: Text;
-        IsSuccessful: Boolean;
-
-        JsonObjectRespuesta: JsonObject;
-        TokenJson: JsonToken;
-    begin
-        //BODY
-        Respuesta := '';
-
-        RequestMessage.GetHeaders(RequestHeaders);
-        RequestHeaders.Clear();
-
-        Content.WriteFrom(json);
-
-        //GET HEADERS
-        Content.GetHeaders(HttpHeadersContent);
-        HttpHeadersContent.Clear();
-        HttpHeadersContent.Remove('Content-Type');
-        HttpHeadersContent.Add('Content-Type', 'application/json');
-
-        //POST METHOD
-        RequestMessage.Content := Content;
-        RequestMessage.SetRequestUri(RequestUrl);
-        RequestMessage.Method := 'POST';
-
-        Clear(TempBlob);
-        TempBlob.CreateInStream(ResponseStream);
-
-        IsSuccessful := Client.Send(RequestMessage, ResponseMessage);
-
-        if not IsSuccessful then error('An API call with the provided header has failed.');
-        if not ResponseMessage.IsSuccessStatusCode() then begin
-            StatusCode := Format(ResponseMessage.HttpStatusCode()) + ' - ' + ResponseMessage.ReasonPhrase;
-            error('The request has failed with status code ' + StatusCode);
-        end;
-
-        if not ResponseMessage.Content().ReadAs(ResponseStream) then error('The response message cannot be processed.');
-        if not JObject.ReadFrom(ResponseStream) then error('Cannot read JSON response.');
-
-        //API response
-        JObject.WriteTo(APICallResponseMessage);
-
-        Respuesta := APICallResponseMessage;
-
-        //APICallResponseMessage := APICallResponseMessage.Replace(',', '\');
-
-        if JsonObjectRespuesta.ReadFrom(APICallResponseMessage) then begin
-            if JsonObjectRespuesta.Get('detail', TokenJson) then begin
-                Respuesta := TokenJson.AsValue().AsText();
-            end;
-        end;
-    end;
-
-
-
-
-
-
+    #region Json
     local procedure DatoJsonTexto(xObjeto: JsonObject; xNodo: Text): text
     var
         JsonTokenParte: JsonToken;
@@ -289,7 +222,63 @@ codeunit 71741 "SGA License Management"
             exit('');
         end;
     end;
-    #endregion
+
+    local procedure DatoArrayJsonTexto(xObjeto: JsonObject; xNodo: Text): JsonArray
+    var
+        VJsonTokenParte: JsonToken;
+        vArray: JsonArray;
+    begin
+
+        if xObjeto.Get(xNodo, VJsonTokenParte) then begin
+            vArray := VJsonTokenParte.AsArray();
+            exit(vArray);
+        end else begin
+            exit(vArray);
+        end;
+    end;
+
+    local procedure DatoJsonInteger(xObjeto: JsonObject; xNodo: Text): Integer
+    var
+        VJsonTokenParte: JsonToken;
+        jVariable: Integer;
+    begin
+        jVariable := 0;
+        if xObjeto.Get(xNodo, VJsonTokenParte) then begin
+            if VJsonTokenParte.AsValue().IsNull then
+                exit(0)
+            else begin
+                jVariable := VJsonTokenParte.AsValue().AsInteger();
+                exit(jVariable);
+            end;
+        end else begin
+            exit(0);
+        end;
+    end;
+
+    local procedure String2Date(texto: text) Fecha: Date
+    var
+        dd: Integer;
+        mm: Integer;
+        yyyy: Integer;
+        n: integer;
+    begin
+        Fecha := 0D;
+
+        n := StrPos(texto, '/');
+        IF (n > 0) then begin
+            Evaluate(dd, copystr(texto, 1, n - 1));
+            texto := COPYSTR(texto, n + 1, STRLEN(texto) - n);
+        end;
+        n := StrPos(texto, '/');
+        IF (n > 0) then begin
+            Evaluate(mm, copystr(texto, 1, n - 1));
+            texto := COPYSTR(texto, n + 1, STRLEN(texto) - n);
+        end;
+        Evaluate(yyyy, texto);
+
+        if (dd <> 0) AND (mm <> 0) AND (yyyy <> 0) then fecha := DMY2DATE(dd, mm, yyyy);
+    end;
+    #Endregion
 
     #region DISPARADORES
 
@@ -398,4 +387,5 @@ codeunit 71741 "SGA License Management"
 
     var
         lblErrorJson: Label 'Incorrect format. A Json was expected', Comment = 'ESP=Formato incorrecto. Se esperaba un Json';
+
 }

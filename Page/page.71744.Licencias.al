@@ -12,17 +12,11 @@ page 71744 Licencias
         {
             group(Datos)
             {
-                field(Estado; LicenciasDatos.Estado)
-                {
-                    ApplicationArea = all;
-                }
-                field(TextoError; LicenciasDatos.Error)
-                {
-                    ApplicationArea = all;
-                }
-                field(LicenciasNo; LicenciasDatos."Licencias Activas")
+                field(LicenciasNo; CompanyInfo."Licencias Activas")
                 { }
-                field(LicenciasUsadas; LicenciasDatos."Licencias Usadas")
+                field(LicenciasUsadas; CompanyInfo."Licencias Usadas")
+                { }
+                field(FechaVto; CompanyInfo."Fecha Vto Licencias")
                 { }
             }
             repeater(Control1)
@@ -59,7 +53,7 @@ page 71744 Licencias
                 image = LinkWeb;
                 trigger OnAction()
                 var
-                    LicenseMgt: Codeunit "SGA License Management2";
+                    LicenseMgt: Codeunit "SGA License Management";
                 begin
                     LicenseMgt.Test_Hola();
                 end;
@@ -71,7 +65,7 @@ page 71744 Licencias
                 Image = TestFile;
                 trigger OnAction()
                 var
-                    LicenseMgt: Codeunit "SGA License Management2";
+                    LicenseMgt: Codeunit "SGA License Management";
                 begin
                     LicenseMgt.Test_Registro();
                 end;
@@ -85,6 +79,8 @@ page 71744 Licencias
                 trigger OnAction()
                 begin
                     Cargar_Datos();
+                    CompanyInfo.Reset;
+                    CompanyInfo.Findfirst;
                     CurrPage.Update(false);
                 end;
 
@@ -108,16 +104,19 @@ page 71744 Licencias
     trigger OnOpenPage()
     begin
         Cargar_Datos();
+        CompanyInfo.Reset;
+        CompanyInfo.Findfirst;
+
     end;
 
     var
-        LicenciasDatos: record Licencias;
+        CompanyInfo: record "Company Information";
 
 
     local procedure Cargar_Datos()
     var
         Recursos: record Resource;
-        LicenseMgt: Codeunit "SGA License Management2";
+        LicenseMgt: Codeunit "SGA License Management";
     begin
         Recursos.reset;
         Recursos.SetRange("Dispositivo Movil", true);

@@ -22,6 +22,19 @@ tableextension 71750 Company_Information_SGA extends "Company Information"
         {
             Caption = 'Vector Encriptación AES';
         }
+        field(71750; "Licencias Activas"; Integer)
+        {
+            Caption = 'Licencias Activas';
+        }
+        field(71751; "Licencias Usadas"; Integer)
+        {
+            Caption = 'Licencias Activas';
+        }
+        field(71752; "Fecha Vto Licencias"; date)
+        {
+            Caption = 'Fecha Vto. Licencias';
+        }
+
     }
 
 }
