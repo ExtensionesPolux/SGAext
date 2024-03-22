@@ -26,12 +26,10 @@ codeunit 71742 "SGA License Management"
     procedure Vector_AES() Respuesta: Text
     var
         CompanyInfo: record "Company Information";
-        JsonAES: JsonObject;
     begin
         Get_CompanyInfo(CompanyInfo);
 
-        JsonAES.add('Vecotor_AES', CompanyInfo."Vector AES");
-        JsonAES.WriteTo(Respuesta);
+        Respuesta := CompanyInfo."Vector AES";
     end;
 
     procedure Hola() Respuesta: Text
