@@ -37,6 +37,14 @@ page 71744 Licencias
                 }
             }
         }
+
+        area(FactBoxes)
+        {
+            systempart(Control1905767507; Notes)
+            {
+                ApplicationArea = Notes;
+            }
+        }
     }
 
     actions
@@ -59,6 +67,7 @@ page 71744 Licencias
             {
                 ApplicationArea = All;
                 Caption = 'Test Registro';
+                Visible = False;
                 Image = TestFile;
                 trigger OnAction()
                 var
@@ -83,18 +92,22 @@ page 71744 Licencias
 
             }
 
-            action(TestError)
+            action(MOTD)
             {
                 ApplicationArea = All;
-                Caption = 'Test Error';
-                Image = TestFile;
+                Caption = 'Mensaje del día';
+                image = ExportMessage;
+
                 trigger OnAction()
                 var
-                    cuWS: Codeunit WsApplicationStandard;
+                    LicenseMgt: Codeunit "SGA License Management";
                 begin
-                    cuWS.Login('{"PIN":"2222","Location":"0"}');
+                    MESSAGE(LicenseMgt.MOTD(rec.Code));
                 end;
+
             }
+
+
         }
     }
 

@@ -6,22 +6,7 @@ codeunit 71742 "SGA License Management"
 
     end;
 
-    procedure Test_Hola()
-    var
-        Respuesta: text;
-    begin
-        Message(Hola());
-    end;
-
-    procedure Test_Registro()
-    var
-        Mensaje: text;
-    begin
-
-        Mensaje := '{"Registro":"SEFdb1Vg2OnXJyaHFEgRtxHAWj34du/7oTLxrA7t9uhrVwPGSfT7Kt1qiGk9Od8TP3Sli+u7v77zaUbIUjyFzwv0M/FFEbq7NchK+L0mAkk="}';
-        MESSAGE(Registro(Mensaje));
-    end;
-
+    #region Funciones
 
     procedure Vector_AES() Respuesta: Text
     var
@@ -31,6 +16,49 @@ codeunit 71742 "SGA License Management"
 
         Respuesta := CompanyInfo."Vector AES";
     end;
+
+
+    procedure MOTD(DispositivoId: code[20]) Mensaje: Text
+    var
+        RecordLinkMgt: Codeunit "Record Link Management";
+        CompanyInfo: record "Company Information";
+        Dispositivo: record Dispositivos;
+        RecordLink: record "Record Link";
+        jsonMOTD: JsonObject;
+        jsonArray: JsonArray;
+        jsonTexto: JsonObject;
+        textoJson: text;
+    begin
+        Get_CompanyInfo(CompanyInfo);
+
+
+        jsonMOTD.add('ID_Dispositivo', DispositivoId);
+        jsonMOTD.Add('Estado', 'OK');
+        jsonMOTD.add('Mensaje_Error', '');
+
+        Dispositivo.Reset;
+        Dispositivo.SetRange(Code, DispositivoId);
+        IF Dispositivo.Findfirst then begin
+            IF Dispositivo.Baja then jsonMOTD.add('Baja', 'True');
+
+            RecordLink.Reset;
+            RecordLink.SetRange("Record ID", Dispositivo.RecordId);
+            RecordLink.SetRange(Type, RecordLink.Type::Note);
+            IF RecordLink.Findset(false) then
+                repeat
+                    CLEAR(jsonTexto);
+                    jsonTexto.add('Mensaje', RecordLinkMgt.ReadNote(RecordLink));
+                    jsonArray.Add(jsonTexto);
+                until RecordLink.NEXT = 0;
+        end;
+
+        jsonArray.WriteTo(textojson);
+        jsonMOTD.add('MOTD', textoJson);
+
+        jsonMOTD.WriteTo(Mensaje);
+    end;
+
+
 
     procedure Hola() Respuesta: Text
     var
@@ -198,7 +226,9 @@ codeunit 71742 "SGA License Management"
 
     end;
 
+    #EndRegion
 
+    #region Funciones_Auxiliares
     local procedure Verificar_Mensaje(CompanyInfo: record "Company Information"; Mensaje: Text)
     var
         jsonEntrada: JsonObject;
@@ -223,6 +253,27 @@ codeunit 71742 "SGA License Management"
         IF CompanyInfo."Azure Code" = '' then error('No se ha definido Azure Code -Información Empresa-');
         IF CompanyInfo."Vector AES" = '' then error('No se ha indicado Vector AES -Información Empresa-');
     end;
+
+    #endregion
+
+    #region Test
+    procedure Test_Hola()
+    var
+        Respuesta: text;
+    begin
+        Message(Hola());
+    end;
+
+    procedure Test_Registro()
+    var
+        Mensaje: text;
+    begin
+
+        Mensaje := '{"Registro":"SEFdb1Vg2OnXJyaHFEgRtxHAWj34du/7oTLxrA7t9uhrVwPGSfT7Kt1qiGk9Od8TP3Sli+u7v77zaUbIUjyFzwv0M/FFEbq7NchK+L0mAkk="}';
+        MESSAGE(Registro(Mensaje));
+    end;
+
+    #endregion
 
     #region Json
     local procedure DatoJsonTexto(xObjeto: JsonObject; xNodo: Text): text
