@@ -3,7 +3,7 @@ page 71744 Licencias
     PageType = list;
     ApplicationArea = All;
     UsageCategory = Tasks;
-    SourceTable = Resource;
+    SourceTable = Dispositivos;
     Permissions = tabledata Resource = RMID;
 
     layout
@@ -21,20 +21,17 @@ page 71744 Licencias
             }
             repeater(Control1)
             {
-                field(Device; rec."No.")
+                field(Device; rec.Code)
                 {
                     Caption = 'Id Dispositivo';
                     ApplicationArea = all;
                 }
-                field(Name; rec.Name)
-                {
-                    ApplicationArea = All;
-                }
+
                 field(IP; rec.IP)
                 {
                     ApplicationArea = all;
                 }
-                field("Posting Date"; rec."Fecha Registro")
+                field("Posting Date"; rec."posting Date")
                 {
                     ApplicationArea = all;
                 }
@@ -114,17 +111,12 @@ page 71744 Licencias
 
     local procedure Cargar_Datos()
     var
-        Recursos: record Resource;
         LicenseMgt: Codeunit "SGA License Management";
     begin
-        Recursos.reset;
-        Recursos.SetRange("Dispositivo Movil", true);
-        Recursos.deleteall;
-
         LicenseMgt.Informacion();
 
         rec.reset;
-        rec.Setrange("Dispositivo Movil", True);
+        rec.FindFirst();
     end;
 
 }

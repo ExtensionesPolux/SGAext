@@ -23,6 +23,17 @@ codeunit 71742 "SGA License Management"
     end;
 
 
+    procedure Vector_AES() Respuesta: Text
+    var
+        CompanyInfo: record "Company Information";
+        JsonAES: JsonObject;
+    begin
+        Get_CompanyInfo(CompanyInfo);
+
+        JsonAES.add('Vecotor_AES', CompanyInfo."Vector AES");
+        JsonAES.WriteTo(Respuesta);
+    end;
+
     procedure Hola() Respuesta: Text
     var
         AzureFunctions: Codeunit "Azure Functions";
@@ -107,7 +118,7 @@ codeunit 71742 "SGA License Management"
         AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
         IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
         CompanyInfo: record "Company Information";
-        Recursos: record Resource;
+        Dispositivos: record Dispositivos;
         JsonBC: JsonObject;
         JsonAzure: JsonObject;
         JsonRespuesta: JsonObject;
@@ -126,6 +137,11 @@ codeunit 71742 "SGA License Management"
         Codigo: code[20];
     begin
         Get_CompanyInfo(CompanyInfo);
+
+        Dispositivos.Reset;
+        Dispositivos.SetRange(Baja, false);
+        Dispositivos.deleteall;
+
         Identificador := CreateGuid();
 
 
@@ -158,20 +174,23 @@ codeunit 71742 "SGA License Management"
 
             foreach jsonTokenLines in jsonArrayLines do begin
                 if jsonDetalle.ReadFrom(FORMAT(jsonTokenLines)) then begin
-                    CLEAR(Recursos);
-
                     jsonDetalle.Get('Id_Dispositivo', jsonToken);
                     Codigo := jsonToken.AsValue().AsText();
 
                     IF (Codigo <> '') then begin
-                        Recursos."No." := Codigo;
+                        CLEAR(Dispositivos);
+                        Dispositivos.Reset;
+                        Dispositivos.SetRange(Code, Codigo);
+                        IF Dispositivos.Findfirst then Dispositivos.delete;
+
+                        Dispositivos.validate(Code, Codigo);
                         jsonDetalle.Get('IP', jsonToken);
-                        Recursos.IP := jsonToken.AsValue().AsText();
+
+                        Dispositivos.Validate(IP, jsonToken.AsValue().AsText());
 
                         jsonDetalle.Get('Fecha_Registro', jsonToken);
-                        Recursos."Fecha Registro" := String2Date(jsonToken.AsValue().AsText());
-                        Recursos."Dispositivo Movil" := True;
-                        Recursos.Insert(true);
+                        Dispositivos.validate("posting Date", String2Date(jsonToken.AsValue().AsText()));
+                        Dispositivos.Insert(true);
                     end;
                 end;
             end;
