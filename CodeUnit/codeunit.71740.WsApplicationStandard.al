@@ -199,6 +199,27 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     #endregion
 
+    #region WEB SERVICES LICENCIAS
+    procedure WsDescargarAES(): Text
+    var
+        RecLocation: Record Location;
+        VJsonObjectLicencia: JsonObject;
+        cuLicencia: Codeunit "SGA License Management";
+        vAES: Text;
+        VJsonText: Text;
+    begin
+
+        vAES := cuLicencia.Vector_AES();
+        VJsonObjectLicencia.Add('AES', vAES);
+
+        VJsonObjectLicencia.WriteTo(VJsonText);
+        exit(VJsonText);
+
+    end;
+
+    #endregion
+
+
     #region WEB SERVICES
 
     //Datos Básicos
@@ -1374,7 +1395,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     #endregion
 
-
     #region PAQUETE
 
     local procedure Crear_Paquete(): Text
@@ -1400,7 +1420,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
     #endregion
-
 
     #region NUEVA SISTEMATICA
 
@@ -2425,7 +2444,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-
     local procedure Recepcionar_Contenedor_Transferencia(xTrackNo: Text; xShipmentNo: Text; xQuantity: Decimal)
     var
         RecWhseReceiptHeader: Record "Warehouse Receipt Header";
@@ -2508,10 +2526,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
-
-
-
-
     /*local procedure Vaciar_Cantidad_Recibir(xRecepcion: Text)
     var
         RecWhseReceiptLine: Record "Warehouse Receipt Line";
@@ -2587,7 +2601,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             ERROR(lblErrorSerialDuplicado);
         end;
     end;
-
 
     local procedure Crear_Reserva(xLotNo: Text; xSerialNo: Text; xPackageNo: Text; xItemNo: Text; xQuantity: Decimal; xAlbaran: Text; xVendorLotNo: Text; xRecWhseReceiptLine: Record "Warehouse Receipt Line"; xTipoSeguimiento: Integer; xFechaCaducidad: Date)
     var
@@ -2687,7 +2700,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         RecReservationEntry.INSERT;
     end;
-
 
     local procedure Eliminar_Contenedor_Recepcion(xJson: Text)
     var
@@ -2890,7 +2902,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
-
     /*procedure Crear_Almacenamiento(xReceiptNo: Code[20])
     var
         CreatePutAwayFromWhseSource: Report "Whse.-Source - Create Document";
@@ -2919,7 +2930,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;*/
 
     #endregion
-
 
     #region RECEPCIONES SUBCONTRATACION
 
@@ -3056,7 +3066,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         exit(VJsonArrayReservas);
     end;
-
 
     local procedure Previo_Recepcionar_Subcontratacion(VJsonObjectContenedor: JsonObject)
     var
@@ -3482,8 +3491,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             end;
         END;
 
-
-
         //Imprimir etiqueta
         Clear(RecResource);
         RecResource.SetRange("No.", jRecurso);
@@ -3741,7 +3748,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
 
     #endregion
-
 
     #region INFORMACION
 
@@ -6337,8 +6343,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         EXIT(Format(xCampo, 0, 9));
         //EXIT(QuitarPunto(Format(xCampo)));
     end;
-
-
 
     local procedure QuitarCaracteresRaros(xOriginal: Text) xFinal: Text
     var
