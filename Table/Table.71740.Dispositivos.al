@@ -20,6 +20,10 @@ table 71740 Dispositivos
         {
             Caption = 'Baja';
         }
+        field(100; ID; Guid)
+        {
+            Caption = 'Identificador Proceso';
+        }
     }
 
     keys

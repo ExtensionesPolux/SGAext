@@ -28,6 +28,8 @@ codeunit 71742 "SGA License Management"
         jsonArray: JsonArray;
         jsonTexto: JsonObject;
         textoJson: text;
+        NoteText: BigText;
+        Stream: InStream;
     begin
         Get_CompanyInfo(CompanyInfo);
 
@@ -46,9 +48,18 @@ codeunit 71742 "SGA License Management"
             RecordLink.SetRange(Type, RecordLink.Type::Note);
             IF RecordLink.Findset(false) then
                 repeat
-                    CLEAR(jsonTexto);
-                    jsonTexto.add('Mensaje', RecordLinkMgt.ReadNote(RecordLink));
-                    jsonArray.Add(jsonTexto);
+                    RecordLink.CalcFields(Note);
+                    IF RecordLink.Note.HasValue then begin
+
+                        CLEAR(NoteText);
+                        RecordLink.Note.CREATEINSTREAM(Stream);
+                        NoteText.READ(Stream);
+                        NoteText.GETSUBTEXT(NoteText, 2);
+
+                        CLEAR(jsonTexto);
+                        jsonTexto.add('Mensaje', FORMAT(NoteText));
+                        jsonArray.Add(jsonTexto);
+                    end;
                 until RecordLink.NEXT = 0;
         end;
 
@@ -164,12 +175,7 @@ codeunit 71742 "SGA License Management"
     begin
         Get_CompanyInfo(CompanyInfo);
 
-        Dispositivos.Reset;
-        Dispositivos.SetRange(Baja, false);
-        Dispositivos.deleteall;
-
         Identificador := CreateGuid();
-
 
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
         JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
@@ -207,7 +213,11 @@ codeunit 71742 "SGA License Management"
                         CLEAR(Dispositivos);
                         Dispositivos.Reset;
                         Dispositivos.SetRange(Code, Codigo);
-                        IF Dispositivos.Findfirst then Dispositivos.delete;
+                        IF NOT Dispositivos.Findfirst then begin
+                            CLEAR(Dispositivos);
+                            Dispositivos.Validate(code, Codigo);
+                            Dispositivos.Insert(true);
+                        end;
 
                         Dispositivos.validate(Code, Codigo);
                         jsonDetalle.Get('IP', jsonToken);
@@ -216,10 +226,17 @@ codeunit 71742 "SGA License Management"
 
                         jsonDetalle.Get('Fecha_Registro', jsonToken);
                         Dispositivos.validate("posting Date", String2Date(jsonToken.AsValue().AsText()));
-                        Dispositivos.Insert(true);
+                        Dispositivos.Validate(Baja, False);
+                        Dispositivos.Validate(ID, Identificador);
+                        Dispositivos.Modify(true);
                     end;
                 end;
             end;
+
+            Dispositivos.Reset;
+            Dispositivos.SetRange(baja, false);
+            Dispositivos.SetFilter(Id, '<>%1', Identificador);
+            Dispositivos.deleteall(true);
         end
         else
             Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());

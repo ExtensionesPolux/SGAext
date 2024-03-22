@@ -58,6 +58,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Dispositivos - Field Code - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 2972410032 - Field 3641927271 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identificador Proceso</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Dispositivos - Field ID - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 2972410032 - Field 3510957723 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>IP</source>
           <note from="Developer" annotates="general" priority="2"></note>
