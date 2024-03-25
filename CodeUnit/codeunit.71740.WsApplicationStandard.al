@@ -217,6 +217,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
+    procedure WsRegistrarDispositivo(xRegistro: Text): Text
+    var
+        cuLicencia: Codeunit "SGA License Management";
+    begin
+        exit(cuLicencia.Registro(xRegistro));
+    end;
+
     #endregion
 
 

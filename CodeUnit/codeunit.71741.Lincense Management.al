@@ -120,12 +120,13 @@ codeunit 71742 "SGA License Management"
         CompanyInfo: record "Company Information";
         Identificador: Guid;
     begin
-        If not jsonEntrada.ReadFrom(xJson) then EXIT('ERROR Json');
+        //If not jsonEntrada.ReadFrom(xJson) then EXIT('ERROR Json');
 
         Get_CompanyInfo(CompanyInfo);
         Identificador := CreateGuid();
 
-        Encriptado := DatoJsonTexto(jsonEntrada, 'Registro');
+        //Encriptado := DatoJsonTexto(jsonEntrada, 'Registro');
+        Encriptado := xJson;
 
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
         JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
