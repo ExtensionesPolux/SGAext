@@ -6374,7 +6374,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         lblErrorLineasCantidad: Label 'There are no pending lines with sufficient quantity', Comment = 'ESP=No hay lineas pendientes con cantidad suficiente';
         lblErrorAlRecepcionar: Label 'Warehouse receipt error', Comment = 'ESP=Error en la recepción';
         lblErrorPrefijoLote: Label 'Lot prefix not defined', comment = 'ESP=No se ha definido el prefijo del lote';
-        lblErrorNSerieLote: Label 'A serial number has not been defined to generate the batch', comment = 'ESP=No se ha definido un nº de serie para generar el lote';
+        lblErrorNSerieLote: Label 'A serial number has not been defined to generate the item lot no.', comment = 'ESP=No se ha definido un nº de serie para generar el lote de la referencia';
         lblErrorSinReferencia: Label 'Item No field is empty', comment = 'ESP=El campo referencia está vacio';
         lblErrorLoteInterno: Label 'Error generating internal Lot No number', comment = 'ESP=Error al generar el número de lote interno';
         lblErrorLote: Label 'Lot No not defined', comment = 'ESP=No se ha definido el lote';

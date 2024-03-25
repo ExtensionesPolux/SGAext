@@ -149,8 +149,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorNadaQueRegistrar</note>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3740895378" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A serial number has not been defined to generate the batch</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido un nº de serie para generar el lote</note>
+          <source>A serial number has not been defined to generate the item lot no.</source>
+          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido un nº de serie para generar el lote de la referencia</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorNSerieLote</note>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3246465920" size-unit="char" translate="yes" xml:space="preserve">
@@ -313,6 +313,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Control Device - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1456375839 - Action 2824216035 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Eliminar Registro</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action DELETE - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1456375839 - Action 240497149 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cargar Datos</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -327,11 +332,6 @@
           <source>Hello Word</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action TestAPI - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 1456375839 - Action 134594287 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Test Registro</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action TestRegistro - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 819454561 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lotes Internos</source>
