@@ -4,7 +4,10 @@ page 71744 Licencias
     ApplicationArea = All;
     UsageCategory = Tasks;
     SourceTable = Dispositivos;
-    Permissions = tabledata Resource = RMID;
+    Permissions = tabledata Dispositivos = RMID;
+    DeleteAllowed = false;
+    ModifyAllowed = False;
+    InsertAllowed = false;
 
     layout
     {
@@ -63,19 +66,7 @@ page 71744 Licencias
                     LicenseMgt.Test_Hola();
                 end;
             }
-            action(TestRegistro)
-            {
-                ApplicationArea = All;
-                Caption = 'Test Registro';
-                Visible = False;
-                Image = TestFile;
-                trigger OnAction()
-                var
-                    LicenseMgt: Codeunit "SGA License Management";
-                begin
-                    LicenseMgt.Test_Registro();
-                end;
-            }
+
             action(Informacion)
             {
                 ApplicationArea = all;
@@ -89,7 +80,6 @@ page 71744 Licencias
                     CompanyInfo.Findfirst;
                     CurrPage.Update(false);
                 end;
-
             }
 
             action(MOTD)
@@ -103,6 +93,20 @@ page 71744 Licencias
                     LicenseMgt: Codeunit "SGA License Management";
                 begin
                     MESSAGE(LicenseMgt.MOTD(rec.Code));
+                end;
+            }
+            action(DELETE)
+            {
+                ApplicationArea = all;
+                Caption = 'Eliminar Registro';
+                Image = DeleteRow;
+
+                trigger OnAction()
+                var
+                    LicenseMgt: Codeunit "SGA License Management";
+                begin
+                    MESSAGE(LicenseMgt.MOTD(rec.Code));
+                    CurrPage.update;
                 end;
 
             }

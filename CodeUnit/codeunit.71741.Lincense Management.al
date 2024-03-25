@@ -41,26 +41,28 @@ codeunit 71742 "SGA License Management"
         Dispositivo.Reset;
         Dispositivo.SetRange(Code, DispositivoId);
         IF Dispositivo.Findfirst then begin
-            IF Dispositivo.Baja then jsonMOTD.add('Baja', 'True');
+            IF NOT Dispositivo.Baja then
+                jsonMOTD.add('Baja', 'True')
+            else begin
+                RecordLink.Reset;
+                RecordLink.SetRange("Record ID", Dispositivo.RecordId);
+                RecordLink.SetRange(Type, RecordLink.Type::Note);
+                IF RecordLink.Findset(false) then
+                    repeat
+                        RecordLink.CalcFields(Note);
+                        IF RecordLink.Note.HasValue then begin
 
-            RecordLink.Reset;
-            RecordLink.SetRange("Record ID", Dispositivo.RecordId);
-            RecordLink.SetRange(Type, RecordLink.Type::Note);
-            IF RecordLink.Findset(false) then
-                repeat
-                    RecordLink.CalcFields(Note);
-                    IF RecordLink.Note.HasValue then begin
+                            CLEAR(NoteText);
+                            RecordLink.Note.CREATEINSTREAM(Stream);
+                            NoteText.READ(Stream);
+                            NoteText.GETSUBTEXT(NoteText, 2);
 
-                        CLEAR(NoteText);
-                        RecordLink.Note.CREATEINSTREAM(Stream);
-                        NoteText.READ(Stream);
-                        NoteText.GETSUBTEXT(NoteText, 2);
-
-                        CLEAR(jsonTexto);
-                        jsonTexto.add('Mensaje', FORMAT(NoteText));
-                        jsonArray.Add(jsonTexto);
-                    end;
-                until RecordLink.NEXT = 0;
+                            CLEAR(jsonTexto);
+                            jsonTexto.add('Mensaje', FORMAT(NoteText));
+                            jsonArray.Add(jsonTexto);
+                        end;
+                    until RecordLink.NEXT = 0;
+            end;
         end;
 
         jsonArray.WriteTo(textojson);
@@ -147,6 +149,39 @@ codeunit 71742 "SGA License Management"
         else
             Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
     end;
+
+
+    procedure Eliminar_Registro_BC(DispositivoID: code[20])
+    var
+        AzureFunctions: Codeunit "Azure Functions";
+        AzureFunctionsResponse: Codeunit "Azure Functions Response";
+        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
+        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
+        JsonAzure: JsonObject;
+        jsonEntrada: JsonObject;
+        RespuestaAzure: text;
+        RequestBody: text;
+        CompanyInfo: record "Company Information";
+        Identificador: Guid;
+    begin
+        Get_CompanyInfo(CompanyInfo);
+        Identificador := CreateGuid();
+
+        JsonAzure.add('Commando', 'HOLA');
+        JsonAzure.Add('ID', Identificador);
+        JsonAzure.WriteTo(RequestBody);
+
+        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
+        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
+        if AzureFunctionsResponse.IsSuccessful() then begin
+            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
+            JsonEntrada.ReadFrom(RespuestaAzure);
+            //Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_Salida');
+        end
+        else
+            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
+    end;
+
 
     procedure Informacion()
     var
