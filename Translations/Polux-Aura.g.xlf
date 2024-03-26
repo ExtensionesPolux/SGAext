@@ -358,11 +358,6 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Company_Info_SGA - Control SGA - Property Caption</note>
         </trans-unit>
-        <trans-unit id="PageExtension 1434786627 - Control 2176927258 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1434786627">
-          <source>Serial number to be used to generate the internal lot number</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Número de serie que se utilizará para generar el número de lote interno"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Item Card - Control Lot No Serial - Property ToolTip</note>
-        </trans-unit>
         <trans-unit id="PageExtension 1748631067 - Control 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3870787835">
           <source>Aplicación SGA</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -492,11 +487,6 @@
           <source>Vector Encriptación AES</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Vector AES - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3276313895 - Field 2176927258 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3276313895">
-          <source>Lot No Serial</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Nº Serie Lote</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Item - Field Lot No Serial - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 346005766 - Field 4283809525 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 346005766">
           <source>Read</source>

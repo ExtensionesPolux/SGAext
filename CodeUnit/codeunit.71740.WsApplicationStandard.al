@@ -1996,16 +1996,17 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseSetup: Record "Warehouse Setup";
         RecItem: Record Item;
 
+        cuNoSeriesManagement: Codeunit NoSeriesManagement;
+
         jTrackNo: Text;
         jReferencia: Text;
         jRecepcion: Text;
         jUnidades: Integer;
         jTotalContenedores: Integer;
         jLoteProveedor: Text;
-        jLotePreasignado: Text;
+        //jLotePreasignado: Text;
         jSerie: Text;
         jRecurso: Text;
-        BaseNumeroContenedor: Text;
         NumeracionInicial: Integer;
         i: Integer;
         NumContedor: Text;
@@ -2021,7 +2022,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jUnidades := DatoJsonInteger(VJsonObjectContenedor, 'Units');
         jTotalContenedores := DatoJsonInteger(VJsonObjectContenedor, 'Quantity');
         jLoteProveedor := DatoJsonTexto(VJsonObjectContenedor, 'VendorLotNo');
-        jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
+        //jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
         jImprimir := DatoJsonBoolean(VJsonObjectContenedor, 'Print');
         jRecurso := DatoJsonTexto(VJsonObjectContenedor, 'ResourceNo');
 
@@ -2045,51 +2046,54 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
             RecWarehouseSetup.Get();
 
-            BaseNumeroContenedor := '';
             iTipoSeguimiento := TipoSeguimientoProducto(jReferencia);
             case iTipoSeguimiento of
                 1, 3, 4, 6://Lote
                     begin
-                        //Base para la creación del Nº Contenedor      
-                        if (RecWarehouseSetup."Usar Lote Proveedor") then
-                            BaseNumeroContenedor := jLoteProveedor
-                        else
-                            if (RecWarehouseSetup."Lote Automatico") then
-                                BaseNumeroContenedor := Base_Numero_Contenedor(1, jReferencia);
+                        if (RecWarehouseSetup."Lote Automatico") then begin
+                            RecItem.Get(jReferencia);
+                            if (RecItem."Lot Nos." = '') then error(lblErrorNSerieLote);
+                        end;
                     end;
             end;
+        end;
 
-            //Si es un contenedor unitario se añade 00 si son varios 01,02....
-            if jTotalContenedores = 1 then
-                NumeracionInicial := 0
+        //Si es un contenedor unitario se añade 00 si son varios 01,02....
+        /*if jTotalContenedores = 1 then
+            NumeracionInicial := 0
+        else
+            NumeracionInicial := 1;*/
+
+        for i := 1 to jTotalContenedores do begin
+
+            /*if (BaseNumeroContenedor <> '') then begin
+                NumContedor := Format(NumeracionInicial);
+                if (StrLen(NumContedor) = 1) then
+                    NumContedor := '00' + NumContedor;
+                if (StrLen(NumContedor) = 2) then
+                    NumContedor := '0' + NumContedor;
+
+                TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
+            end else
+                TextoContenedorFinal := '';*/
+
+            //Base para la creación del Nº Contenedor      
+            if (RecWarehouseSetup."Usar Lote Proveedor") then
+                TextoContenedorFinal := jLoteProveedor
             else
-                NumeracionInicial := 1;
+                if (RecWarehouseSetup."Lote Automatico") then
+                    TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
 
-            for i := 1 to jTotalContenedores do begin
+            //Si lleva un lote preasignado utilizamos ese
+            /*if jLotePreasignado <> '' then begin
+                TextoContenedorFinal := jLotePreasignado;
+                jImprimir := false;
+            end;*/
 
-                if (BaseNumeroContenedor <> '') then begin
-                    NumContedor := Format(NumeracionInicial);
-                    if (StrLen(NumContedor) = 1) then
-                        NumContedor := '00' + NumContedor;
-                    if (StrLen(NumContedor) = 2) then
-                        NumContedor := '0' + NumContedor;
+            Recepcionar_Contenedor(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
 
-                    TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
-                end else
-                    TextoContenedorFinal := '';
+            NumeracionInicial += 1;
 
-
-                //Si lleva un lote preasignado utilizamos ese
-                if jLotePreasignado <> '' then begin
-                    TextoContenedorFinal := jLotePreasignado;
-                    jImprimir := false;
-                end;
-
-                Recepcionar_Contenedor(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
-
-                NumeracionInicial += 1;
-
-            end;
         end;
 
     end;
@@ -2773,8 +2777,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;*/
 
 
-
-
     end;
 
     local procedure Eliminar_Cantidad_Recepcion(xJson: Text)
@@ -2820,7 +2822,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
     local procedure Registrar_Recepcion(xRecepcion: Text; xLinea: Integer)
-    var
+    var          //RecWarehouseSetup: Record "Warehouse Setup";
         pgWR: Page "Warehouse Receipt";
         RecWhseReceiptLine: Record "Warehouse Receipt Line";
         cuWhsePostReceipt: Codeunit "Whse.-Post Receipt";
@@ -3078,11 +3080,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     var
         RecWarehouseSetup: Record "Warehouse Setup";
         RecItem: Record Item;
+        cuNoSeriesManagement: Codeunit NoSeriesManagement;
 
         jReferencia: Text;
         jTotalContenedores: Integer;
         jLoteProveedor: Text;
-        jLotePreasignado: Text;
         jRecurso: Text;
         BaseNumeroContenedor: Text;
         NumeracionInicial: Integer;
@@ -3116,24 +3118,22 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         case iTipoSeguimiento of
             1, 3, 4, 6://Lote
                 begin
-                    //Base para la creación del Nº Contenedor      
-                    if (RecWarehouseSetup."Usar Lote Proveedor") then
-                        BaseNumeroContenedor := jLoteProveedor
-                    else
-                        if (RecWarehouseSetup."Lote Automatico") then
-                            BaseNumeroContenedor := Base_Numero_Contenedor(1, jReferencia);
+                    if (RecWarehouseSetup."Lote Automatico") then begin
+                        RecItem.Get(jReferencia);
+                        if (RecItem."Lot Nos." = '') then error(lblErrorNSerieLote);
+                    end;
                 end;
         end;
 
         //Si es un contenedor unitario se añade 00 si son varios 01,02....
-        if jTotalContenedores = 1 then
+        /*if jTotalContenedores = 1 then
             NumeracionInicial := 0
         else
-            NumeracionInicial := 1;
+            NumeracionInicial := 1;*/
 
         for i := 1 to jTotalContenedores do begin
 
-            if (BaseNumeroContenedor <> '') then begin
+            /*if (BaseNumeroContenedor <> '') then begin
                 NumContedor := Format(NumeracionInicial);
                 if (StrLen(NumContedor) = 1) then
                     NumContedor := '00' + NumContedor;
@@ -3142,14 +3142,15 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
                 TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
             end else
-                TextoContenedorFinal := '';
+                TextoContenedorFinal := '';*/
 
 
-            //Si lleva un lote preasignado utilizamos ese
-            if jLotePreasignado <> '' then begin
-                TextoContenedorFinal := jLotePreasignado;
-                jImprimir := false;
-            end;
+            if (RecWarehouseSetup."Usar Lote Proveedor") then
+                TextoContenedorFinal := jLoteProveedor
+            else
+                if (RecWarehouseSetup."Lote Automatico") then
+                    TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
+
 
             Recepcionar_Contenedor_Subcontratacion(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
 
@@ -6025,9 +6026,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
     ///<summary>1: Materia Prima - 2: Semielaborado - 3: Producto Terminado</summary>    
-    procedure Base_Numero_Contenedor(xTipo: Integer; xItemNo: Text): Text
+    procedure Base_Numero_Contenedor_b(xTipo: Integer; xItemNo: Text): Text
     var
-        RecWarehouseSetup: Record "Warehouse Setup";
         RecLotNoInf: Record "Lot No. Information";
         RecItem: Record Item;
         cuNoSeriesManagement: Codeunit NoSeriesManagement;
@@ -6039,43 +6039,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         SufijoNumSerie: Text;
     begin
 
-        RecWarehouseSetup.get();
-
         TxtContenedor := '';
-
-        /*if NOT RecWarehouseSetup."Usar serie para Lote" THEN BEGIN
-
-            case xTipo of
-                1:
-                    begin
-                        xInicial := RecWarehouseSetup."Prefijo Materia Prima";
-                    end;
-                2:
-                    begin
-                        xInicial := RecWarehouseSetup."Prefijo Semielaborado";
-                    end;
-                3:
-                    begin
-                        xInicial := RecWarehouseSetup."Prefijo Producto Terminado";
-                    end;
-            end;
-
-            if (xInicial = '') then Error(lblErrorPrefijoLote);
-
-            if (RecWarehouseSetup."Lot No Serial" = '') then Error(lblErrorNSerieLote);
-
-            Formato := '<year,2><month,2><day,2><Hours24,2>';
-            sufijo := cuNoSeriesManagement.GetNextNo(RecWarehouseSetup."Lot No Serial", WorkDate, true);
-            TxtContenedor := xInicial + Format(CurrentDateTime, 8, Formato) + sufijo;
-        END ELSE begin*/
 
         if (xItemNo = '') then error(lblErrorSinReferencia);
         RecItem.Get(xItemNo);
-        if (RecItem."Lot No Serial" = '') then error(lblErrorNSerieLote);
+        if (RecItem."Lot Nos." = '') then error(lblErrorNSerieLote);
 
-        TxtContenedor := cuNoSeriesManagement.GetNextNo(RecItem."Lot No Serial", WorkDate, true);
-        /*end;*/
-
+        TxtContenedor := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
 
         Clear(RecLotNoInf);
         RecLotNoInf.SetRange("Lot No.", TxtContenedor);
