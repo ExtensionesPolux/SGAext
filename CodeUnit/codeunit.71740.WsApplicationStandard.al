@@ -232,8 +232,14 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
+    procedure WsBajaDispositivo(xDispositivo: Text): Text
+    var
+        cuLicencia: Codeunit "SGA License Management";
+    begin
+        cuLicencia.Eliminar_Registro_BC(xDispositivo);
 
-
+        exit('');
+    end;
 
     #endregion
 
