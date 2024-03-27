@@ -64,8 +64,9 @@ codeunit 71742 "SGA License Management"
                     until RecordLink.NEXT = 0;
             end;
         end;
-
-        jsonArray.WriteTo(textojson);
+        textoJson := '';
+        IF jsonArray.Count > 0 then jsonArray.WriteTo(textojson);
+        if textoJson = '[]' then textojson := '';
         jsonMOTD.add('MOTD', textoJson);
 
         jsonMOTD.WriteTo(Mensaje);
@@ -149,7 +150,7 @@ codeunit 71742 "SGA License Management"
     end;
 
 
-    procedure Eliminar_Registro_BC(DispositivoID: code[20])
+    procedure Eliminar_Registro_BC(DispositivoID: code[40])
     var
         AzureFunctions: Codeunit "Azure Functions";
         AzureFunctionsResponse: Codeunit "Azure Functions Response";
