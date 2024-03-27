@@ -38,6 +38,10 @@ page 71744 Licencias
                 {
                     ApplicationArea = all;
                 }
+                field(Baja; rec.Baja)
+                {
+                    ApplicationArea = All;
+                }
             }
         }
 
@@ -143,6 +147,7 @@ page 71744 Licencias
         LicenseMgt.Informacion();
 
         rec.reset;
+        //rec.setrange(Baja, False);
         rec.FindFirst();
     end;
 
