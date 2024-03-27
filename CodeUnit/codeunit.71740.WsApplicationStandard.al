@@ -224,6 +224,23 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit(cuLicencia.Registro(xRegistro));
     end;
 
+    procedure WsMOTD(xDispositivo: Text): Text
+    var
+        cuLicencia: Codeunit "SGA License Management";
+    begin
+        exit(cuLicencia.MOTD(xDispositivo));
+    end;
+
+
+    procedure WsBajaDispositivo(xDispositivo: Text): Text
+    var
+        cuLicencia: Codeunit "SGA License Management";
+    begin
+        cuLicencia.Eliminar_Registro_BC(xDispositivo);
+
+        exit('');
+    end;
+
     #endregion
 
 
@@ -1111,10 +1128,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 lUbicacionHasta := Ubicacion_Paquete(newPackageNo, lAlmacen);
             end;
 
-            Clear(RecLocation);
-            RecLocation.Get(lAlmacen);
-            if RecLocation."Almacen Avanzado" then
-                AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, lCantidad, lContenedor, lResource, lItemNo, lLotNo, lSerialNo, lPackageNo, newPackageNo);
+            //Clear(RecLocation);
+            //RecLocation.Get(lAlmacen);
+            //if RecLocation."Almacen Avanzado" then
+            AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, lCantidad, lContenedor, lResource, lItemNo, lLotNo, lSerialNo, lPackageNo, newPackageNo);
 
         END;
         exit('OK');
@@ -5263,18 +5280,18 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             VJsonObjectInventario.Add('SerialNo', QueryLotInventory.Serial_No);
             VJsonObjectInventario.Add('PackageNo', QueryLotInventory.Package_No);
 
-            if (RecWarehouseSetup."Codigo Sin Paquete" <> '') then begin
-                if (RecWarehouseSetup."Codigo Sin Paquete" <> QueryLotInventory.Package_No) then begin
+            if (QueryLotInventory.Package_No <> '') then begin
+                if (RecWarehouseSetup."Codigo Sin Paquete" <> '') then begin
+                    if (RecWarehouseSetup."Codigo Sin Paquete" <> QueryLotInventory.Package_No) then begin
+                        VJsonObjectInventario.Add('InPackage', FormatoBoolean(True));
+                    end else begin
+                        VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
+                    end;
+                end ELSE begin
                     VJsonObjectInventario.Add('InPackage', FormatoBoolean(True));
-                end else begin
-                    VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
                 end;
-            end ELSE begin
-                if (QueryLotInventory.Package_No <> '') then begin
-                    VJsonObjectInventario.Add('InPackage', FormatoBoolean(True));
-                end else begin
-                    VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
-                end;
+            END ELSE begin
+                VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
             end;
 
 
