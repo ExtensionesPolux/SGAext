@@ -33,7 +33,4 @@ table 71740 Dispositivos
             Clustered = true;
         }
     }
-
-
-
 }

@@ -41,7 +41,7 @@ codeunit 71742 "SGA License Management"
         Dispositivo.Reset;
         Dispositivo.SetRange(Code, DispositivoId);
         IF Dispositivo.Findfirst then begin
-            IF NOT Dispositivo.Baja then
+            IF Dispositivo.Baja then
                 jsonMOTD.add('Baja', 'True')
             else begin
                 RecordLink.Reset;
@@ -120,12 +120,9 @@ codeunit 71742 "SGA License Management"
         CompanyInfo: record "Company Information";
         Identificador: Guid;
     begin
-        //If not jsonEntrada.ReadFrom(xJson) then EXIT('ERROR Json');
-
         Get_CompanyInfo(CompanyInfo);
         Identificador := CreateGuid();
 
-        //Encriptado := DatoJsonTexto(jsonEntrada, 'Registro');
         Encriptado := xJson;
 
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
@@ -158,18 +155,32 @@ codeunit 71742 "SGA License Management"
         AzureFunctionsResponse: Codeunit "Azure Functions Response";
         AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
         IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
+        Dispositivos: record Dispositivos;
+        jsonToken: JsonToken;
         JsonAzure: JsonObject;
         jsonEntrada: JsonObject;
+        jsonBC: JsonObject;
         RespuestaAzure: text;
         RequestBody: text;
         CompanyInfo: record "Company Information";
         Identificador: Guid;
+        MensajeBC: text;
     begin
+        Dispositivos.Reset;
+        Dispositivos.SetRange(Code, DispositivoID);
+        IF NOT Dispositivos.Findfirst then error('No Existe Dispositivo: ' + DispositivoID);
+
         Get_CompanyInfo(CompanyInfo);
         Identificador := CreateGuid();
 
-        JsonAzure.add('Commando', 'HOLA');
+        JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
+        jsonBC.add('ID_Dispositivo', DispositivoID);
+        JsonBC.WriteTo(MensajeBC);
+
+        JsonAzure.add('Commando', 'UNREGISTER-BC');
         JsonAzure.Add('ID', Identificador);
+        JsonAzure.add('Mensaje_BC', MensajeBC);
         JsonAzure.WriteTo(RequestBody);
 
         IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
@@ -177,7 +188,14 @@ codeunit 71742 "SGA License Management"
         if AzureFunctionsResponse.IsSuccessful() then begin
             AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
             JsonEntrada.ReadFrom(RespuestaAzure);
-            //Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_Salida');
+            IF Json_Read_Label(jsonEntrada, 'Estado') <> 'OK' Then Error(Json_Read_Label(jsonEntrada, 'Mensaje_Error'));
+
+            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
+            jsonBC.ReadFrom(DatoJsonTexto(jsonEntrada, 'Mensaje_BC'));
+            IF Json_Read_Label(jsonBC, 'Estado') <> 'OK' Then Error(Json_Read_Label(jsonBC, 'Mensaje_Error'));
+
+            Dispositivos.Baja := True;
+            Dispositivos.Modify;
         end
         else
             Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
@@ -256,12 +274,9 @@ codeunit 71742 "SGA License Management"
                         end;
 
                         Dispositivos.validate(Code, Codigo);
-                        jsonDetalle.Get('IP', jsonToken);
 
-                        Dispositivos.Validate(IP, jsonToken.AsValue().AsText());
-
-                        jsonDetalle.Get('Fecha_Registro', jsonToken);
-                        Dispositivos.validate("posting Date", String2Date(jsonToken.AsValue().AsText()));
+                        Dispositivos.Validate(IP, Json_Read_Label(jsonDetalle, 'IP'));
+                        Dispositivos.validate("posting Date", String2Date(Json_Read_Label(jsonDetalle, 'Fecha_Registro')));
                         Dispositivos.Validate(Baja, False);
                         Dispositivos.Validate(ID, Identificador);
                         Dispositivos.Modify(true);
@@ -329,6 +344,16 @@ codeunit 71742 "SGA License Management"
     #endregion
 
     #region Json
+
+    local procedure Json_Read_Label(json: JsonObject; Etiqueta: text) Valor: Text
+    var
+        jsonToken: JsonToken;
+
+    begin
+        json.Get(Etiqueta, jsonToken);
+        Valor := jsonToken.AsValue().AsText();
+    end;
+
     local procedure DatoJsonTexto(xObjeto: JsonObject; xNodo: Text): text
     var
         JsonTokenParte: JsonToken;

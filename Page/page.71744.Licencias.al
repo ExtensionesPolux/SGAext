@@ -95,6 +95,19 @@ page 71744 Licencias
                     MESSAGE(LicenseMgt.MOTD(rec.Code));
                 end;
             }
+            action(REGISTER)
+            {
+                ApplicationArea = All;
+                Caption = 'Prueba Registro';
+                image = Register;
+
+                trigger OnAction()
+                var
+                    LicenseMgt: Codeunit "SGA License Management";
+                begin
+                    LicenseMgt.Registro('+NHBrvhSau5AXed+gV4tCPoRW/JFf0ZnzH2gZJiuuYafC/rNB7n0gxNWqrAs2vZwXZgMewwVak35PdgnxdbIC4QVg4lX+vwjC/pUJ+eDrXCDxX7Q+v6lIUKpydAr3zy3oQjQO0pnAuotffaBa7n8VBghPHMnFcPWsP3LTjPwvBanubbanoUX5Zs3W1HbMUpLamVhUebg8oPOxHIDXQ7kPwN1MTuntcTsZmqZ6GKctvE=')
+                end;
+            }
             action(DELETE)
             {
                 ApplicationArea = all;
@@ -105,19 +118,16 @@ page 71744 Licencias
                 var
                     LicenseMgt: Codeunit "SGA License Management";
                 begin
-                    MESSAGE(LicenseMgt.MOTD(rec.Code));
-                    CurrPage.update;
+                    LicenseMgt.Eliminar_Registro_BC(rec.Code);
+                    Cargar_Datos();
+                    CurrPage.Update(false);
                 end;
-
             }
-
-
         }
     }
 
     trigger OnOpenPage()
     begin
-        Cargar_Datos();
         CompanyInfo.Reset;
         CompanyInfo.Findfirst;
     end;
