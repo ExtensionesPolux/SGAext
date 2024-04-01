@@ -233,7 +233,7 @@ codeunit 71742 "SGA License Management"
         Identificador := CreateGuid();
 
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
-        JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
         JsonBC.WriteTo(MensajeBC);
 
         JsonAzure.add('Commando', 'INFO');
