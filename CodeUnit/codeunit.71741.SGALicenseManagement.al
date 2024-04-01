@@ -1,4 +1,4 @@
-codeunit 71742 "SGA License Management"
+codeunit 71741 "SGA License Management"
 {
 
     trigger OnRun()
@@ -34,7 +34,7 @@ codeunit 71742 "SGA License Management"
         Get_CompanyInfo(CompanyInfo);
 
 
-        jsonMOTD.add('ID_Dispositivo', DispositivoId);
+        jsonMOTD.add('Id_Dispositivo', DispositivoId);
         jsonMOTD.Add('Estado', 'OK');
         jsonMOTD.add('Mensaje_Error', '');
 
@@ -111,6 +111,8 @@ codeunit 71742 "SGA License Management"
         AzureFunctionsResponse: Codeunit "Azure Functions Response";
         AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
         IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
+        Dispositivos: record Dispositivos;
+        Id_Dispositivo: code[40];
         jsonEntrada: JsonObject;
         JsonBC: JsonObject;
         JsonAzure: JsonObject;
@@ -127,7 +129,7 @@ codeunit 71742 "SGA License Management"
         Encriptado := xJson;
 
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
-        JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
         JsonBC.WriteTo(MensajeBC);
 
         JsonAzure.add('Commando', 'REGISTRAR');
@@ -143,6 +145,26 @@ codeunit 71742 "SGA License Management"
             Verificar_Mensaje(CompanyInfo, RespuestaAzure);
 
             JsonEntrada.ReadFrom(RespuestaAzure);
+
+            Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_BC');
+            IF Respuesta = '' then error('No Existe json BC en Registro');
+
+            jsonBC.ReadFrom(Respuesta);
+            Id_Dispositivo := DatoJsonTexto(jsonBC, 'Id_Dispositivo');
+
+            IF Id_Dispositivo <> '' then begin
+                Dispositivos.Reset;
+                Dispositivos.SetRange(Code, Id_Dispositivo);
+                IF NOT Dispositivos.Findfirst then begin
+                    CLEAR(Dispositivos);
+                    Dispositivos.Code := Id_Dispositivo;
+                    Dispositivos.Insert;
+                end;
+                Dispositivos.Baja := False;
+                Dispositivos."posting Date" := WorkDate();
+                Dispositivos.Modify;
+            end;
+
             Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_App');
         end
         else
@@ -175,8 +197,8 @@ codeunit 71742 "SGA License Management"
         Identificador := CreateGuid();
 
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
-        JsonBC.Add('ID_Polux', CompanyInfo."License Aura-SGA");
-        jsonBC.add('ID_Dispositivo', DispositivoID);
+        JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
+        jsonBC.add('Id_Dispositivo', DispositivoID);
         JsonBC.WriteTo(MensajeBC);
 
         JsonAzure.add('Commando', 'UNREGISTER-BC');
@@ -308,7 +330,7 @@ codeunit 71742 "SGA License Management"
         Mensaje := DatoJsonTexto(jsonEntrada, 'Mensaje_BC');
         JsonBC.ReadFrom(Mensaje);
         IF (text.UpperCase(DatoJsonTexto(JsonBC, 'Licencia_BC')) <> text.UpperCase(CompanyInfo."License BC")) or
-           (text.UpperCase(DatoJsonTexto(JsonBC, 'ID_Polux')) <> text.UpperCase(CompanyInfo."License Aura-SGA")) then
+           (text.UpperCase(DatoJsonTexto(JsonBC, 'Id_Polux')) <> text.UpperCase(CompanyInfo."License Aura-SGA")) then
             error('Destinatario del mensaje erróneo');
     end;
 

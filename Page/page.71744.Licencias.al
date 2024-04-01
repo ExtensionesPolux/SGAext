@@ -109,7 +109,7 @@ page 71744 Licencias
                 var
                     LicenseMgt: Codeunit "SGA License Management";
                 begin
-                    LicenseMgt.Registro('+NHBrvhSau5AXed+gV4tCPoRW/JFf0ZnzH2gZJiuuYafC/rNB7n0gxNWqrAs2vZwXZgMewwVak35PdgnxdbIC4QVg4lX+vwjC/pUJ+eDrXCDxX7Q+v6lIUKpydAr3zy3oQjQO0pnAuotffaBa7n8VBghPHMnFcPWsP3LTjPwvBanubbanoUX5Zs3W1HbMUpLamVhUebg8oPOxHIDXQ7kPwN1MTuntcTsZmqZ6GKctvE=')
+                    LicenseMgt.Registro('O8JmtY03KyuZNNVohiImwxegnn+P5epppLfoLZG/dZ3icMwq+rUlnzhrLfYhO435lxbY/EJEXdZb68zJhseYfwClnH758cfnLnbSos0K2/irr/AZYOlyNnrKvS08ZcRoc7PqNozUt5VshcO9X7hDz3+3hMwAfaICt4ImmN1EC2vzJHqseT6Z51FwRTZVCGAQldtzL7Tl/whgp7+Sq1hPh2r8ZopOwBrPjzFAwRg6/3Q=')
                 end;
             }
             action(DELETE)
