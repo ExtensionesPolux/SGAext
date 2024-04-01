@@ -224,6 +224,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit(cuLicencia.Registro(xRegistro));
     end;
 
+    procedure WsRenovarDispositivo(xRegistro: Text): Text
+    var
+        cuLicencia: Codeunit "SGA License Management";
+    begin
+        exit(cuLicencia.Renovar(xRegistro));
+    end;
+
     procedure WsMOTD(xDispositivo: Text): Text
     var
         cuLicencia: Codeunit "SGA License Management";
