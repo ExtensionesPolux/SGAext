@@ -171,6 +171,51 @@ codeunit 71741 "SGA License Management"
             Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
     end;
 
+    procedure Renovar(xJson: Text) Respuesta: Text
+    var
+        AzureFunctions: Codeunit "Azure Functions";
+        AzureFunctionsResponse: Codeunit "Azure Functions Response";
+        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
+        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
+        jsonEntrada: JsonObject;
+        JsonBC: JsonObject;
+        JsonAzure: JsonObject;
+        Encriptado: Text;
+        MensajeBC: Text;
+        RespuestaAzure: text;
+        RequestBody: text;
+        CompanyInfo: record "Company Information";
+        Identificador: Guid;
+    begin
+        Get_CompanyInfo(CompanyInfo);
+        Identificador := CreateGuid();
+
+        Encriptado := xJson;
+
+        JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.WriteTo(MensajeBC);
+
+        JsonAzure.add('Commando', 'RENOVAR');
+        JsonAzure.Add('ID', Identificador);
+        JsonAzure.add('Mensaje_BC', MensajeBC);
+        JsonAzure.add('Mensaje_App', Encriptado);
+        JsonAzure.WriteTo(RequestBody);
+
+        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
+        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
+        if AzureFunctionsResponse.IsSuccessful() then begin
+            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
+            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
+
+            JsonEntrada.ReadFrom(RespuestaAzure);
+
+            Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_App');
+        end
+        else
+            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
+    end;
+
 
     procedure Eliminar_Registro_BC(DispositivoID: code[40])
     var
