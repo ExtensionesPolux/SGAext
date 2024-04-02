@@ -3010,6 +3010,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectReceipts.Add('No', RecPurchaseHeader."No.");
 
         VJsonObjectReceipts.Add('Date', FormatoFecha(RecPurchaseHeader."Posting Date"));
+        VJsonObjectReceipts.Add('VendorShipmentNo', RecPurchaseHeader."Vendor Shipment No.");
 
         VJsonObjectReceipts.Add('VendorName', RecPurchaseHeader."Buy-from Vendor Name");
         //VJsonObjectReceipts.Add('ProdOrderNo', RecPurchaseLine."Prod. Order No.");
@@ -3018,7 +3019,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectReceipts.Add('EsSubcontratacion', 'True');
         VJsonObjectReceipts.Add('TieneComentarios', 'false');
         VJsonObjectReceipts.Add('Comentarios', '');
-
         Clear(RecPurchaseLine);
         //RecPurchaseLine.SetRange(RecPurchaseLine."Document Type", RecPurchaseLine."Document Type"::Order);
         RecPurchaseLine.SetRange(RecPurchaseLine."Document No.", xNo);
