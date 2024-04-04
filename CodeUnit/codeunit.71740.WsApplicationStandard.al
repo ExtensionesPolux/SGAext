@@ -485,14 +485,19 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectContenedor: JsonObject;
         VJsonText: Text;
         jRecepcion: Text;
+        jTipo: Text;
 
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
             ERROR(lblErrorJson);
 
         jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
+        jTipo := DatoJsonTexto(VJsonObjectContenedor, 'Type');
 
-        Eliminar_Contenedor_Recepcion(xJson);
+        IF (jTipo = 'T') THEN
+            Eliminar_Contenedor_Recepcion_Transferencia(xJson)
+        else
+            Eliminar_Contenedor_Recepcion(xJson);
 
         //Actualizar_Cantidad_Recibir(jRecepcion);
         Objeto_Recepcion(jRecepcion).WriteTo(VJsonText);
@@ -2756,6 +2761,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jLoteInterno: Text;
         jSerie: Text;
         EsSubcontratacion: Boolean;
+
+        jLotNo: Text;
+        jSerialNo: Text;
+
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
             Error(lblErrorJson);
@@ -2772,6 +2781,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWhseReceiptLine.SETRANGE("No.", jRecepcion);
         RecWhseReceiptLine.SETRANGE("Line No.", jLineNo);
         IF RecWhseReceiptLine.findfirst THEN begin
+
             RecWhseReceiptLine.Validate("Qty. to Receive", RecWhseReceiptLine."Qty. to Receive" - RecReservationEntry.Quantity);
             if (RecWhseReceiptLine."Qty. to Receive" < 0) then
                 RecWhseReceiptLine.Validate("Qty. to Receive", 0);
@@ -2779,6 +2789,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;
 
         RecReservationEntry.Delete();
+
 
 
         //Eliminar el lote si no está en algún pedido de compra preasignado
@@ -2802,6 +2813,58 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
 
     end;
+
+
+
+
+    local procedure Eliminar_Contenedor_Recepcion_Transferencia(xJson: Text)
+    var
+
+        RecReservationEntry: Record "Reservation Entry";
+        RecWhseReceiptLine: Record "Warehouse Receipt Line";
+        RecLotNoInf: Record "Lot No. Information";
+        RecPurchaseLine: Record "Purchase Line";
+        VJsonObjectContenedor: JsonObject;
+
+        lParte: Text;
+        VJsonText: Text;
+        lNumeroContenedor: Text;
+        lRespuesta: Text;
+        jRecepcion: Text;
+        jLineNo: Integer;
+        jEntryNo: Integer;
+
+        jLoteInterno: Text;
+        jSerie: Text;
+        EsSubcontratacion: Boolean;
+    begin
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            Error(lblErrorJson);
+
+        jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
+        jLineNo := DatoJsonInteger(VJsonObjectContenedor, 'LineNo');
+        jEntryNo := DatoJsonInteger(VJsonObjectContenedor, 'EntryNo');
+
+        CLEAR(RecReservationEntry);
+        RecReservationEntry.SetRange("Entry No.", jEntryNo);
+        IF NOT RecReservationEntry.FindFirst() THEN Error(StrSubstNo(lblErrorLoteInternoNoExiste, ''));
+
+        clear(RecWhseReceiptLine);
+        RecWhseReceiptLine.SETRANGE("No.", jRecepcion);
+        RecWhseReceiptLine.SETRANGE("Line No.", jLineNo);
+        IF RecWhseReceiptLine.findfirst THEN begin
+            RecWhseReceiptLine.Validate("Qty. to Receive", RecWhseReceiptLine."Qty. to Receive" - RecReservationEntry.Quantity);
+            if (RecWhseReceiptLine."Qty. to Receive" < 0) then
+                RecWhseReceiptLine.Validate("Qty. to Receive", 0);
+            RecWhseReceiptLine.MODIFY();
+        end;
+
+        RecReservationEntry.Validate("Qty. to Handle (Base)", 0);
+        RecReservationEntry.Modify();
+
+    end;
+
+
 
     local procedure Eliminar_Cantidad_Recepcion(xJson: Text)
     var
