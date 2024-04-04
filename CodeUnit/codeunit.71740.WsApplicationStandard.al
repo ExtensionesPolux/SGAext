@@ -2079,44 +2079,45 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                         end;
                     end;
             end;
-        end;
 
-        //Si es un contenedor unitario se añade 00 si son varios 01,02....
-        /*if jTotalContenedores = 1 then
-            NumeracionInicial := 0
-        else
-            NumeracionInicial := 1;*/
 
-        for i := 1 to jTotalContenedores do begin
-
-            /*if (BaseNumeroContenedor <> '') then begin
-                NumContedor := Format(NumeracionInicial);
-                if (StrLen(NumContedor) = 1) then
-                    NumContedor := '00' + NumContedor;
-                if (StrLen(NumContedor) = 2) then
-                    NumContedor := '0' + NumContedor;
-
-                TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
-            end else
-                TextoContenedorFinal := '';*/
-
-            //Base para la creación del Nº Contenedor      
-            if (RecWarehouseSetup."Usar Lote Proveedor") then
-                TextoContenedorFinal := jLoteProveedor
+            //Si es un contenedor unitario se añade 00 si son varios 01,02....
+            /*if jTotalContenedores = 1 then
+                NumeracionInicial := 0
             else
-                if (RecWarehouseSetup."Lote Automatico") then
-                    TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
+                NumeracionInicial := 1;*/
 
-            //Si lleva un lote preasignado utilizamos ese
-            /*if jLotePreasignado <> '' then begin
-                TextoContenedorFinal := jLotePreasignado;
-                jImprimir := false;
-            end;*/
+            for i := 1 to jTotalContenedores do begin
 
-            Recepcionar_Contenedor(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
+                /*if (BaseNumeroContenedor <> '') then begin
+                    NumContedor := Format(NumeracionInicial);
+                    if (StrLen(NumContedor) = 1) then
+                        NumContedor := '00' + NumContedor;
+                    if (StrLen(NumContedor) = 2) then
+                        NumContedor := '0' + NumContedor;
 
-            NumeracionInicial += 1;
+                    TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
+                end else
+                    TextoContenedorFinal := '';*/
 
+                //Base para la creación del Nº Contenedor      
+                if (RecWarehouseSetup."Usar Lote Proveedor") then
+                    TextoContenedorFinal := jLoteProveedor
+                else
+                    if (RecWarehouseSetup."Lote Automatico") then
+                        TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
+
+                //Si lleva un lote preasignado utilizamos ese
+                /*if jLotePreasignado <> '' then begin
+                    TextoContenedorFinal := jLotePreasignado;
+                    jImprimir := false;
+                end;*/
+
+                Recepcionar_Contenedor(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
+
+                NumeracionInicial += 1;
+
+            end;
         end;
 
     end;
