@@ -4284,15 +4284,19 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         end;
 
+        //Commit();
+
         WhseJnlLine.reset;
         WhseJnlLine.SETRANGE("Whse. Document No.", 'MOVE');
         WhseJnlLine.SETRANGE("To Bin Code", '=%1', xToBin);
         IF WhseJnlLine.FindSet() then begin
             //Registrar
-            IF NOT CODEUNIT.Run(CODEUNIT::"Whse. Jnl.-Register Batch", WhseJnlLine) THEN begin
+            CODEUNIT.Run(CODEUNIT::"Whse. Jnl.-Register Batch", WhseJnlLine);
+
+            /*IF NOT CODEUNIT.Run(CODEUNIT::"Whse. Jnl.-Register Batch", WhseJnlLine) THEN begin
                 txtError := GetLastErrorText();
                 ERROR(txtError);
-            end;
+            end;*/
         end ELSE
             Error(lblErrorMover);
 
