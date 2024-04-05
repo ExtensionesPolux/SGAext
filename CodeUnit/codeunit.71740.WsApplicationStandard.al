@@ -224,13 +224,19 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit(cuLicencia.Registro(xRegistro));
     end;
 
+    procedure WsRenovarDispositivo(xRegistro: Text): Text
+    var
+        cuLicencia: Codeunit "SGA License Management";
+    begin
+        exit(cuLicencia.Renovar(xRegistro));
+    end;
+
     procedure WsMOTD(xDispositivo: Text): Text
     var
         cuLicencia: Codeunit "SGA License Management";
     begin
         exit(cuLicencia.MOTD(xDispositivo));
     end;
-
 
     procedure WsBajaDispositivo(xDispositivo: Text): Text
     var
@@ -479,14 +485,19 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectContenedor: JsonObject;
         VJsonText: Text;
         jRecepcion: Text;
+        jTipo: Text;
 
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
             ERROR(lblErrorJson);
 
         jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
+        jTipo := DatoJsonTexto(VJsonObjectContenedor, 'Type');
 
-        Eliminar_Contenedor_Recepcion(xJson);
+        IF (jTipo = 'T') THEN
+            Eliminar_Contenedor_Recepcion_Transferencia(xJson)
+        else
+            Eliminar_Contenedor_Recepcion(xJson);
 
         //Actualizar_Cantidad_Recibir(jRecepcion);
         Objeto_Recepcion(jRecepcion).WriteTo(VJsonText);
@@ -1032,7 +1043,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         jItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
         jTrackNo := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
-        jBin := DatoJsonTexto(VJsonObjectDatos, 'Bin');
+        //jBin := DatoJsonTexto(VJsonObjectDatos, 'Bin');
         jQuantity := DatoJsonDecimal(VJsonObjectDatos, 'Quantity');
 
         jItemNoFilter := DatoJsonTexto(VJsonObjectDatos, 'ItemNoFilter');
@@ -1077,7 +1088,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     begin
 
         If not VJsonObjectDatos.ReadFrom(xJson) then
-            exit('Respuesta no valida. Se esperaba un Json');
+            Error('Respuesta no valida. Se esperaba un Json');
 
         lContenedor := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
         lTipo := DatoJsonTexto(VJsonObjectDatos, 'Tipo');
@@ -2073,44 +2084,45 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                         end;
                     end;
             end;
-        end;
 
-        //Si es un contenedor unitario se añade 00 si son varios 01,02....
-        /*if jTotalContenedores = 1 then
-            NumeracionInicial := 0
-        else
-            NumeracionInicial := 1;*/
 
-        for i := 1 to jTotalContenedores do begin
-
-            /*if (BaseNumeroContenedor <> '') then begin
-                NumContedor := Format(NumeracionInicial);
-                if (StrLen(NumContedor) = 1) then
-                    NumContedor := '00' + NumContedor;
-                if (StrLen(NumContedor) = 2) then
-                    NumContedor := '0' + NumContedor;
-
-                TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
-            end else
-                TextoContenedorFinal := '';*/
-
-            //Base para la creación del Nº Contenedor      
-            if (RecWarehouseSetup."Usar Lote Proveedor") then
-                TextoContenedorFinal := jLoteProveedor
+            //Si es un contenedor unitario se añade 00 si son varios 01,02....
+            /*if jTotalContenedores = 1 then
+                NumeracionInicial := 0
             else
-                if (RecWarehouseSetup."Lote Automatico") then
-                    TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
+                NumeracionInicial := 1;*/
 
-            //Si lleva un lote preasignado utilizamos ese
-            /*if jLotePreasignado <> '' then begin
-                TextoContenedorFinal := jLotePreasignado;
-                jImprimir := false;
-            end;*/
+            for i := 1 to jTotalContenedores do begin
 
-            Recepcionar_Contenedor(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
+                /*if (BaseNumeroContenedor <> '') then begin
+                    NumContedor := Format(NumeracionInicial);
+                    if (StrLen(NumContedor) = 1) then
+                        NumContedor := '00' + NumContedor;
+                    if (StrLen(NumContedor) = 2) then
+                        NumContedor := '0' + NumContedor;
 
-            NumeracionInicial += 1;
+                    TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
+                end else
+                    TextoContenedorFinal := '';*/
 
+                //Base para la creación del Nº Contenedor      
+                if (RecWarehouseSetup."Usar Lote Proveedor") then
+                    TextoContenedorFinal := jLoteProveedor
+                else
+                    if (RecWarehouseSetup."Lote Automatico") then
+                        TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
+
+                //Si lleva un lote preasignado utilizamos ese
+                /*if jLotePreasignado <> '' then begin
+                    TextoContenedorFinal := jLotePreasignado;
+                    jImprimir := false;
+                end;*/
+
+                Recepcionar_Contenedor(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
+
+                NumeracionInicial += 1;
+
+            end;
         end;
 
     end;
@@ -2749,6 +2761,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jLoteInterno: Text;
         jSerie: Text;
         EsSubcontratacion: Boolean;
+
+        jLotNo: Text;
+        jSerialNo: Text;
+
     begin
         If not VJsonObjectContenedor.ReadFrom(xJson) then
             Error(lblErrorJson);
@@ -2765,6 +2781,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWhseReceiptLine.SETRANGE("No.", jRecepcion);
         RecWhseReceiptLine.SETRANGE("Line No.", jLineNo);
         IF RecWhseReceiptLine.findfirst THEN begin
+
             RecWhseReceiptLine.Validate("Qty. to Receive", RecWhseReceiptLine."Qty. to Receive" - RecReservationEntry.Quantity);
             if (RecWhseReceiptLine."Qty. to Receive" < 0) then
                 RecWhseReceiptLine.Validate("Qty. to Receive", 0);
@@ -2772,6 +2789,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;
 
         RecReservationEntry.Delete();
+
 
 
         //Eliminar el lote si no está en algún pedido de compra preasignado
@@ -2795,6 +2813,58 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
 
     end;
+
+
+
+
+    local procedure Eliminar_Contenedor_Recepcion_Transferencia(xJson: Text)
+    var
+
+        RecReservationEntry: Record "Reservation Entry";
+        RecWhseReceiptLine: Record "Warehouse Receipt Line";
+        RecLotNoInf: Record "Lot No. Information";
+        RecPurchaseLine: Record "Purchase Line";
+        VJsonObjectContenedor: JsonObject;
+
+        lParte: Text;
+        VJsonText: Text;
+        lNumeroContenedor: Text;
+        lRespuesta: Text;
+        jRecepcion: Text;
+        jLineNo: Integer;
+        jEntryNo: Integer;
+
+        jLoteInterno: Text;
+        jSerie: Text;
+        EsSubcontratacion: Boolean;
+    begin
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            Error(lblErrorJson);
+
+        jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
+        jLineNo := DatoJsonInteger(VJsonObjectContenedor, 'LineNo');
+        jEntryNo := DatoJsonInteger(VJsonObjectContenedor, 'EntryNo');
+
+        CLEAR(RecReservationEntry);
+        RecReservationEntry.SetRange("Entry No.", jEntryNo);
+        IF NOT RecReservationEntry.FindFirst() THEN Error(StrSubstNo(lblErrorLoteInternoNoExiste, ''));
+
+        clear(RecWhseReceiptLine);
+        RecWhseReceiptLine.SETRANGE("No.", jRecepcion);
+        RecWhseReceiptLine.SETRANGE("Line No.", jLineNo);
+        IF RecWhseReceiptLine.findfirst THEN begin
+            RecWhseReceiptLine.Validate("Qty. to Receive", RecWhseReceiptLine."Qty. to Receive" - RecReservationEntry.Quantity);
+            if (RecWhseReceiptLine."Qty. to Receive" < 0) then
+                RecWhseReceiptLine.Validate("Qty. to Receive", 0);
+            RecWhseReceiptLine.MODIFY();
+        end;
+
+        RecReservationEntry.Validate("Qty. to Handle (Base)", 0);
+        RecReservationEntry.Modify();
+
+    end;
+
+
 
     local procedure Eliminar_Cantidad_Recepcion(xJson: Text)
     var
@@ -2845,6 +2915,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         cuWhsePostReceipt: Codeunit "Whse.-Post Receipt";
         //RecWarehouseSetup: Record "Warehouse Setup";
         RecLocation: Record Location;
+        txtError: Text;
+
     begin
         RecWhseReceiptLine.RESET;
         RecWhseReceiptLine.SETRANGE("No.", xRecepcion);
@@ -2861,8 +2933,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 if RecLocation."Zona Recepcionados" = '' then ERROR('No se ha definido zona de recepcionados');
             END;
 
-            if not cuWhsePostReceipt.RUN(RecWhseReceiptLine) then
-                ERROR(lblErrorRegistrar);
+            if not cuWhsePostReceipt.RUN(RecWhseReceiptLine) then begin
+                txtError := GetLastErrorText();
+                ERROR(txtError);
+                //ERROR(lblErrorRegistrar);
+
+            end;
 
 
 
@@ -2891,7 +2967,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectDatos: JsonObject;
 
         lResource: Text;
-
+        txtError: Text;
     begin
 
         Clear(RecRecepRegistradas);
@@ -2923,7 +2999,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseActivityLine.SetRange("Whse. Document No.", RecRecepRegistradas."No.");
         RecWarehouseActivityLine.SetRange("Activity Type", RecWarehouseActivityLine."Activity Type"::"Put-away");
         if RecWarehouseActivityLine.FindSet() then
-            cuWarehouseActivityRegister.run(RecWarehouseActivityLine);
+            IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) then begin
+                txtError := GetLastErrorText();
+                ERROR(txtError);
+            end;
 
     end;
 
@@ -3003,6 +3082,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectReceipts.Add('No', RecPurchaseHeader."No.");
 
         VJsonObjectReceipts.Add('Date', FormatoFecha(RecPurchaseHeader."Posting Date"));
+        VJsonObjectReceipts.Add('VendorShipmentNo', RecPurchaseHeader."Vendor Shipment No.");
 
         VJsonObjectReceipts.Add('VendorName', RecPurchaseHeader."Buy-from Vendor Name");
         //VJsonObjectReceipts.Add('ProdOrderNo', RecPurchaseLine."Prod. Order No.");
@@ -3011,7 +3091,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectReceipts.Add('EsSubcontratacion', 'True');
         VJsonObjectReceipts.Add('TieneComentarios', 'false');
         VJsonObjectReceipts.Add('Comentarios', '');
-
         Clear(RecPurchaseLine);
         //RecPurchaseLine.SetRange(RecPurchaseLine."Document Type", RecPurchaseLine."Document Type"::Order);
         RecPurchaseLine.SetRange(RecPurchaseLine."Document No.", xNo);
@@ -3749,6 +3828,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         pgWR: Page "Warehouse Receipt";
         RecPurchaseHeader: Record "Purchase Header";
         cuPurchPost: Codeunit "Purch.-Post";
+        txtError: Text;
     //RecWarehouseSetup: Record "Warehouse Setup";
     begin
         Clear(RecPurchaseHeader);
@@ -3760,7 +3840,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecPurchaseHeader."Posting Date" := Today;
             RecPurchaseHeader.Modify();
             RecPurchaseHeader.Receive := true;
-            cuPurchPost.RUN(RecPurchaseHeader);
+            IF NOT cuPurchPost.RUN(RecPurchaseHeader) THEN BEGIN
+                txtError := GetLastErrorText();
+                ERROR(txtError);
+            END;
 
             //Vaciar_Cantidad_Recibir_Sub(xRecepcion);
 
@@ -4101,6 +4184,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         WhseJnlRegisterLine: codeunit "Whse. Jnl.-Register Line";
 
+        txtError: Text;
         lblErrorReclasif: Label 'Not exist Reclassification Template', comment = 'ESP="No existe Libro diario Reclasificación"';
     begin
 
@@ -4205,7 +4289,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         WhseJnlLine.SETRANGE("To Bin Code", '=%1', xToBin);
         IF WhseJnlLine.FindSet() then begin
             //Registrar
-            CODEUNIT.Run(CODEUNIT::"Whse. Jnl.-Register Batch", WhseJnlLine)
+            IF NOT CODEUNIT.Run(CODEUNIT::"Whse. Jnl.-Register Batch", WhseJnlLine) THEN begin
+                txtError := GetLastErrorText();
+                ERROR(txtError);
+            end;
         end ELSE
             Error(lblErrorMover);
 
@@ -4446,6 +4533,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         VJsonObjectAlmacenamiento: JsonObject;
         VJsonText: Text;
+        txtError: Text;
     begin
 
         clear(RecWarehouseActivityLine);
@@ -4475,9 +4563,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
         //RecWarehouseActivityLine.SetFilter("Line No.", '=%1|%2', lLineNoFrom, lLineNoTo);
         if RecWarehouseActivityLine.FindSet() then
-            cuWarehouseActivityRegister.run(RecWarehouseActivityLine)
-        ELSE
-            Error(lblErrorSinAlmacenamiento);
+            IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) THEN begin
+                txtError := GetLastErrorText();
+                ERROR(txtError);
+            end
+            ELSE
+                Error(lblErrorSinAlmacenamiento);
 
         VJsonObjectAlmacenamiento := Objeto_Almacenamiento(xNo);
         VJsonObjectAlmacenamiento.WriteTo(VJsonText);
@@ -4511,6 +4602,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         VJsonObjectAlmacenamiento: JsonObject;
         VJsonText: Text;
+        txtError: Text;
     begin
 
         clear(RecWarehouseActivityLine);
@@ -4577,9 +4669,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         //RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
         if RecWarehouseActivityLine.FindSet() then
-            cuWarehouseActivityRegister.run(RecWarehouseActivityLine)
-        ELSE
-            Error(lblErrorSinMovimiento);
+            IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) then begin
+                txtError := GetLastErrorText();
+                ERROR(txtError);
+            end
+            ELSE
+                Error(lblErrorSinMovimiento);
     end;
 
 
@@ -5120,6 +5215,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         PostedWhseShipLine: record "Posted Whse. Shipment Line";
         WhsePostShipmentMgt: Codeunit "Whse.-Post Shipment";
         SalesShipmentLine: Record "Sales Shipment Line";
+        txtError: Text;
     begin
 
         WhseShipmentHeader.Reset;
@@ -5136,7 +5232,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             WhseShipmentLine.SETRANGE("Line No.", xLinea);
 
         IF WhseShipmentLine.FindFirst THEN BEGIN
-            WhsePostShipmentMgt.RUN(WhseShipmentLine);
+            IF NOT WhsePostShipmentMgt.RUN(WhseShipmentLine) THEN begin
+                txtError := GetLastErrorText();
+                ERROR(txtError);
+            end;
         END;
 
         /*IF Estado = 'True' then begin

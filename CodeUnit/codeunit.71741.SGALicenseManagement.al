@@ -574,9 +574,43 @@ codeunit 71741 "SGA License Management"
         WhseReceiptLine2: Record "Warehouse Receipt Line";
         TrackLine: record "Tracking Specification";
     begin
+
         WhseReceiptLine2.reset;
         WhseReceiptLine2.SetRange("No.", WhseReceiptLine."No.");
         WhseReceiptLine2.SetRange("Line No.", WhseReceiptLine."Line No.");
+        IF NOT WhseReceiptLine2.Findfirst then exit;
+
+        WarehouseSetup.Reset;
+        IF NOT WarehouseSetup.Findfirst then exit;
+        IF NOT WarehouseSetup."Cantidad recepcion a cero" then exit;
+
+        TrackLine.reset;
+        trackLine.setrange("Source Type", WhseReceiptLine2."Source Type");
+        trackLine.Setrange("Source Subtype", WhseReceiptLine2."Source Subtype");
+        TrackLine.SetRange("Source ID", WhseReceiptLine2."Source No.");
+        TrackLine.SetRange("Source Ref. No.", WhseReceiptLine2."Source Line No.");
+        TrackLine.SetRange("Item No.", WhseReceiptLine2."Item No.");
+        TrackLine.SetRange("Variant Code", WhseReceiptLine2."Variant Code");
+        TrackLine.CalcSums("Qty. to Handle", "Qty. to Handle (Base)");
+
+        WhseReceiptLine2."Qty. to Receive" := TrackLine."Qty. to Handle";
+        WhseReceiptLine2."Qty. to Receive (Base)" := TrackLine."Qty. to Handle (Base)";
+        WhseReceiptLine2.Modify;
+    end;
+
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Receipt", 'OnAfterPostSourceDocument', '', false, false)]
+    local procedure OnAfterPostWhseJnlLine(var WarehouseReceiptLine: Record "Warehouse Receipt Line")
+    var
+        WarehouseSetup: record "Warehouse Setup";
+        WhseReceiptLine2: Record "Warehouse Receipt Line";
+        TrackLine: record "Tracking Specification";
+
+    begin
+        WhseReceiptLine2.reset;
+        WhseReceiptLine2.SetRange("No.", WarehouseReceiptLine."No.");
+        WhseReceiptLine2.SetRange("Line No.", WarehouseReceiptLine."Line No.");
         IF NOT WhseReceiptLine2.Findfirst then exit;
 
         WarehouseSetup.Reset;
