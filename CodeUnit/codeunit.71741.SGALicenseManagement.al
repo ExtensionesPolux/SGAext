@@ -217,7 +217,17 @@ codeunit 71741 "SGA License Management"
     end;
 
 
-    procedure Eliminar_Registro_BC(DispositivoID: code[40])
+    procedure Eliminar_Registro_APP(DispositivoID: Code[20])
+    begin
+        Eliminar_Registro(DispositivoID, 'UNREGISTER-APP');
+    end;
+
+    procedure Eliminar_Registro_BC(xDispositivo: code[20])
+    begin
+        Eliminar_Registro(xDispositivo, 'UNREGISTER-BC');
+    end;
+
+    local procedure Eliminar_Registro(DispositivoID: code[20]; Comando: code[20])
     var
         AzureFunctions: Codeunit "Azure Functions";
         AzureFunctionsResponse: Codeunit "Azure Functions Response";
@@ -246,7 +256,7 @@ codeunit 71741 "SGA License Management"
         jsonBC.add('Id_Dispositivo', DispositivoID);
         JsonBC.WriteTo(MensajeBC);
 
-        JsonAzure.add('Commando', 'UNREGISTER-BC');
+        JsonAzure.add('Commando', Comando);
         JsonAzure.Add('ID', Identificador);
         JsonAzure.add('Mensaje_BC', MensajeBC);
         JsonAzure.WriteTo(RequestBody);
@@ -261,59 +271,6 @@ codeunit 71741 "SGA License Management"
             Verificar_Mensaje(CompanyInfo, RespuestaAzure);
             jsonBC.ReadFrom(DatoJsonTexto(jsonEntrada, 'Mensaje_BC'));
             IF Json_Read_Label(jsonBC, 'Estado') <> 'OK' Then Error(Json_Read_Label(jsonBC, 'Mensaje_Error'));
-
-            Dispositivos.Baja := True;
-            Dispositivos.Modify;
-        end
-        else
-            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
-    end;
-
-
-    procedure Eliminar_Registro_App(DispositivoID: code[40])
-    var
-        AzureFunctions: Codeunit "Azure Functions";
-        AzureFunctionsResponse: Codeunit "Azure Functions Response";
-        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
-        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
-        Dispositivos: record Dispositivos;
-        jsonToken: JsonToken;
-        JsonAzure: JsonObject;
-        jsonEntrada: JsonObject;
-        jsonBC: JsonObject;
-        RespuestaAzure: text;
-        RequestBody: text;
-        CompanyInfo: record "Company Information";
-        Identificador: Guid;
-        MensajeBC: text;
-    begin
-        Dispositivos.Reset;
-        Dispositivos.SetRange(Code, DispositivoID);
-        IF NOT Dispositivos.Findfirst then error('No Existe Dispositivo: ' + DispositivoID);
-
-        Get_CompanyInfo(CompanyInfo);
-        Identificador := CreateGuid();
-
-        JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
-        JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
-        jsonBC.add('Id_Dispositivo', DispositivoID);
-        JsonBC.WriteTo(MensajeBC);
-
-        JsonAzure.add('Commando', 'UNREGISTER-APP');
-        JsonAzure.Add('ID', Identificador);
-        JsonAzure.add('Mensaje_BC', MensajeBC);
-        JsonAzure.WriteTo(RequestBody);
-
-        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
-        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
-        if AzureFunctionsResponse.IsSuccessful() then begin
-            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
-            JsonEntrada.ReadFrom(RespuestaAzure);
-            IF Json_Read_Label(jsonEntrada, 'Estado') <> 'OK' Then Error(Json_Read_Label(jsonEntrada, 'Mensaje_Error'));
-
-            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
-            jsonBC.ReadFrom(DatoJsonTexto(jsonEntrada, 'Mensaje_BC'));
-
 
             Dispositivos.Baja := True;
             Dispositivos.Modify;
