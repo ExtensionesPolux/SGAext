@@ -1,7 +1,3 @@
-namespace Microsoft.Inventory.Counting.Recording;
-
-using Microsoft.Inventory.Counting.Document;
-
 report 71740 "Make Phys. Invt. Rec. Track"
 {
     Caption = 'Crear Reg. Inventario Físico con Trazabilidad';
