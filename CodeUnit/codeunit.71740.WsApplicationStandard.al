@@ -19,6 +19,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonArrayOTS: JsonArray;
         VJsonArrayParte: JsonArray;
         VJsonText: Text;
+        vAlmacenEncontrado: Boolean;
     begin
 
         If not VJsonObjectLogin.ReadFrom(xJson) then
@@ -34,13 +35,19 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             exit(lblErrorRecurso);
 
         if lLocation = '' then begin
-            if NOT App_Location(lLocation) then
-                exit(GetLastErrorText());
+            App_Location(lLocation);
         end;
 
         Clear(RecLocation);
         RecLocation.SetRange(RecLocation.Code, lLocation);
-        if NOT RecLocation.FindFirst() then exit(lblErrorAlmacen);
+        if NOT RecLocation.FindFirst() then
+            vAlmacenEncontrado := false;
+
+        if not vAlmacenEncontrado then begin
+            Clear(RecLocation);
+            if not RecLocation.FindFirst() then
+                Error(lblErrorAlmacen);
+        end;
 
 
         VJsonObjectRecurso.Add('No', RecRecursos."No.");
@@ -2999,10 +3006,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseActivityLine.SetRange("Whse. Document No.", RecRecepRegistradas."No.");
         RecWarehouseActivityLine.SetRange("Activity Type", RecWarehouseActivityLine."Activity Type"::"Put-away");
         if RecWarehouseActivityLine.FindSet() then
-            IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) then begin
-                txtError := GetLastErrorText();
-                ERROR(txtError);
-            end;
+            cuWarehouseActivityRegister.run(RecWarehouseActivityLine);
+        /*IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) then begin
+            txtError := GetLastErrorText();
+            ERROR(txtError);
+        end;*/
 
     end;
 
@@ -4567,12 +4575,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
         //RecWarehouseActivityLine.SetFilter("Line No.", '=%1|%2', lLineNoFrom, lLineNoTo);
         if RecWarehouseActivityLine.FindSet() then
-            IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) THEN begin
-                txtError := GetLastErrorText();
-                ERROR(txtError);
-            end
-            ELSE
-                Error(lblErrorSinAlmacenamiento);
+            cuWarehouseActivityRegister.run(RecWarehouseActivityLine)
+        /*IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) THEN begin
+            txtError := GetLastErrorText();
+            ERROR(txtError);
+        end*/
+        ELSE
+            Error(lblErrorSinAlmacenamiento);
 
         VJsonObjectAlmacenamiento := Objeto_Almacenamiento(xNo);
         VJsonObjectAlmacenamiento.WriteTo(VJsonText);
@@ -4673,12 +4682,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         //RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
         if RecWarehouseActivityLine.FindSet() then
-            IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) then begin
-                txtError := GetLastErrorText();
-                ERROR(txtError);
-            end
-            ELSE
-                Error(lblErrorSinMovimiento);
+            cuWarehouseActivityRegister.run(RecWarehouseActivityLine)
+        /*IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) then begin
+            txtError := GetLastErrorText();
+            ERROR(txtError);
+        end*/
+        ELSE
+            Error(lblErrorSinMovimiento);
     end;
 
 

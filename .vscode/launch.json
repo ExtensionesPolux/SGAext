@@ -27,6 +27,7 @@
             "serverInstance": "BC230",
             "authentication": "Windows",
             "startupObjectType": "Page",
+            "startupObjectId": 6508,
             "breakOnError": "All",
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
