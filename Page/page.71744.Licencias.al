@@ -70,6 +70,18 @@ page 71744 Licencias
                     LicenseMgt.Test_Hola();
                 end;
             }
+            action(PruebaInfoBC18)
+            {
+                ApplicationArea = All;
+                Caption = 'Prueba Info';
+                image = Info;
+                trigger OnAction()
+                var
+                    LicenseMgt2: Codeunit "SGA License Management OLD";
+                begin
+                    LicenseMgt2.Prueba_Informacion_BC18();
+                end;
+            }
 
             action(Informacion)
             {

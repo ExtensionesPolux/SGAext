@@ -25,6 +25,68 @@ codeunit 71749 "SGA License Management OLD"
         MESSAGE(Registro(Mensaje));
     end;
 
+    procedure Prueba_Informacion_BC18()
+    var
+        CompanyInfo: record "Company Information";
+        jsonBC: JsonObject;
+        jsonAzure: JsonObject;
+        Client: HttpClient;
+        Content: HttpContent;
+        ContentHeaders: HttpHeaders;
+        ResponseMessage: HttpResponseMessage;
+        Response: HttpResponseMessage;
+        Url: Text;
+        Identificador: guid;
+        Respuesta: text;
+        MensajeBC: text;
+        IsSuccessful: Boolean;
+        HttpStatusCode: enum HttpCode;
+
+
+    begin
+        Respuesta := '';
+
+        Get_CompanyInfo(CompanyInfo);
+        Identificador := CreateGuid();
+
+        JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
+        JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.WriteTo(MensajeBC);
+
+        JsonAzure.add('Commando', 'INFO');
+        JsonAzure.Add('ID', Identificador);
+        JsonAzure.add('Mensaje_BC', MensajeBC);
+        JsonAzure.WriteTo(MensajeBC);
+
+        Content.GetHeaders(ContentHeaders);
+
+        if ContentHeaders.Contains('Content-Type') then ContentHeaders.Remove('Content-Type');
+        ContentHeaders.Add('Content-Type', 'application/json');
+
+        if ContentHeaders.Contains('Content-Encoding') then ContentHeaders.Remove('Content-Encoding');
+        ContentHeaders.Add('Content-Encoding', 'UTF8');
+
+        Content.WriteFrom(MensajeBC);
+
+        url := CompanyInfo."URL API" + '?Code=' + CompanyInfo."Azure Code";
+
+        IsSuccessful := Client.Post(Url, Content, Response);
+
+        if not IsSuccessful then begin
+            // handle the error
+        end;
+
+        if not Response.IsSuccessStatusCode() then begin
+            HttpStatusCode := response.HttpStatusCode();
+            // handle the error (depending on the HTTP status code)
+        end;
+
+        Response.Content().ReadAs(Respuesta);
+
+        Message(Respuesta);
+
+    end;
+
 
 
     procedure MOTD(xJson: text) Respuesta: Text

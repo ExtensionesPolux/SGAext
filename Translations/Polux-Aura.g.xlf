@@ -283,6 +283,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action MOTD - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1456375839 - Action 3566722577 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prueba Info</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action PruebaInfoBC18 - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1456375839 - Action 728366043 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Prueba Registro</source>
           <note from="Developer" annotates="general" priority="2"></note>
