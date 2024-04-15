@@ -1,4 +1,4 @@
-codeunit 71741 "SGA License Management"
+codeunit 71742 "SGA License Management POST"
 {
 
     trigger OnRun()
@@ -76,10 +76,6 @@ codeunit 71741 "SGA License Management"
 
     procedure Hola() Respuesta: Text
     var
-        AzureFunctions: Codeunit "Azure Functions";
-        AzureFunctionsResponse: Codeunit "Azure Functions Response";
-        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
-        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
         JsonAzure: JsonObject;
         jsonEntrada: JsonObject;
         RespuestaAzure: text;
@@ -94,23 +90,13 @@ codeunit 71741 "SGA License Management"
         JsonAzure.Add('ID', Identificador);
         JsonAzure.WriteTo(RequestBody);
 
-        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
-        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
-        if AzureFunctionsResponse.IsSuccessful() then begin
-            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
-            JsonEntrada.ReadFrom(RespuestaAzure);
-            Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_Salida');
-        end
-        else
-            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
+        RespuestaAzure := Azure_Function(RequestBody);
+        JsonEntrada.ReadFrom(RespuestaAzure);
+        Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_Salida');
     end;
 
     procedure Registro(xJson: Text) Respuesta: Text
     var
-        AzureFunctions: Codeunit "Azure Functions";
-        AzureFunctionsResponse: Codeunit "Azure Functions Response";
-        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
-        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
         Dispositivos: record Dispositivos;
         Id_Dispositivo: code[40];
         jsonEntrada: JsonObject;
@@ -138,45 +124,36 @@ codeunit 71741 "SGA License Management"
         JsonAzure.add('Mensaje_App', Encriptado);
         JsonAzure.WriteTo(RequestBody);
 
-        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
-        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
-        if AzureFunctionsResponse.IsSuccessful() then begin
-            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
-            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
+        RespuestaAzure := Azure_Function(RequestBody);
 
-            JsonEntrada.ReadFrom(RespuestaAzure);
+        Verificar_Mensaje(CompanyInfo, RespuestaAzure);
 
-            Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_BC');
-            IF Respuesta = '' then error('No Existe json BC en Registro');
+        JsonEntrada.ReadFrom(RespuestaAzure);
 
-            jsonBC.ReadFrom(Respuesta);
-            Id_Dispositivo := DatoJsonTexto(jsonBC, 'Id_Dispositivo');
+        Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_BC');
+        IF Respuesta = '' then error('No Existe json BC en Registro');
 
-            IF Id_Dispositivo <> '' then begin
-                Dispositivos.Reset;
-                Dispositivos.SetRange(Code, Id_Dispositivo);
-                IF NOT Dispositivos.Findfirst then begin
-                    CLEAR(Dispositivos);
-                    Dispositivos.Code := Id_Dispositivo;
-                    Dispositivos.Insert;
-                end;
-                Dispositivos.Baja := False;
-                Dispositivos."posting Date" := WorkDate();
-                Dispositivos.Modify;
+        jsonBC.ReadFrom(Respuesta);
+        Id_Dispositivo := DatoJsonTexto(jsonBC, 'Id_Dispositivo');
+
+        IF Id_Dispositivo <> '' then begin
+            Dispositivos.Reset;
+            Dispositivos.SetRange(Code, Id_Dispositivo);
+            IF NOT Dispositivos.Findfirst then begin
+                CLEAR(Dispositivos);
+                Dispositivos.Code := Id_Dispositivo;
+                Dispositivos.Insert;
             end;
+            Dispositivos.Baja := False;
+            Dispositivos."posting Date" := WorkDate();
+            Dispositivos.Modify;
+        end;
 
-            Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_App');
-        end
-        else
-            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
+        Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_App');
     end;
 
     procedure Renovar(xJson: Text) Respuesta: Text
     var
-        AzureFunctions: Codeunit "Azure Functions";
-        AzureFunctionsResponse: Codeunit "Azure Functions Response";
-        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
-        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
         jsonEntrada: JsonObject;
         JsonBC: JsonObject;
         JsonAzure: JsonObject;
@@ -202,18 +179,13 @@ codeunit 71741 "SGA License Management"
         JsonAzure.add('Mensaje_App', Encriptado);
         JsonAzure.WriteTo(RequestBody);
 
-        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
-        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
-        if AzureFunctionsResponse.IsSuccessful() then begin
-            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
-            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
+        RespuestaAzure := Azure_Function(RequestBody);
 
-            JsonEntrada.ReadFrom(RespuestaAzure);
+        Verificar_Mensaje(CompanyInfo, RespuestaAzure);
 
-            Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_App');
-        end
-        else
-            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
+        JsonEntrada.ReadFrom(RespuestaAzure);
+
+        Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_App');
     end;
 
 
@@ -229,10 +201,6 @@ codeunit 71741 "SGA License Management"
 
     local procedure Eliminar_Registro(DispositivoID: code[20]; Comando: code[20])
     var
-        AzureFunctions: Codeunit "Azure Functions";
-        AzureFunctionsResponse: Codeunit "Azure Functions Response";
-        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
-        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
         Dispositivos: record Dispositivos;
         jsonToken: JsonToken;
         JsonAzure: JsonObject;
@@ -261,30 +229,20 @@ codeunit 71741 "SGA License Management"
         JsonAzure.add('Mensaje_BC', MensajeBC);
         JsonAzure.WriteTo(RequestBody);
 
-        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
-        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
-        if AzureFunctionsResponse.IsSuccessful() then begin
-            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
-            JsonEntrada.ReadFrom(RespuestaAzure);
-            IF Json_Read_Label(jsonEntrada, 'Estado') <> 'OK' Then Error(Json_Read_Label(jsonEntrada, 'Mensaje_Error'));
+        RespuestaAzure := Azure_Function(RequestBody);
+        JsonEntrada.ReadFrom(RespuestaAzure);
+        IF Json_Read_Label(jsonEntrada, 'Estado') <> 'OK' Then Error(Json_Read_Label(jsonEntrada, 'Mensaje_Error'));
 
-            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
-            jsonBC.ReadFrom(DatoJsonTexto(jsonEntrada, 'Mensaje_BC'));
-            IF Json_Read_Label(jsonBC, 'Estado') <> 'OK' Then Error(Json_Read_Label(jsonBC, 'Mensaje_Error'));
+        Verificar_Mensaje(CompanyInfo, RespuestaAzure);
+        jsonBC.ReadFrom(DatoJsonTexto(jsonEntrada, 'Mensaje_BC'));
+        IF Json_Read_Label(jsonBC, 'Estado') <> 'OK' Then Error(Json_Read_Label(jsonBC, 'Mensaje_Error'));
 
-            Dispositivos.Baja := True;
-            Dispositivos.Modify;
-        end
-        else
-            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
+        Dispositivos.Baja := True;
+        Dispositivos.Modify;
     end;
 
     procedure Informacion()
     var
-        AzureFunctions: Codeunit "Azure Functions";
-        AzureFunctionsResponse: Codeunit "Azure Functions Response";
-        AzureFunctionsAuthentication: Codeunit "Azure Functions Authentication";
-        IAzureFunctionsAuthentication: Interface "Azure Functions Authentication";
         CompanyInfo: record "Company Information";
         Dispositivos: record Dispositivos;
         JsonBC: JsonObject;
@@ -317,63 +275,103 @@ codeunit 71741 "SGA License Management"
         JsonAzure.add('Mensaje_BC', MensajeBC);
         JsonAzure.WriteTo(RequestBody);
 
-        IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
-        AzureFunctionsResponse := AzureFunctions.SendPostRequest(IAzureFunctionsAuthentication, RequestBody, 'application/json');
-        if AzureFunctionsResponse.IsSuccessful() then begin
-            AzureFunctionsResponse.GetResultAsText(RespuestaAzure);
-            Verificar_Mensaje(CompanyInfo, RespuestaAzure);
+        respuestaAzure := Azure_Function(RequestBody);
 
-            jSonRespuesta.ReadFrom(RespuestaAzure);
-            jsonInfo.ReadFrom(DatoJsonTexto(jSonRespuesta, 'Mensaje_BC'));
+        Verificar_Mensaje(CompanyInfo, RespuestaAzure);
 
-            CompanyInfo."Licencias Activas" := DatoJsonInteger(JsonInfo, 'Licencias_Activas');
-            CompanyInfo."Licencias Usadas" := DatoJsonInteger(JsonInfo, 'Licencias_Usadas');
-            CompanyInfo."Fecha Vto Licencias" := string2date(DatoJsonTexto(JsonInfo, 'Fecha_Vto'));
-            CompanyInfo.Modify;
+        jSonRespuesta.ReadFrom(RespuestaAzure);
+        jsonInfo.ReadFrom(DatoJsonTexto(jSonRespuesta, 'Mensaje_BC'));
+
+        CompanyInfo."Licencias Activas" := DatoJsonInteger(JsonInfo, 'Licencias_Activas');
+        CompanyInfo."Licencias Usadas" := DatoJsonInteger(JsonInfo, 'Licencias_Usadas');
+        CompanyInfo."Fecha Vto Licencias" := string2date(DatoJsonTexto(JsonInfo, 'Fecha_Vto'));
+        CompanyInfo.Modify;
 
 
-            jsonInfo.get('Devices', jsonTokenLines);
-            jsonArrayLines := jsonTokenLines.AsArray();
+        jsonInfo.get('Devices', jsonTokenLines);
+        jsonArrayLines := jsonTokenLines.AsArray();
 
-            foreach jsonTokenLines in jsonArrayLines do begin
-                if jsonDetalle.ReadFrom(FORMAT(jsonTokenLines)) then begin
-                    jsonDetalle.Get('Id_Dispositivo', jsonToken);
-                    Codigo := jsonToken.AsValue().AsText();
+        foreach jsonTokenLines in jsonArrayLines do begin
+            if jsonDetalle.ReadFrom(FORMAT(jsonTokenLines)) then begin
+                jsonDetalle.Get('Id_Dispositivo', jsonToken);
+                Codigo := jsonToken.AsValue().AsText();
 
-                    IF (Codigo <> '') then begin
+                IF (Codigo <> '') then begin
+                    CLEAR(Dispositivos);
+                    Dispositivos.Reset;
+                    Dispositivos.SetRange(Code, Codigo);
+                    IF NOT Dispositivos.Findfirst then begin
                         CLEAR(Dispositivos);
-                        Dispositivos.Reset;
-                        Dispositivos.SetRange(Code, Codigo);
-                        IF NOT Dispositivos.Findfirst then begin
-                            CLEAR(Dispositivos);
-                            Dispositivos.Validate(code, Codigo);
-                            Dispositivos.Insert(true);
-                        end;
-
-                        Dispositivos.validate(Code, Codigo);
-
-                        Dispositivos.Validate(IP, Json_Read_Label(jsonDetalle, 'IP'));
-                        Dispositivos.validate("posting Date", String2Date(Json_Read_Label(jsonDetalle, 'Fecha_Registro')));
-                        Dispositivos.Validate(Baja, False);
-                        Dispositivos.Validate(ID, Identificador);
-                        Dispositivos.Modify(true);
+                        Dispositivos.Validate(code, Codigo);
+                        Dispositivos.Insert(true);
                     end;
+
+                    Dispositivos.validate(Code, Codigo);
+
+                    Dispositivos.Validate(IP, Json_Read_Label(jsonDetalle, 'IP'));
+                    Dispositivos.validate("posting Date", String2Date(Json_Read_Label(jsonDetalle, 'Fecha_Registro')));
+                    Dispositivos.Validate(Baja, False);
+                    Dispositivos.Validate(ID, Identificador);
+                    Dispositivos.Modify(true);
                 end;
             end;
+        end;
 
-            Dispositivos.Reset;
-            Dispositivos.SetRange(baja, false);
-            Dispositivos.SetFilter(Id, '<>%1', Identificador);
-            Dispositivos.deleteall(true);
-        end
-        else
-            Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
-
+        Dispositivos.Reset;
+        Dispositivos.SetRange(baja, false);
+        Dispositivos.SetFilter(Id, '<>%1', Identificador);
+        Dispositivos.deleteall(true);
     end;
 
     #EndRegion
 
     #region Funciones_Auxiliares
+
+    local procedure Azure_Function(jsonEnviar: text) Respuesta: text;
+    var
+        CompanyInfo: record "Company Information";
+        Client: HttpClient;
+        Content: HttpContent;
+        ContentHeaders: HttpHeaders;
+        ResponseMessage: HttpResponseMessage;
+        Response: HttpResponseMessage;
+        Url: Text;
+        IsSuccessful: Boolean;
+        HttpStatusCode: enum HttpStatusCode;
+        n: integer;
+    begin
+        Respuesta := '';
+
+        Get_CompanyInfo(CompanyInfo);
+
+        Content.GetHeaders(ContentHeaders);
+
+        if ContentHeaders.Contains('Content-Type') then ContentHeaders.Remove('Content-Type');
+        ContentHeaders.Add('Content-Type', 'application/json');
+
+        if ContentHeaders.Contains('Content-Encoding') then ContentHeaders.Remove('Content-Encoding');
+        ContentHeaders.Add('Content-Encoding', 'UTF8');
+
+        Content.WriteFrom(jsonEnviar);
+
+        url := CompanyInfo."URL API" + '?Code=' + CompanyInfo."Azure Code";
+
+        IsSuccessful := Client.Post(Url, Content, Response);
+
+        if not IsSuccessful then begin
+            Error('Error Conexión POST');
+        end;
+
+        if not Response.IsSuccessStatusCode() then begin
+            n := response.HttpStatusCode();
+
+            HttpStatusCode := enum::HttpStatusCode.FromInteger(n);
+            ERROR('Error: ' + FORMAT(HttpStatusCode));
+        end;
+
+        Response.Content().ReadAs(Respuesta);
+    end;
+
     local procedure Verificar_Mensaje(CompanyInfo: record "Company Information"; Mensaje: Text)
     var
         jsonEntrada: JsonObject;
@@ -505,7 +503,6 @@ codeunit 71741 "SGA License Management"
         if (dd <> 0) AND (mm <> 0) AND (yyyy <> 0) then fecha := DMY2DATE(dd, mm, yyyy);
     end;
     #Endregion
-
 
     var
         lblErrorJson: Label 'Incorrect format. A Json was expected', Comment = 'ESP=Formato incorrecto. Se esperaba un Json';

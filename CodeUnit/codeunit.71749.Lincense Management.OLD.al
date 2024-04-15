@@ -40,9 +40,8 @@ codeunit 71749 "SGA License Management OLD"
         Respuesta: text;
         MensajeBC: text;
         IsSuccessful: Boolean;
-        HttpStatusCode: enum HttpCode;
-
-
+        HttpStatusCode: enum HttpStatusCode;
+        n: integer;
     begin
         Respuesta := '';
 
@@ -68,23 +67,22 @@ codeunit 71749 "SGA License Management OLD"
 
         Content.WriteFrom(MensajeBC);
 
-        url := CompanyInfo."URL API" + '?Code=' + CompanyInfo."Azure Code";
+        url := CompanyInfo."URL API" + '?Codxe=' + CompanyInfo."Azure Code";
 
         IsSuccessful := Client.Post(Url, Content, Response);
 
         if not IsSuccessful then begin
-            // handle the error
+            Error('Error Conexión POST');
         end;
 
         if not Response.IsSuccessStatusCode() then begin
-            HttpStatusCode := response.HttpStatusCode();
-            // handle the error (depending on the HTTP status code)
+            n := response.HttpStatusCode();
+
+            HttpStatusCode := enum::HttpStatusCode.FromInteger(n);
+            ERROR('Error: ' + FORMAT(HttpStatusCode));
         end;
 
         Response.Content().ReadAs(Respuesta);
-
-        Message(Respuesta);
-
     end;
 
 

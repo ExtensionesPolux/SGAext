@@ -1,4 +1,4 @@
-page 71744 Licencias
+page 71749 "Licencias BC18"
 {
     PageType = list;
     ApplicationArea = All;
@@ -58,31 +58,16 @@ page 71744 Licencias
     {
         area(Processing)
         {
-            action(TestAPI)
+            action(TestAPIBC18)
             {
                 ApplicationArea = All;
-                Caption = 'Hello Word';
+                Caption = 'Hello Word BC18';
                 image = LinkWeb;
                 trigger OnAction()
                 var
-                    LicenseMgt: Codeunit "SGA License Management";
+                    LicenseMgt: Codeunit "SGA License Management POST";
                 begin
                     LicenseMgt.Test_Hola();
-                end;
-            }
-
-            action(Informacion)
-            {
-                ApplicationArea = all;
-                Caption = 'Cargar Datos';
-                image = Info;
-
-                trigger OnAction()
-                begin
-                    Cargar_Datos();
-                    CompanyInfo.Reset;
-                    CompanyInfo.Findfirst;
-                    CurrPage.Update(false);
                 end;
             }
 
@@ -94,7 +79,7 @@ page 71744 Licencias
 
                 trigger OnAction()
                 var
-                    LicenseMgt: Codeunit "SGA License Management";
+                    LicenseMgt: Codeunit "SGA License Management POST";
                 begin
                     MESSAGE(LicenseMgt.MOTD(rec.Code));
                 end;
@@ -107,7 +92,7 @@ page 71744 Licencias
 
                 trigger OnAction()
                 var
-                    LicenseMgt: Codeunit "SGA License Management";
+                    LicenseMgt: Codeunit "SGA License Management POST";
                 begin
                     LicenseMgt.Registro('O8JmtY03KyuZNNVohiImwxegnn+P5epppLfoLZG/dZ3icMwq+rUlnzhrLfYhO435lxbY/EJEXdZb68zJhseYfwClnH758cfnLnbSos0K2/irr/AZYOlyNnrKvS08ZcRoc7PqNozUt5VshcO9X7hDz3+3hMwAfaICt4ImmN1EC2vzJHqseT6Z51FwRTZVCGAQldtzL7Tl/whgp7+Sq1hPh2r8ZopOwBrPjzFAwRg6/3Q=')
                 end;
@@ -120,7 +105,7 @@ page 71744 Licencias
 
                 trigger OnAction()
                 var
-                    LicenseMgt: Codeunit "SGA License Management";
+                    LicenseMgt: Codeunit "SGA License Management POST";
                 begin
                     LicenseMgt.Eliminar_Registro_BC(rec.Code);
                     Cargar_Datos();
@@ -142,7 +127,7 @@ page 71744 Licencias
 
     local procedure Cargar_Datos()
     var
-        LicenseMgt: Codeunit "SGA License Management";
+        LicenseMgt: Codeunit "SGA License Management POST";
     begin
         LicenseMgt.Informacion();
 
