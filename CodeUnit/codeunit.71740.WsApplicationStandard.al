@@ -41,14 +41,15 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         Clear(RecLocation);
         RecLocation.SetRange(RecLocation.Code, lLocation);
         if NOT RecLocation.FindFirst() then
-            vAlmacenEncontrado := false;
+            vAlmacenEncontrado := false
+        else
+            vAlmacenEncontrado := true;
 
         if not vAlmacenEncontrado then begin
             Clear(RecLocation);
             if not RecLocation.FindFirst() then
                 Error(lblErrorAlmacen);
         end;
-
 
         VJsonObjectRecurso.Add('No', RecRecursos."No.");
         VJsonObjectRecurso.Add('Name', RecRecursos.Name);
@@ -64,19 +65,15 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         VJsonObjectRecurso.Add('VerSalidas', FormatoBoolean(RecWarehouseSetup."Ver Salidas"));
         VJsonObjectRecurso.Add('VerInventario', FormatoBoolean(RecWarehouseSetup."Ver Inventario"));
         VJsonObjectRecurso.Add('VerMovimientos', FormatoBoolean(RecWarehouseSetup."Ver Movimientos"));
-
+        VJsonObjectRecurso.Add('VerAltas', FormatoBoolean(RecWarehouseSetup."Ver Altas"));
 
         RecLocation.CalcFields(RecLocation."Tiene Ubicaciones");
         VJsonObjectRecurso.Add('AlmacenAvanzado', FormatoBoolean(RecLocation."Almacen Avanzado"));
         VJsonObjectRecurso.Add('TieneUbicaciones', FormatoBoolean(RecLocation."Tiene Ubicaciones"));
 
-
-
         VJsonObjectRecurso.Add('LoteInternoObligatorio', FormatoBoolean(RecWarehouseSetup."Lote Interno Obligatorio"));
         VJsonObjectRecurso.Add('UsarLoteProveedor', FormatoBoolean(RecWarehouseSetup."Usar Lote Proveedor"));
         VJsonObjectRecurso.Add('LoteAutomatico', FormatoBoolean(RecWarehouseSetup."Lote Automatico"));
-
-
 
         VJsonObjectRecurso.Add('Location', RecLocation.Code);
         VJsonObjectRecurso.Add('NombreAlamcen', RecLocation.Name);

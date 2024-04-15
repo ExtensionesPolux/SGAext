@@ -77,8 +77,15 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
         field(71753; "Ver Subcontratacion"; Boolean)
         {
             DataClassification = ToBeClassified;
+
             Caption = 'See Subcontracting', Comment = 'ESP=Ver Subcontratación';
         }
+        field(71754; "Ver Altas"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'See New Items Registrations', Comment = 'ESP=Ver Alta Productos';
+        }
+
         // Envíos y recepciones
         field(71760; "Cantidad envio a cero"; Boolean)
         {
@@ -94,7 +101,6 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
             Caption = 'Inventory No Serial', Comment = 'ESP=Nº Serie Inventario';
-
         }
 
         field(71780; "Numero Serie Paquete"; Code[20])
@@ -102,13 +108,12 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
             Caption = 'Package No Serial', Comment = 'ESP=Nº Serie Paquete';
-
         }
+
         field(71781; "Codigo Sin Paquete"; Code[10])
         {
             DataClassification = ToBeClassified;
             Caption = 'Without Package Code', Comment = 'ESP=Código Sin Paquete';
-
         }
     }
 
