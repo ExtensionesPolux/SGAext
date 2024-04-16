@@ -67,7 +67,8 @@ codeunit 71741 "SGA License Management"
         textoJson := '';
         IF jsonArray.Count > 0 then jsonArray.WriteTo(textojson);
         if textoJson = '[]' then textojson := '';
-        jsonMOTD.add('MOTD', textoJson);
+        //jsonMOTD.add('MOTD', textoJson);
+        jsonMOTD.add('MOTD', jsonArray);
 
         jsonMOTD.WriteTo(Mensaje);
     end;

@@ -1,1096 +1,1161 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
-  <file datatype="xml" source-language="en-US" target-language="en-US" original="Polux-Aura">
+  <file datatype="xml" source-language="en-US" target-language="es-ES" original="Polux-Aura">
     <body>
       <group id="body">
         <trans-unit id="Table 2972410032 - Field 2872515276 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Baja</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Table Dispositivos - Field Baja - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 2972410032 - Field 3004954119 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Código</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Table Dispositivos - Field Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 2972410032 - Field 3641927271 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Identificador Proceso</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Table Dispositivos - Field ID - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 2972410032 - Field 3510957723 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>IP</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Table Dispositivos - Field IP - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 2972410032 - Field 2739223632 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fecha Registro</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Table Dispositivos - Field posting Date - Property Caption</note>
         </trans-unit>
         <trans-unit id="Codeunit 186058903 - NamedType 1304331942" size-unit="char" translate="yes" xml:space="preserve">
           <source>Incorrect format. A Json was expected</source>
           <note from="Developer" annotates="general" priority="2">ESP=Formato incorrecto. Se esperaba un Json</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SGA License Management - NamedType lblErrorJson</note>
+          <target>Formato incorrecto. Se esperaba un Json</target>
         </trans-unit>
         <trans-unit id="Codeunit 1853919318 - NamedType 1304331942" size-unit="char" translate="yes" xml:space="preserve">
           <source>Incorrect format. A Json was expected</source>
           <note from="Developer" annotates="general" priority="2">ESP=Formato incorrecto. Se esperaba un Json</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SGA License Management OLD - NamedType lblErrorJson</note>
+          <target>Formato incorrecto. Se esperaba un Json</target>
         </trans-unit>
         <trans-unit id="Codeunit 3942018711 - NamedType 1304331942" size-unit="char" translate="yes" xml:space="preserve">
           <source>Incorrect format. A Json was expected</source>
           <note from="Developer" annotates="general" priority="2">ESP=Formato incorrecto. Se esperaba un Json</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SGA License Management POST - NamedType lblErrorJson</note>
+          <target>Formato incorrecto. Se esperaba un Json</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3168196109" size-unit="char" translate="yes" xml:space="preserve">
           <source>App Warehouse not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el almacén de la App</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorAlmacen</note>
+          <target>No se ha definido el almacén de la App</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3195850850" size-unit="char" translate="yes" xml:space="preserve">
           <source>Warehouse receipt error</source>
           <note from="Developer" annotates="general" priority="2">ESP=Error en la recepción</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorAlRecepcionar</note>
+          <target>Error en la recepción</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2642384789" size-unit="char" translate="yes" xml:space="preserve">
           <source>No product tracking code has been indicated for reference %1</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha indicado código seguimiento producto para la referencia %1</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorCodSeguimiento</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1185164919 - NamedType 2335270310" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Journal Template Name not define on Location</source>
-          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el diario en el almacén</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorDiarioAlm</note>
+          <target>No se ha indicado código seguimiento producto para la referencia %1</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 951021725" size-unit="char" translate="yes" xml:space="preserve">
           <source>Journal Template Name not define on Warehouse Setup</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el diario inventario en la configuración de almacén</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorDiarioInv</note>
+          <target>No se ha definido el diario inventario en la configuración de almacén</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3717824003" size-unit="char" translate="yes" xml:space="preserve">
           <source>Shipment Not Found</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado en envío</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorEnvio</note>
+          <target>No se ha encontrado en envío</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 1304331942" size-unit="char" translate="yes" xml:space="preserve">
           <source>Incorrect format. A Json was expected</source>
           <note from="Developer" annotates="general" priority="2">ESP=Formato incorrecto. Se esperaba un Json</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorJson</note>
+          <target>Formato incorrecto. Se esperaba un Json</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 4232205562" size-unit="char" translate="yes" xml:space="preserve">
           <source>There are no pending lines with sufficient quantity</source>
           <note from="Developer" annotates="general" priority="2">ESP=No hay lineas pendientes con cantidad suficiente</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLineasCantidad</note>
+          <target>No hay lineas pendientes con cantidad suficiente</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2732831268" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot No not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el lote</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLote</note>
+          <target>No se ha definido el lote</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 426222983" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error generating internal Lot No number</source>
           <note from="Developer" annotates="general" priority="2">ESP=Error al generar el número de lote interno</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLoteInterno</note>
+          <target>Error al generar el número de lote interno</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3649219638" size-unit="char" translate="yes" xml:space="preserve">
           <source>Internal Lot No %1 was not found in the system</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado el lote interno %1 en el sistema</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLoteInternoNoExiste</note>
+          <target>No se ha encontrado el lote interno %1 en el sistema</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2170364747" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot No. has not been indicated</source>
           <note from="Developer" annotates="general" priority="2">ESP=El Nº de Lote no se ha indicado</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLotNoEmpty</note>
+          <target>El Nº de Lote no se ha indicado</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 41991427" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error when moving</source>
           <note from="Developer" annotates="general" priority="2">ESP="Error al mover"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorMover</note>
+          <target>Error al mover</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3779943642" size-unit="char" translate="yes" xml:space="preserve">
           <source>Nothing to handle.</source>
           <note from="Developer" annotates="general" priority="2">ESP="Nada que registrar"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorNadaQueRegistrar</note>
+          <target>Nada que registrar</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3740895378" size-unit="char" translate="yes" xml:space="preserve">
           <source>A serial number has not been defined to generate the item lot no.</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido un nº de serie para generar el lote de la referencia</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorNSerieLote</note>
+          <target>No se ha definido un nº de serie para generar el lote de la referencia</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3246465920" size-unit="char" translate="yes" xml:space="preserve">
           <source>Package No. has not been indicated</source>
           <note from="Developer" annotates="general" priority="2">ESP=El Nº de Paquete no se ha indicado</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorPackageNoEmpty</note>
+          <target>El Nº de Paquete no se ha indicado</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 1652318197" size-unit="char" translate="yes" xml:space="preserve">
           <source>Package No not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el paquete</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorPaquete</note>
+          <target>No se ha definido el paquete</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 30562039" size-unit="char" translate="yes" xml:space="preserve">
           <source>Empty Package code not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el código de paquete vacío</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorPaqueteGenerico</note>
+          <target>No se ha definido el código de paquete vacío</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 1143900519" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot prefix not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el prefijo del lote</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorPrefijoLote</note>
+          <target>No se ha definido el prefijo del lote</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 824384756" size-unit="char" translate="yes" xml:space="preserve">
           <source>Warehouse receipt with number %1 not found</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado la recepción con número %1</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorRecepcion</note>
+          <target>No se ha encontrado la recepción con número %1</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2250250847" size-unit="char" translate="yes" xml:space="preserve">
           <source>The indicated resource was not found</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado el recurso indicado</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorRecurso</note>
+          <target>No se ha encontrado el recurso indicado</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 422849800" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reference %1 not found in the system</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado la referencia %1 en el sistema</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorReferencia</note>
+          <target>No se ha encontrado la referencia %1 en el sistema</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2878665887" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error posting</source>
           <note from="Developer" annotates="general" priority="2">ESP=Error al registrar</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorRegistrar</note>
+          <target>Error al registrar</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2273148134" size-unit="char" translate="yes" xml:space="preserve">
           <source>Product tracking definition error</source>
           <note from="Developer" annotates="general" priority="2">ESP="Error en la definición del seguimiento de producto"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSegProd</note>
+          <target>Error en la definición del seguimiento de producto</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 614367065" size-unit="char" translate="yes" xml:space="preserve">
           <source>The serial number already exists in the systemr</source>
           <note from="Developer" annotates="general" priority="2">ESP="El número de serie ya existe en el sistema"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSerialDuplicado</note>
+          <target>El número de serie ya existe en el sistema</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2129802656" size-unit="char" translate="yes" xml:space="preserve">
           <source>The serial number already exists in one shipment</source>
           <note from="Developer" annotates="general" priority="2">ESP="El número de serie ya existe en un envío"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSerialDuplicadoEnvio</note>
+          <target>El número de serie ya existe en un envío</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 9733994" size-unit="char" translate="yes" xml:space="preserve">
           <source>Serial No. has not been indicated</source>
           <note from="Developer" annotates="general" priority="2">ESP=El Nº de Serie no se ha indicado</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSerialNoEmpty</note>
+          <target>El Nº de Serie no se ha indicado</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3754081590" size-unit="char" translate="yes" xml:space="preserve">
           <source>Serial No not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el serie</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSerie</note>
+          <target>No se ha definido el serie</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3992898100" size-unit="char" translate="yes" xml:space="preserve">
           <source>Internal Serial No %1 was not found in the system</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado el serie interno %1 en el sistema</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSerieInternoNoExiste</note>
+          <target>No se ha encontrado el serie interno %1 en el sistema</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 1690454790" size-unit="char" translate="yes" xml:space="preserve">
           <source>Put-away not found</source>
           <note from="Developer" annotates="general" priority="2">ESP="Almacenamiento no encontrado"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSinAlmacenamiento</note>
+          <target>Almacenamiento no encontrado</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2029379943" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory not found</source>
           <note from="Developer" annotates="general" priority="2">ESP="No existe inventario"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSinInventario</note>
+          <target>No existe inventario</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 4271515033" size-unit="char" translate="yes" xml:space="preserve">
           <source>Movement not found</source>
           <note from="Developer" annotates="general" priority="2">ESP="Movimiento no encontrado"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSinMovimiento</note>
+          <target>Movimiento no encontrado</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3028313164" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item No field is empty</source>
           <note from="Developer" annotates="general" priority="2">ESP=El campo referencia está vacio</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSinReferencia</note>
+          <target>El campo referencia está vacio</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3385541537" size-unit="char" translate="yes" xml:space="preserve">
           <source>Package Serial No not define on Warehouse Setup</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el nº de serie del en la configuración de almacén</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSinSeriePaquete</note>
+          <target>No se ha definido el nº de serie del en la configuración de almacén</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2273248168" size-unit="char" translate="yes" xml:space="preserve">
           <source>Track No. Not Found</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado la trazabilidad</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorTrackNo</note>
+          <target>No se ha encontrado la trazabilidad</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3018482407" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bin %1 not found</source>
           <note from="Developer" annotates="general" priority="2">ESP=Ubicación %1 no encontrada</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorUbicacion</note>
+          <target>Ubicación %1 no encontrada</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 1135649827" size-unit="char" translate="yes" xml:space="preserve">
           <source>Adjust bin not defined</source>
           <note from="Developer" annotates="general" priority="2">ESP="Ubicación de ajuste no definida"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorUbicacionAjuste</note>
+          <target>Ubicación de ajuste no definida</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3120865116" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Lote</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblLote</note>
+          <target>Lote</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 963375437" size-unit="char" translate="yes" xml:space="preserve">
           <source>Package</source>
           <note from="Developer" annotates="general" priority="2">ESP=Paquete</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblPaquete</note>
+          <target>Paquete</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 1914991808" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item No.</source>
           <note from="Developer" annotates="general" priority="2">ESP=Referencia</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblReferencia</note>
+          <target>Referencia</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 3076488670" size-unit="char" translate="yes" xml:space="preserve">
           <source>Serial No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Serie</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblSerie</note>
+          <target>Serie</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - Method 2221218137 - NamedType 321955337" size-unit="char" translate="yes" xml:space="preserve">
           <source>The item %1 does not exist</source>
           <note from="Developer" annotates="general" priority="2">ESP="El producto %1 no existe"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - Method AnalizarSeguimientoProducto - NamedType lblErrorItem</note>
+          <target>El producto %1 no existe</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - Method 1158457578 - NamedType 486645057" size-unit="char" translate="yes" xml:space="preserve">
           <source>Not exist Reclassification Template</source>
           <note from="Developer" annotates="general" priority="2">ESP="No existe Libro diario Reclasificación"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - Method AppCreateReclassWarehouse_Avanzado - NamedType lblErrorReclasif</note>
+          <target>No existe Libro diario Reclasificación</target>
         </trans-unit>
         <trans-unit id="Page 1622517182 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Alertas</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page AlertaFactBox - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1377536918 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Alertas</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page AlertaSerieFactBox - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1550665627 - Control 3891454143 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Almacen</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Filtro Inventario - Control Location - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1456375839 - Control 3212038148 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Id Dispositivo</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Control Device - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1456375839 - Action 2824216035 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Eliminar Registro</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action DELETE - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1456375839 - Action 240497149 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cargar Datos</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action Informacion - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1456375839 - Action 2482872990 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Mensaje del día</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action MOTD - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1456375839 - Action 728366043 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Prueba Registro</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action REGISTER - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1456375839 - Action 3231099658 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Hello Word</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action TestAPI - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 967074543 - Control 3212038148 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Id Dispositivo</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias BC18 - Control Device - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 967074543 - Action 2824216035 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Eliminar Registro</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias BC18 - Action DELETE - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 967074543 - Action 2482872990 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Mensaje del día</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias BC18 - Action MOTD - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 967074543 - Action 728366043 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Prueba Registro</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias BC18 - Action REGISTER - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 967074543 - Action 3619274122 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Hello Word BC18</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias BC18 - Action TestAPIBC18 - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 819454561 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lotes Internos</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Lotes Internos - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1295399128 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reservas</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page PageReservas - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2295959263 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Series Internos</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page Series Internos - Property Caption</note>
         </trans-unit>
         <trans-unit id="Report 3744796316 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Crear Reg. Inventario Físico con Trazabilidad</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Report 3744796316 - NamedType 3831665571" size-unit="char" translate="yes" xml:space="preserve">
-          <source>%1 different orders has been created.</source>
-          <note from="Developer" annotates="general" priority="2">%1 = counter</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - NamedType DifferentOrdersMsg</note>
-        </trans-unit>
-        <trans-unit id="Report 3744796316 - NamedType 731289405" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Physical inventory recording %1 %2 has been created.</source>
-          <note from="Developer" annotates="general" priority="2">%1 = Order No. %2 = Recording No.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - NamedType NewOrderCreatedMsg</note>
         </trans-unit>
         <trans-unit id="Report 3744796316 - NamedType 3027491954" size-unit="char" translate="yes" xml:space="preserve">
           <source>A physical inventory recording was not created because no valid physical inventory order lines exist.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - NamedType NewOrderNotCreatedMsg</note>
         </trans-unit>
         <trans-unit id="Report 3744796316 - Control 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Options</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control Options - Property Caption</note>
         </trans-unit>
         <trans-unit id="Report 3744796316 - Control 416030689 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies that recording lines are automatically created for items that do not exist on the physical inventory order. This can only happen if none of the values in these four fields exist for an item on the order: Item No., Variant Code, Location Code, and Bin Code.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control AllowRecWithoutOrder - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Report 3744796316 - Control 416030689 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permitir Registro sin pedido</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control AllowRecWithoutOrder - Property Caption</note>
         </trans-unit>
         <trans-unit id="Report 3744796316 - Control 347408959 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies that a new physical inventory recording lines are only created when the data does not exist on any other physical inventory recording line. This is useful when you want to make sure that different recordings do not contain the same items.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control OnlyLinesNotInRecordings - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Report 3744796316 - Control 347408959 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Solo líneas no existen en registro</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Report Make Phys. Invt. Rec. Track - Control OnlyLinesNotInRecordings - Property Caption</note>
         </trans-unit>
         <trans-unit id="Query 3664961965 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot Numbers by Bin</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Query Lot Numbers by Location 2 - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1825673968 - Control 2155719079 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3469146285">
           <source>AURA-SGA</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Company_Info_SGA - Control SGA - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1748631067 - Control 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3870787835">
           <source>Aplicación SGA</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension LocationCard - Control App - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1748631067 - Control 2006825773 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3870787835">
           <source>Inventario</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension LocationCard - Control Inventario - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1748631067 - Control 3741301255 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3870787835">
           <source>Reclasificacion</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension LocationCard - Control Reclasificacion - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 2187133665 - Control 4283809525 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2187133665">
           <source>Read</source>
           <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Phys. Inventory Journal - Control Leido - Property ToolTip</note>
+          <target>Leido</target>
         </trans-unit>
         <trans-unit id="PageExtension 274825734 - Action 2922789772 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2431002931">
           <source>Crear Nuevo Registro Para App Móvil</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Phys_Inv_Order_Laqtia - Action Diario - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>Aplicación SGA</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control App - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 1518918944 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>Copy Allows</source>
           <note from="Developer" annotates="general" priority="2">ESP="Permite copiar"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control Permite Copiar - Property ToolTip</note>
+          <target>Permite copiar</target>
         </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 3987993804 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>Regularize allows</source>
           <note from="Developer" annotates="general" priority="2">ESP="Permite regularizar"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control Permite Regularizar - Property ToolTip</note>
+          <target>Permite regularizar</target>
         </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 325008777 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>Pin</source>
           <note from="Developer" annotates="general" priority="2">ESP="Pin"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control Pin - Property ToolTip</note>
+          <target>Pin</target>
         </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 3181781902 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>View inventory quantity</source>
           <note from="Developer" annotates="general" priority="2">ESP="Ver cantidad inventario"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control Ver cantidad inventario - Property ToolTip</note>
+          <target>Ver cantidad inventario</target>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Aplicación SGA</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control App - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 2617071045 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Activar</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control AppActivar - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 727291767 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Envíos y Recepciones</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control AppEnviosRecepciones - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 157422581 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Trazabilidad</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control AppLote - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 453237732 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Automatic lot no</source>
           <note from="Developer" annotates="general" priority="2">ESP="Crear el Nº. de lote automáticamente"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Lote Automatico - Property ToolTip</note>
+          <target>Crear el Nº. de lote automáticamente</target>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 2317360410 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>All products must have a unique internal lot no</source>
           <note from="Developer" annotates="general" priority="2">ESP="Todos los productos tienen que llevar un lote interno único"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Lote Interno Obligatorio - Property ToolTip</note>
+          <target>Todos los productos tienen que llevar un lote interno único</target>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 4288541063 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>For products with lot no, use the vendors lot no</source>
           <note from="Developer" annotates="general" priority="2">ESP="Para los productos con lote usar el lote del proveedor"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Usar Lote Proveedor - Property ToolTip</note>
+          <target>Para los productos con lote usar el lote del proveedor</target>
         </trans-unit>
         <trans-unit id="PageExtension 3288470611 - Control 4283809525 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3288470611">
           <source>Read</source>
           <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Whse. Phys. Invt. Journal - Control Leido - Property ToolTip</note>
+          <target>Leido</target>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 421183472 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Azure Code</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Azure Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 3569215515 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Fecha Vto. Licencias</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Fecha Vto Licencias - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 1334820330 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Licencias Activas</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Licencias Activas - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 4092529168 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Licencias Activas</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Licencias Usadas - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 1466686936 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Licencia SGA Polux</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field License Aura-SGA - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 399027694 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Licencia BC</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field License BC - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 1156102885 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>URL API</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field URL API - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 2012072162 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Vector Encriptación AES</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Company_Information_SGA - Field Vector AES - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 346005766 - Field 4283809525 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 346005766">
           <source>Read</source>
           <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Item Journal Line - Field Leido - Property Caption</note>
+          <target>Leido</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 6560835 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Advanced Warehouse</source>
           <note from="Developer" annotates="general" priority="2">ESP=Almacén Avanzado</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field Almacen Avanzado - Property Caption</note>
+          <target>Almacén Avanzado</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 1523876818 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Automatic Put-Away</source>
           <note from="Developer" annotates="general" priority="2">ESP="Almacenamiento automático"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field Almacenamiento automatico - Property Caption</note>
+          <target>Almacenamiento automático</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 1154349302 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Journal Batch</source>
           <note from="Developer" annotates="general" priority="2">ESP=Sección</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppInvJournalBatchName - Property Caption</note>
+          <target>Sección</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 283379698 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Journal Template</source>
           <note from="Developer" annotates="general" priority="2">ESP=Diario</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppInvJournalTemplateName - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3891454143 - Field 4059171314 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
-          <source>Item Journal Batch</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Sección Producto</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppItemJournalBatchName - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3891454143 - Field 2337220822 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
-          <source>Item Journal Template</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Diario Producto</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppItemJournalTemplateName - Property Caption</note>
+          <target>Diario</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 1935546685 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Journal Batch</source>
           <note from="Developer" annotates="general" priority="2">ESP=Sección</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppJournalBatchName - Property Caption</note>
+          <target>Sección</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 1404235969 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Journal Template</source>
           <note from="Developer" annotates="general" priority="2">ESP=Diario</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppJournalTemplateName - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3891454143 - Field 1415228622 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
-          <source>Warehouse Journal Batch</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Sección  Almacén</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppWhseJournalBatchName - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 3891454143 - Field 3125199802 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
-          <source>Warehouse Journal Template</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Diario Almacén</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppWhseJournalTemplateName - Property Caption</note>
+          <target>Diario</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 3882650204 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Add quantity in inventory</source>
           <note from="Developer" annotates="general" priority="2">ESP=Incrementar Cantidades</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field SumarCantidad - Property Caption</note>
+          <target>Incrementar Cantidades</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 953684134 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Tiene Ubicaciones</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field Tiene Ubicaciones - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 698477360 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Received Bin</source>
           <note from="Developer" annotates="general" priority="2">ESP="Ubicación Alm. Automático"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field Ubicacion Recepcionados - Property Caption</note>
+          <target>Ubicación Alm. Automático</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 3445095923 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Received Zone</source>
           <note from="Developer" annotates="general" priority="2">ESP="Zona Alm. Automático"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field Zona Recepcionados - Property Caption</note>
+          <target>Zona Alm. Automático</target>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 2638738419 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Vendor Shipment No.</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº Albarán Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field Albaran Proveedor - Property Caption</note>
+          <target>Nº Albarán Proveedor</target>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 441647185 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Alert</source>
           <note from="Developer" annotates="general" priority="2">ESP=Alerta</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field Alerta - Property Caption</note>
+          <target>Alerta</target>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 1573565203 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Initial Qty</source>
           <note from="Developer" annotates="general" priority="2">ESP=Cantidad inicial</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field CantidadInicial - Property Caption</note>
+          <target>Cantidad inicial</target>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 1927906008 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>On Alert</source>
           <note from="Developer" annotates="general" priority="2">ESP=En Alerta</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field En Alerta - Property Caption</note>
+          <target>En Alerta</target>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 3002765613 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Receipt Date</source>
           <note from="Developer" annotates="general" priority="2">ESP=Fecha Recepción</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field Fecha Recepcion - Property Caption</note>
+          <target>Fecha Recepción</target>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 3560088070 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Photo</source>
           <note from="Developer" annotates="general" priority="2">ESP=Foto</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field Foto - Property Caption</note>
+          <target>Foto</target>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 2165670724 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Vendor Lot</source>
           <note from="Developer" annotates="general" priority="2">ESP=Lote Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field Lote Proveedor - Property Caption</note>
+          <target>Lote Proveedor</target>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 1760272082 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Serie No.</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº serie</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field NSerie - Property Caption</note>
+          <target>Nº serie</target>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 1567443966 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Vendor</source>
           <note from="Developer" annotates="general" priority="2">ESP=Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field Proveedor - Property Caption</note>
+          <target>Proveedor</target>
         </trans-unit>
         <trans-unit id="TableExtension 1395915454 - Field 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2932055751">
           <source>App Móvil</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Phys_Invt_record_Header - Field App - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 1518918944 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
           <source>Copy Allow</source>
           <note from="Developer" annotates="general" priority="2">ESP=Permitir Copiar</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Resource - Field Permite Copiar - Property Caption</note>
+          <target>Permitir Copiar</target>
         </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 3987993804 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
           <source>Allows regularization</source>
           <note from="Developer" annotates="general" priority="2">ESP=Permitir regularizar</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Resource - Field Permite Regularizar - Property Caption</note>
+          <target>Permitir regularizar</target>
         </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 325008777 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
           <source>Pin to access</source>
           <note from="Developer" annotates="general" priority="2">ESP="Pin de acceso"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Resource - Field Pin - Property Caption</note>
+          <target>Pin de acceso</target>
         </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 325008777 - Method 2126772001 - NamedType 1930514908" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 348912950">
           <source>The pin must have at least 4 characters</source>
           <note from="Developer" annotates="general" priority="2">ESP=El pin ha de tener al menos 4 carácteres</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Resource - Field Pin - Method OnValidate - NamedType lblErrorLong</note>
+          <target>El pin ha de tener al menos 4 carácteres</target>
         </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 3181781902 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
           <source>View inventory quantity</source>
           <note from="Developer" annotates="general" priority="2">ESP=Mostrar Cantidad inventario</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Resource - Field Ver cantidad inventario - Property Caption</note>
+          <target>Mostrar Cantidad inventario</target>
         </trans-unit>
         <trans-unit id="TableExtension 1793067959 - Field 2638738419 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2119038973">
           <source>Vendor Shipment No.</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº Albarán Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SerialNoInformation - Field Albaran Proveedor - Property Caption</note>
+          <target>Nº Albarán Proveedor</target>
         </trans-unit>
         <trans-unit id="TableExtension 1793067959 - Field 441647185 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2119038973">
           <source>Alert</source>
           <note from="Developer" annotates="general" priority="2">ESP=Alerta</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SerialNoInformation - Field Alerta - Property Caption</note>
+          <target>Alerta</target>
         </trans-unit>
         <trans-unit id="TableExtension 1793067959 - Field 1927906008 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2119038973">
           <source>On Alert</source>
           <note from="Developer" annotates="general" priority="2">ESP=En Alerta</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SerialNoInformation - Field En Alerta - Property Caption</note>
+          <target>En Alerta</target>
         </trans-unit>
         <trans-unit id="TableExtension 1793067959 - Field 3002765613 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2119038973">
           <source>Receipt Date</source>
           <note from="Developer" annotates="general" priority="2">ESP=Fecha Recepción</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SerialNoInformation - Field Fecha Recepcion - Property Caption</note>
+          <target>Fecha Recepción</target>
         </trans-unit>
         <trans-unit id="TableExtension 1793067959 - Field 3560088070 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2119038973">
           <source>Photo</source>
           <note from="Developer" annotates="general" priority="2">ESP=Foto</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SerialNoInformation - Field Foto - Property Caption</note>
+          <target>Foto</target>
         </trans-unit>
         <trans-unit id="TableExtension 1793067959 - Field 2165670724 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2119038973">
           <source>Vendor Lot</source>
           <note from="Developer" annotates="general" priority="2">ESP=Lote Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SerialNoInformation - Field Lote Proveedor - Property Caption</note>
+          <target>Lote Proveedor</target>
         </trans-unit>
         <trans-unit id="TableExtension 1143503822 - Field 4283809525 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1143503822">
           <source>Read</source>
           <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Journal Line - Field Leido - Property Caption</note>
+          <target>Leido</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 446492480 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>SGA App Location</source>
           <note from="Developer" annotates="general" priority="2">ESP=Almacén Aplicación SGA</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field App Location - Property Caption</note>
+          <target>Almacén Aplicación SGA</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 4287287883 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Reset Shipment quantity</source>
           <note from="Developer" annotates="general" priority="2">ESP=Crear Envíos sin cantidad</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Cantidad envio a cero - Property Caption</note>
+          <target>Crear Envíos sin cantidad</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 1341359764 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Reset Receipt quantity</source>
           <note from="Developer" annotates="general" priority="2">ESP=Crear Recepciones sin cantidad</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Cantidad recepcion a cero - Property Caption</note>
+          <target>Crear Recepciones sin cantidad</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 3565850144 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Without Package Code</source>
           <note from="Developer" annotates="general" priority="2">ESP=Código Sin Paquete</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Codigo Sin Paquete - Property Caption</note>
+          <target>Código Sin Paquete</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 453237732 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Automatic Lot No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº. Lote Automático</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Lote Automatico - Property Caption</note>
+          <target>Nº. Lote Automático</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 2317360410 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Mandatory Lot No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº. Lote Obligatorio</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Lote Interno Obligatorio - Property Caption</note>
+          <target>Nº. Lote Obligatorio</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 1689496183 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Inventory No Serial</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº Serie Inventario</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Numero Serie Inventario - Property Caption</note>
+          <target>Nº Serie Inventario</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 747811521 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Package No Serial</source>
           <note from="Developer" annotates="general" priority="2">ESP=Nº Serie Paquete</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Numero Serie Paquete - Property Caption</note>
+          <target>Nº Serie Paquete</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 4288541063 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Use Vendor Lot No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Usar Nº. Lote Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Usar Lote Proveedor - Property Caption</note>
+          <target>Usar Nº. Lote Proveedor</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 2886464262 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>See New Items Registrations</source>
           <note from="Developer" annotates="general" priority="2">ESP=Ver Alta Productos</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Ver Altas - Property Caption</note>
+          <target>Ver Alta Productos</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 1163754742 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>See Inventory</source>
           <note from="Developer" annotates="general" priority="2">ESP=Inventario</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Ver Inventario - Property Caption</note>
+          <target>Inventario</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 2801074517 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>See Movements</source>
           <note from="Developer" annotates="general" priority="2">ESP=Movimientos</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Ver Movimientos - Property Caption</note>
+          <target>Movimientos</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 606050021 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>See Receipt</source>
           <note from="Developer" annotates="general" priority="2">ESP=Recepción</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Ver Recepcion - Property Caption</note>
+          <target>Recepción</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 3430218604 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>See Shipments</source>
           <note from="Developer" annotates="general" priority="2">ESP=Salidas</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Ver Salidas - Property Caption</note>
+          <target>Salidas</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 816434858 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>See Subcontracting</source>
           <note from="Developer" annotates="general" priority="2">ESP=Ver Subcontratación</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Ver Subcontratacion - Property Caption</note>
+          <target>Ver Subcontratación</target>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 346708723 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 202. Accepted indica que se aceptó la solicitud para su posterior procesamiento.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Accepted - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2418745115 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 208. AlreadyReported indica que los miembros de un enlace de WebDAV ya se han enumerado en una parte anterior de la respuesta multiestado y no se incluyen de nuevo.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue AlreadyReported - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2792882736 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 300. Ambiguous indica que la información solicitada tiene varias representaciones. La acción predeterminada consiste en tratar este estado como una redirección y seguir el contenido del encabezado Location asociado a esta respuesta. Ambiguous es un sinónimo de MultipleChoices.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Ambiguous - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1373389465 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 502. BadGateway indica que un servidor proxy intermedio recibió una respuesta errónea de otro proxy o del servidor de origen.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue BadGateway - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3532150282 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 400. BadRequest indica que el servidor no entendió la solicitud. Se envía BadRequest cuando ningún otro error es aplicable se desconoce el error exacto o este no tiene su propio código de error.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue BadRequest - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2943951202 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 409. Conflict indica que no se pudo realizar la solicitud debido a un conflicto en el servidor.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Conflict - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1852903571 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 100. Continue indica que el cliente puede continuar con su solicitud.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Continue - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1249475212 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 201. Created indica que la solicitud dio como resultado un nuevo recurso creado antes de enviar la respuesta.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Created - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2715875885 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 103. EarlyHints indica al cliente que es probable que el servidor envíe una respuesta final con los campos de encabezado incluidos en la respuesta informativa.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue EarlyHints - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2036055603 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 417. ExpectationFailed indica que el servidor no pudo cumplir la expectativa dada en un encabezado Expect.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue ExpectationFailed - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2949448808 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 424. FailedDependency indica que el método no se pudo realizar en el recurso porque la acción solicitada dependía de otra acción y se produjo un error en la acción.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue FailedDependency - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2374075469 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 403. Forbidden indica que el servidor rechaza atender la solicitud.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Forbidden - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2816937778 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 302. Found indica que la información solicitada se encuentra en el URI especificado en el encabezado Location. La acción predeterminada cuando se recibe este estado es seguir el encabezado Location asociado a la respuesta. Si el método de solicitud original era POST la solicitud redirigida utilizará el método GET. Found es un sinónimo de Redirect.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Found - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3973445597 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 504. GatewayTimeout indica que un servidor proxy intermedio agotó su tiempo de espera mientras aguardaba una respuesta de otro proxy o del servidor de origen.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue GatewayTimeout - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 454221045 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 410. Gone indica que el recurso solicitado ya no está disponible.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Gone - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1686118467 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 505. HttpVersionNotSupported indica que el servidor no admite la versión HTTP solicitada.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue HttpVersionNotSupported - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2406191013 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 226. IMUsed indica que el servidor ha atendido una solicitud del recurso y la respuesta es una representación del resultado de una o varias manipulaciones de instancia aplicadas a la instancia actual.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue IMUsed - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2713745944 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 507. InsufficientStorage indica que el servidor no puede almacenar la representación necesaria para completar la solicitud.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue InsufficientStorage - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3248063838 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 500. InternalServerError indica que se produjo un error genérico en el servidor.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue InternalServerError - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1542689871 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 411. LengthRequired indica que falta el encabezado Content-Length requerido.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue LengthRequired - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3846472926 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 423. Locked indica que el recurso de origen o de destino está bloqueado.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Locked - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3079292262 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 508. LoopDetected indica que el servidor ha finalizado una operación porque encontró un bucle infinito al procesar una solicitud de WebDAV con Profundidad: Infinito. Este código de estado se ha diseñado a efectos de compatibilidad con versiones anteriores de los clientes que no reconocen el código de estado 208 AlreadyReported que aparece en los cuerpos de respuesta multiestado.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue LoopDetected - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2419914294 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 405. MethodNotAllowed indica que no se permite el método de solicitud (POST o GET) en el recurso solicitado.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue MethodNotAllowed - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 469320182 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 421. MisdirectedRequest indica que la solicitud se dirigió en un servidor que no puede generar una respuesta.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue MisdirectedRequest - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1809480719 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 301. Moved indica que la información solicitada se ha trasladado al URI especificado en el encabezado Location. La acción predeterminada cuando se recibe este estado es seguir el encabezado Location asociado a la respuesta. Si el método de solicitud original era POST la solicitud redirigida utilizará el método GET. Moved es un sinónimo de MovedPermanently.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Moved - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 4041833047 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 207. MultiStatus indica varios códigos de estado para una sola respuesta durante una operación del Sistema distribuido de creación y control de versiones web (WebDAV). El cuerpo de la respuesta contiene XML que describe los códigos de estado.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue MultiStatus - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1067640265 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 511. NetworkAuthenticationRequired indica que el cliente debe autenticarse para obtener acceso a la red; está diseñado para su uso mediante la interceptación de servidores proxy que se usan para controlar el acceso a la red.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue NetworkAuthenticationRequired - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2186274660 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 204. NoContent indica que la solicitud se procesó correctamente y la respuesta está intencionadamente en blanco.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue NoContent - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3659041560 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 203. NonAuthoritativeInformation indica que la meta información devuelta procede de una copia almacenada en caché en lugar del servidor de origen y por lo tanto puede ser incorrecta.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue NonAuthoritativeInformation - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3999858745 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 406. NotAcceptable indica que el cliente ha señalado con encabezados Accept que ya no aceptará ninguna de las representaciones disponibles del recurso.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue NotAcceptable - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1719335846 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 510. NotExtended indica que se necesitan más extensiones de la solicitud para que el servidor la atienda.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue NotExtended - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3133017589 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 404. NotFound indica que el recurso solicitado no existe en el servidor.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue NotFound - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 993997389 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 501. NotImplemented indica que el servidor no admite la función solicitada.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue NotImplemented - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3132929344 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 304. NotModified indica que está actualizada la copia en caché del cliente. No se transfiere el contenido del recurso.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue NotModified - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2079045816 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 200. OK indica que la solicitud se realizó correctamente y la información solicitada se incluye en la respuesta. Este es el código de estado más habitual que se va a recibir.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue OK - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 710322366 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 206. PartialContent indica que la respuesta es una respuesta parcial conforme a una solicitud GET que incluye un intervalo de bytes.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue PartialContent - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3327791709 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 402. PaymentRequired se reserva para un uso futuro.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue PaymentRequired - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 53058788 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 308. PermanentRedirect indica que la información de la solicitud se encuentra en el URI especificado en el encabezado Location. La acción predeterminada cuando se recibe este estado es seguir el encabezado Location asociado a la respuesta. Si el método de solicitud original era POST la solicitud redirigida también utilizará el método GET.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue PermanentRedirect - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 477999809 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 412. PreconditionFailed indica un error relativo a una condición establecida para esta solicitud lo cual impide su realización. Las condiciones se establecen mediante encabezados de solicitud condicional como If-Match If-None-Match o If-Unmodified-Since.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue PreconditionFailed - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 303948287 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 428. PreconditionRequired indica que el servidor requiere que la solicitud sea condicional.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue PreconditionRequired - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3862845261 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 102. Processing indica que el servidor ha aceptado la solicitud completa pero todavía no la ha completado.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Processing - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 395071511 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 407. ProxyAuthenticationRequired indica que el proxy solicitado requiere autenticación. El encabezado Proxy-authenticate contiene los detalles de cómo realizar la autenticación.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue ProxyAuthenticationRequired - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1257034974 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 307. RedirectKeepVerb indica que la información de la solicitud se encuentra en el URI especificado en el encabezado Location. La acción predeterminada cuando se recibe este estado es seguir el encabezado Location asociado a la respuesta. Si el método de solicitud original era POST la solicitud redirigida también utilizará el método GET. RedirectKeepVerb es un sinónimo de TemporaryRedirect.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue RedirectKeepVerb - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1346633551 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 303. RedirectMethod redirige automáticamente el cliente al URI especificado en el encabezado Location como resultado de una acción POST. La solicitud al recurso especificado por el encabezado Location se realizará con GET. RedirectMethod es un sinónimo de SeeOther.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue RedirectMethod - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 947961029 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 416. RequestedRangeNotSatisfiable indica que no se puede devolver el intervalo de datos solicitado desde el recurso porque el comienzo del intervalo se encuentra delante del comienzo del recurso o porque el final del intervalo se encuentra detrás del final del recurso.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue RequestedRangeNotSatisfiable - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3415302605 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 413. RequestEntityTooLarge indica que la solicitud es demasiado grande para que el servidor la pueda procesar.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue RequestEntityTooLarge - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 326213266 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 431. RequestHeaderFieldsTooLarge indica que es difícil que el servidor procese la solicitud porque sus campos de encabezado (ya sea un campo de encabezado individual o todos los campos de encabezado colectivamente) son demasiado grandes.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue RequestHeaderFieldsTooLarge - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2462835046 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 408. RequestTimeout indica que el cliente no envió una solicitud en el intervalo de tiempo durante el cual el servidor la esperaba.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue RequestTimeout - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1767338051 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 414. RequestUriTooLong indica que el URI es demasiado largo.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue RequestUriTooLong - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 4086303528 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 205. ResetContent indica que el cliente debe restablecer (no recargar) el recurso actual.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue ResetContent - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 729778665 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 503. ServiceUnavailable indica que el servidor está temporalmente no disponible normalmente por motivos de sobrecarga o mantenimiento.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue ServiceUnavailable - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3206068057 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 101. SwitchingProtocols indica que se está modificando la versión de protocolo o el protocolo.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue SwitchingProtocols - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 344037415 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 429. TooManyRequests indica que el usuario ha enviado demasiadas solicitudes en un período de tiempo determinado.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue TooManyRequests - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 3050614224 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 401. Unauthorized indica que el recurso solicitado requiere autenticación. El encabezado WWW-Authenticate contiene los detalles de cómo realizar la autenticación.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Unauthorized - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 849932287 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 451. UnavailableForLegalReasons indica que el servidor está denegando el acceso al recurso como consecuencia de una demanda legal.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue UnavailableForLegalReasons - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2734311453 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 422. UnprocessableContent indica que la solicitud tenía el formato correcto pero no pudo seguirse debido a errores semánticos. UnprocessableContent es un sinónimo de UnprocessableEntity.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue UnprocessableContent - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 1423469835 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 415. UnsupportedMediaType indica que el tipo de la solicitud no es compatible.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue UnsupportedMediaType - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 59129936 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 306. Unused es una extensión propuesta de la especificación HTTP/1.1 que no está totalmente especificada.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue Unused - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 486982595 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 426. UpgradeRequired indica que el cliente debería cambiar a otro protocolo como TLS/1.0.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue UpgradeRequired - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2301375905 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 305. UseProxy indica que la solicitud debe utilizar el servidor proxy en el URI especificado en el encabezado Location.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue UseProxy - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1661597915 - EnumValue 2411615877 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Equivalente al código de estado HTTP 506. VariantAlsoNegotiates indica que el recurso de variante elegido está configurado para participar en una negociación de contenido transparente y por tanto no es un punto de conexión adecuado en el proceso de negociación.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Enum HttpStatusCode - EnumValue VariantAlsoNegotiates - Property Caption</note>
         </trans-unit>
       </group>

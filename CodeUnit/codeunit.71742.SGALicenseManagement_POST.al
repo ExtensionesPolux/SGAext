@@ -67,7 +67,8 @@ codeunit 71742 "SGA License Management POST"
         textoJson := '';
         IF jsonArray.Count > 0 then jsonArray.WriteTo(textojson);
         if textoJson = '[]' then textojson := '';
-        jsonMOTD.add('MOTD', textoJson);
+        //jsonMOTD.add('MOTD', textoJson);
+        jsonMOTD.add('MOTD', jsonArray);
 
         jsonMOTD.WriteTo(Mensaje);
     end;

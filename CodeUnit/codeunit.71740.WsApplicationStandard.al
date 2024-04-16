@@ -5578,9 +5578,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
-
-
-
     procedure Validar_Linea_Inventario_Almacen_Avanzado(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xItemNo: Text; xLocation: Text): Text
     var
 
@@ -5633,7 +5630,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;
 
     end;
-
 
     procedure Agregar_Linea_Inventario_Almacen_Avanzado(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xTipo: Code[1]; xItemNo: Text; xLocation: Text): Text
     var
@@ -5984,6 +5980,359 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     #endregion
 
+
+
+    #region AJUSTE
+
+
+    procedure WsAjustar(xJson: Text): Text
+    var
+
+        RecLocation: Record Location;
+        RecWarehouseSetup: Record "Warehouse Setup";
+        QueryContPaquete: Query "Lot Numbers by Bin";
+
+        VJsonObjectDatos: JsonObject;
+
+        lContenedor: Text;
+        lAlmacen: Text;
+
+        RecLotNo: Record "Lot No. Information";
+        RecSerialNo: Record "Serial No. Information";
+
+        lUbicadionDesde: Text;
+        lUbicacionHasta: Text;
+        lCantidad: Decimal;
+        lResource: Text;
+        lItemNo: Text;
+        lLotNo: Text;
+        lSerialNo: Text;
+        lPackageNo: Text;
+        newPackageNo: Text;
+        ltipo: Text;
+        lTrackNo: Text;
+        lPositivo: Boolean;
+    begin
+
+        If not VJsonObjectDatos.ReadFrom(xJson) then
+            Error('Respuesta no valida. Se esperaba un Json');
+
+        lContenedor := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
+        lTipo := DatoJsonTexto(VJsonObjectDatos, 'Tipo');
+        lUbicadionDesde := DatoJsonTexto(VJsonObjectDatos, 'BinFrom');
+
+        lItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
+        lUbicadionDesde := DatoJsonTexto(VJsonObjectDatos, 'BinFrom');
+        lCantidad := DatoJsonDecimal(VJsonObjectDatos, 'Quantity');
+        lResource := DatoJsonTexto(VJsonObjectDatos, 'Resource');
+        lAlmacen := DatoJsonTexto(VJsonObjectDatos, 'Location');
+        lLotNo := DatoJsonTexto(VJsonObjectDatos, 'LotNo');
+        lSerialNo := DatoJsonTexto(VJsonObjectDatos, 'SerialNo');
+        lPackageNo := DatoJsonTexto(VJsonObjectDatos, 'PackageNo');
+
+        lPositivo := DatoJsonBoolean(VJsonObjectDatos, 'Positive');
+
+        IF (lLotNo <> '') then begin
+            Clear(RecLotNo);
+            RecLotNo.SetRange("Item No.", lItemNo);
+            RecLotNo.SetRange("Lot No.", lLotNo);
+            if not RecLotNo.FindFirst() then
+                Crear_Lote(lLotNo, lItemNo, lCantidad, '', '');
+        end;
+
+        IF (lSerialNo <> '') then begin
+            Clear(RecSerialNo);
+            RecSerialNo.SetRange("Item No.", lItemNo);
+            RecSerialNo.SetRange("Serial No.", lSerialNo);
+            if not RecSerialNo.FindFirst() then
+                Crear_Serie(lSerialNo, lItemNo, lCantidad, '', '');
+        end;
+
+        RecLocation.Get(lAlmacen);
+        IF RecLocation."Almacen Avanzado" then
+            Diario_Almacen(lLotNo, lSerialNo, lItemNo, lCantidad, lUbicadionDesde, lAlmacen, lPositivo, 'APP_AJ')
+        ELSE
+            Diario_Producto(lAlmacen, lItemNo, lCantidad, lLotNo, lSerialNo, lPositivo, 'APP_AJ');
+
+        exit('OK');
+
+    end;
+
+
+
+
+    local procedure Diario_Almacen(xLote: Code[50]; xSerie: Code[50]; xReferencia: Code[20]; xCantidad: Decimal; xUbicacion: Code[20]; xLocation: Code[10]; xPositivo: Boolean; xDoc: Text)
+    var
+        RecLocation: Record Location;
+        LRecWarehouseJournalLine: Record "Warehouse Journal Line";
+        LRecItemTracking: Record "Whse. Item Tracking Line";
+        //RecWarehouseSetup: Record "Warehouse Setup";
+        RecBin: Record Bin;
+        RecBinAjus: Record Bin;
+
+        vNumeroLinea: Integer;
+        vNumeroLineaTr: Integer;
+
+        vTemplate: Text;
+        vBacth: Text;
+
+    begin
+
+        Clear(RecLocation);
+        RecLocation.get(xLocation);
+        if RecLocation.AppWhseJournalTemplateName = '' then ERROR(lblErrorDiarioAlm);
+        if RecLocation.AppWhseJournalBatchName = '' then ERROR(lblErrorDiarioAlm);
+        //vTemplate := 'AJUST';
+        //vBacth := 'GENERICO';
+
+        vTemplate := RecLocation.AppWhseJournalTemplateName;
+        vBacth := RecLocation.AppWhseJournalBatchName;
+
+        LRecWarehouseJournalLine.RESET;
+
+        LRecWarehouseJournalLine.SetRange("Journal Template Name", vTemplate);
+        LRecWarehouseJournalLine.SetRange("Journal Batch Name", vBacth);
+        IF (LRecWarehouseJournalLine.FindLast()) THEN
+            vNumeroLinea := LRecWarehouseJournalLine."Line No." + 10001
+        ELSE
+            vNumeroLinea := 60001;
+
+        if not xPositivo then
+            xCantidad := -xCantidad;
+
+        //Comprobar si ya está creado
+        /*Clear(LRecItemTracking);
+        LRecItemTracking.SetRange("Item No.", xReferencia);
+        LRecItemTracking.SetRange("Location Code", xLocation);
+        IF xCantidad < 0 THEN
+            LRecItemTracking.SetRange("Qty. to Handle", -xCantidad)
+        else
+            LRecItemTracking.SetRange("Qty. to Handle", -xCantidad);
+        LRecItemTracking.SetRange("Lot No.", xLote);
+        LRecItemTracking.SetRange("Serial No.", xSerie);
+        if LRecItemTracking.FindFirst() then ERROR('Ya existe el registro.\\Lote: %1 \Serie: %2', xLote, xSerie);
+        */
+
+
+        //Buscar ubicación
+        Clear(RecBin);
+        RecBin.SetRange(Code, xUbicacion);
+        IF not RecBin.FindFirst() then error(StrSubstNo(lblErrorUbicacion, xUbicacion));
+
+        LRecWarehouseJournalLine.RESET;
+        LRecWarehouseJournalLine.INIT;
+        LRecWarehouseJournalLine.VALIDATE("Journal Template Name", vTemplate);
+        LRecWarehouseJournalLine.VALIDATE("Journal Batch Name", vBacth);
+        LRecWarehouseJournalLine."Whse. Document No." := xDoc;
+        LRecWarehouseJournalLine.VALIDATE("Location Code", xLocation);
+        LRecWarehouseJournalLine.SetUpNewLine(LRecWarehouseJournalLine);
+        LRecWarehouseJournalLine."Line No." := vNumeroLinea;
+        LRecWarehouseJournalLine.VALIDATE("Registering Date", Today);
+        LRecWarehouseJournalLine.VALIDATE("Item No.", xReferencia);
+
+        LRecWarehouseJournalLine.VALIDATE(Quantity, xCantidad);
+
+        LRecWarehouseJournalLine."Zone Code" := RecBin."Zone Code";
+        LRecWarehouseJournalLine."Bin Code" := xUbicacion;
+
+        RecLocation.Get(xLocation);
+
+        //Buscar ubicación
+        Clear(RecBinAjus);
+        RecBinAjus.SetRange(Code, RecLocation."Adjustment Bin Code");
+        IF not RecBinAjus.FindFirst() then Error('No se ha encontrado la ubicación %1', RecBinAjus);
+
+        IF xCantidad > 0 THEN begin
+
+            LRecWarehouseJournalLine."From Zone Code" := RecBinAjus."Zone Code";
+            LRecWarehouseJournalLine."From Bin Code" := RecBinAjus.Code;
+
+            LRecWarehouseJournalLine."To Zone Code" := RecBin."Zone Code";
+            LRecWarehouseJournalLine."To Bin Code" := xUbicacion;
+
+        end ELSE begin
+            LRecWarehouseJournalLine."To Zone Code" := RecBinAjus."Zone Code";
+            LRecWarehouseJournalLine."To Bin Code" := RecBinAjus.Code;
+
+            LRecWarehouseJournalLine."From Zone Code" := RecBin."Zone Code";
+            LRecWarehouseJournalLine."From Bin Code" := xUbicacion;
+        end;
+
+        LRecWarehouseJournalLine."User ID" := USERID;
+
+        IF LRecWarehouseJournalLine.INSERT THEN;
+
+        vNumeroLineaTr := 70001;
+        LRecItemTracking.RESET;
+        IF LRecItemTracking.FINDLAST THEN;
+        vNumeroLineaTr += LRecItemTracking."Entry No.";
+
+        //ES NECESARIO AGREGAR LA INFORMACION DEL LOTE
+        LRecItemTracking.INIT;
+        LRecItemTracking."Entry No." := vNumeroLineaTr;
+        LRecItemTracking."Item No." := xReferencia;
+        LRecItemTracking."Location Code" := xLocation;
+        IF xCantidad < 0 THEN BEGIN
+            LRecItemTracking."Qty. to Handle" := -xCantidad;
+            LRecItemTracking."Quantity (Base)" := -xCantidad;
+            LRecItemTracking."Qty. to Handle (Base)" := -xCantidad;
+        END ELSE BEGIN
+            LRecItemTracking."Qty. to Handle" := xCantidad;
+            LRecItemTracking."Quantity (Base)" := xCantidad;
+            LRecItemTracking."Qty. to Handle (Base)" := xCantidad;
+        END;
+
+        LRecItemTracking."Source Ref. No." := vNumeroLinea;
+        LRecItemTracking."Source Type" := 7311;
+        LRecItemTracking."Source Batch Name" := vTemplate;
+        LRecItemTracking."Source ID" := vBacth;
+        LRecItemTracking."Lot No." := xLote;
+        LRecItemTracking."Serial No." := xSerie;
+        LRecItemTracking."New Package No." := xDoc;
+        LRecItemTracking.INSERT(TRUE);
+
+        //REGISTRAR
+
+        LRecWarehouseJournalLine.RESET;
+        LRecWarehouseJournalLine.SETRANGE("Journal Template Name", vTemplate);
+        LRecWarehouseJournalLine.SETRANGE("Journal Batch Name", vBacth);
+        LRecWarehouseJournalLine.SETRANGE("Location Code", xLocation);
+        LRecWarehouseJournalLine.SETRANGE("Line No.", vNumeroLinea);
+        IF LRecWarehouseJournalLine.FINDFIRST THEN
+            CODEUNIT.RUN(CODEUNIT::"Whse. Jnl.-Register Batch", LRecWarehouseJournalLine);
+
+        Diario_Producto(xLocation, xReferencia, xCantidad, xLote, xSerie, xPositivo, xDoc);
+
+    end;
+
+    local procedure Diario_Producto(xLocation: Text; xReferencia: Text; xCantidad: Decimal; xLote: Text; xSerie: Text; xPositive: boolean; xDoc: Text)
+    var
+        RecLocation: Record Location;
+        //RecWarehouseSetup: Record "Warehouse Setup";
+        LRecItemJournalLine: Record "Item Journal Line";
+        LRecReservationEntry: Record "Reservation Entry";
+        vNumeroLinea: Integer;
+        vNumeroLineaTr: Integer;
+        vTemplate: Text;
+        vBacth: Text;
+        ItemCost: record Item;
+    begin
+
+        Clear(RecLocation);
+        RecLocation.get(xLocation);
+        if RecLocation.AppItemJournalTemplateName = '' then ERROR(lblErrorDiarioAlm);
+        if RecLocation.AppItemJournalBatchName = '' then ERROR(lblErrorDiarioAlm);
+
+        vTemplate := RecLocation.AppItemJournalTemplateName;
+        vBacth := RecLocation.AppItemJournalBatchName;
+        //vTemplate := 'PRODUCTO';
+        //vBacth := 'GENERICO';
+
+        LRecItemJournalLine.RESET;
+
+        LRecItemJournalLine.SetRange("Journal Template Name", vTemplate);
+        LRecItemJournalLine.SetRange("Journal Batch Name", vBacth);
+        IF (LRecItemJournalLine.FindLast()) THEN
+            vNumeroLinea := LRecItemJournalLine."Line No." + 10001
+        ELSE
+            vNumeroLinea := 60001;
+
+
+        LRecItemJournalLine.RESET;
+        LRecItemJournalLine.INIT;
+
+        LRecItemJournalLine.VALIDATE("Journal Template Name", vTemplate);
+        LRecItemJournalLine.VALIDATE("Journal Batch Name", vBacth);
+
+        //LRecItemJournalLine.SetUpNewLine(LRecItemJournalLine);
+        //Buscamos el número de línea
+        LRecItemJournalLine."Line No." := vNumeroLinea;
+
+        LRecItemJournalLine.VALIDATE("Posting Date", Today);
+        IF xPositive THEN BEGIN
+            LRecItemJournalLine.VALIDATE("Entry Type", LRecItemJournalLine."Entry Type"::"Positive Adjmt.")
+        END ELSE BEGIN
+            LRecItemJournalLine.VALIDATE("Entry Type", LRecItemJournalLine."Entry Type"::"Negative Adjmt.");
+            xCantidad := xCantidad * -1;
+        END;
+
+        LRecItemJournalLine.VALIDATE("Item No.", xReferencia);
+        LRecItemJournalLine.VALIDATE("Location Code", xLocation);
+        LRecItemJournalLine."Document No." := xDoc;
+        LRecItemJournalLine.VALIDATE(Quantity, xCantidad);
+        LRecItemJournalLine.VALIDATE("Invoiced Quantity", xCantidad);
+        LRecItemJournalLine."Warehouse Adjustment" := TRUE;
+        //PX221123 METEMOS COSTE ESTANDAR
+        IF ItemCost.GET(LRecItemJournalLine."Item No.") and (itemCost."Standard Cost" <> 0) then
+            LRecItemJournalLine.VALIDATE("Unit Cost", ItemCost."Standard Cost");
+        //PX221123             
+
+        IF LRecItemJournalLine.INSERT THEN;
+
+        //ES NECESARIO AGREGAR LA INFORMACION DEL LOTE
+        vNumeroLineaTr := 70001;
+        IF LRecReservationEntry.FINDLAST THEN
+            vNumeroLineaTr := LRecReservationEntry."Entry No." + 100;
+
+        LRecReservationEntry.INIT;
+        LRecReservationEntry."Entry No." := vNumeroLineaTr;
+        LRecReservationEntry."Item No." := xReferencia;
+        LRecReservationEntry."Location Code" := xLocation;
+
+        IF xPositive THEN BEGIN
+            LRecReservationEntry."Quantity (Base)" := xCantidad;
+            LRecReservationEntry."Qty. to Handle (Base)" := xCantidad;
+            LRecReservationEntry.Quantity := xCantidad;
+            LRecReservationEntry."Qty. to Invoice (Base)" := xCantidad;
+        END ELSE BEGIN
+            LRecReservationEntry."Quantity (Base)" := -xCantidad;
+            LRecReservationEntry."Qty. to Handle (Base)" := -xCantidad;
+            LRecReservationEntry.Quantity := -xCantidad;
+            LRecReservationEntry."Qty. to Invoice (Base)" := -xCantidad;
+        END;
+        LRecReservationEntry."Reservation Status" := LRecReservationEntry."Reservation Status"::Prospect;
+        LRecReservationEntry."Source Ref. No." := vNumeroLinea;
+        LRecReservationEntry."Created By" := USERID;
+        LRecReservationEntry."Source Type" := 83;
+        IF xPositive THEN
+            LRecReservationEntry."Source Subtype" := 2
+        ELSE
+            LRecReservationEntry."Source Subtype" := 3;
+        LRecReservationEntry.Positive := TRUE;
+        LRecReservationEntry."Source Batch Name" := vBacth;
+        LRecReservationEntry."Source ID" := vTemplate;
+
+
+        LRecReservationEntry."Lot No." := xLote;
+        LRecReservationEntry."Serial No." := xSerie;
+        if (xSerie = '') then
+            LRecReservationEntry."Item Tracking" := LRecReservationEntry."Item Tracking"::"Lot No."
+        else
+            LRecReservationEntry."Item Tracking" := LRecReservationEntry."Item Tracking"::"Lot and Serial No.";
+
+        LRecReservationEntry."New Package No." := xDoc;
+
+        LRecReservationEntry.INSERT(TRUE);
+
+
+        //REGISTRAR
+        LRecItemJournalLine.RESET;
+        LRecItemJournalLine.SETRANGE("Journal Template Name", vTemplate);
+        LRecItemJournalLine.SETRANGE("Journal Batch Name", vBacth);
+        LRecItemJournalLine.SETRANGE("Location Code", xLocation);
+        LRecItemJournalLine.SETRANGE("Line No.", vNumeroLinea);
+        IF LRecItemJournalLine.FINDFIRST THEN
+            CODEUNIT.RUN(CODEUNIT::"Item Jnl.-Post Batch", LRecItemJournalLine);
+
+
+    end;
+
+
+
+
+    #endregion
+
+
     #region FUNCIONES BC
 
 
@@ -6019,7 +6368,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit('N');
     end;
 
-
     local procedure Item_Tipo_Dato(xTrackNo: Text): Code[50]
     var
         RecLotNo: Record "Lot No. Information";
@@ -6042,7 +6390,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit('');
     end;
 
-
     local procedure Existe_Referencia(xItemNo: Text; xAnalizarSeg: Boolean): Boolean
     var
         RecItem: Record Item;
@@ -6059,7 +6406,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;
 
     end;
-
 
     local procedure Existe_Lote(xLotNo: Text; xItemNo: Text): Boolean
     var
@@ -6493,6 +6839,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         lblLote: Label 'Lot No', Comment = 'ESP=Lote';
         lblSerie: Label 'Serial No', Comment = 'ESP=Serie';
         lblReferencia: Label 'Item No.', Comment = 'ESP=Referencia';
+        lblErrorDiarioAlm: Label 'Journal Template Name not define on Location', comment = 'ESP=No se ha definido el diario en el almacén';
 
         lblErrorDiarioInv: Label 'Journal Template Name not define on Warehouse Setup', comment = 'ESP=No se ha definido el diario inventario en la configuración de almacén';
         lblErrorUbicacion: Label 'Bin %1 not found', Comment = 'ESP=Ubicación %1 no encontrada';
