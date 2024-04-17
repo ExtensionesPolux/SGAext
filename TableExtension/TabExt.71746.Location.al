@@ -96,7 +96,7 @@ tableextension 71746 Location extends Location
         }
         field(71767; AppWhseJournalBatchName; Code[20])
         {
-            TableRelation = "Warehouse Journal Batch".Name where("Journal Template Name" = FIELD(AppJournalTemplateName));
+            TableRelation = "Warehouse Journal Batch".Name where("Journal Template Name" = FIELD(AppWhseJournalTemplateName));
             Caption = 'Warehouse Journal Batch', Comment = 'ESP=Sección  Almacén';
 
         }
@@ -111,7 +111,7 @@ tableextension 71746 Location extends Location
         }
         field(71769; AppItemJournalBatchName; Code[20])
         {
-            TableRelation = "Item Journal Batch".Name where("Journal Template Name" = FIELD(AppInvJournalTemplateName));
+            TableRelation = "Item Journal Batch".Name where("Journal Template Name" = FIELD(AppItemJournalTemplateName));
             Caption = 'Item Journal Batch', Comment = 'ESP=Sección Producto';
 
         }

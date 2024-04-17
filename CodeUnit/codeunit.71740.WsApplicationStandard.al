@@ -34,21 +34,15 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         IF NOT RecRecursos.FindFirst() THEN
             exit(lblErrorRecurso);
 
-        if lLocation = '' then begin
-            App_Location(lLocation);
-        end;
+        vAlmacenEncontrado := false;
 
-        Clear(RecLocation);
-        RecLocation.SetRange(RecLocation.Code, lLocation);
-        if NOT RecLocation.FindFirst() then
-            vAlmacenEncontrado := false
-        else
-            vAlmacenEncontrado := true;
-
-        if not vAlmacenEncontrado then begin
+        if lLocation <> '' then begin
             Clear(RecLocation);
-            if not RecLocation.FindFirst() then
-                Error(lblErrorAlmacen);
+            RecLocation.SetRange(RecLocation.Code, lLocation);
+            if NOT RecLocation.FindFirst() then
+                vAlmacenEncontrado := false
+            else
+                vAlmacenEncontrado := true;
         end;
 
         VJsonObjectRecurso.Add('No', RecRecursos."No.");
@@ -61,35 +55,49 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         //VJsonObjectRecurso.Add('UsarPaquete', FormatoBoolean(RecWarehouseSetup."Usar paquetes"));
         VJsonObjectRecurso.Add('VerRecepcion', FormatoBoolean(RecWarehouseSetup."Ver Recepcion"));
         VJsonObjectRecurso.Add('VerSubcontratacion', FormatoBoolean(RecWarehouseSetup."Ver Subcontratacion"));
-
         VJsonObjectRecurso.Add('VerSalidas', FormatoBoolean(RecWarehouseSetup."Ver Salidas"));
         VJsonObjectRecurso.Add('VerInventario', FormatoBoolean(RecWarehouseSetup."Ver Inventario"));
         VJsonObjectRecurso.Add('VerMovimientos', FormatoBoolean(RecWarehouseSetup."Ver Movimientos"));
         VJsonObjectRecurso.Add('VerAltas', FormatoBoolean(RecWarehouseSetup."Ver Altas"));
-
-        RecLocation.CalcFields(RecLocation."Tiene Ubicaciones");
-        VJsonObjectRecurso.Add('AlmacenAvanzado', FormatoBoolean(RecLocation."Almacen Avanzado"));
-        VJsonObjectRecurso.Add('TieneUbicaciones', FormatoBoolean(RecLocation."Tiene Ubicaciones"));
-
         VJsonObjectRecurso.Add('LoteInternoObligatorio', FormatoBoolean(RecWarehouseSetup."Lote Interno Obligatorio"));
         VJsonObjectRecurso.Add('UsarLoteProveedor', FormatoBoolean(RecWarehouseSetup."Usar Lote Proveedor"));
         VJsonObjectRecurso.Add('LoteAutomatico', FormatoBoolean(RecWarehouseSetup."Lote Automatico"));
 
-        VJsonObjectRecurso.Add('Location', RecLocation.Code);
-        VJsonObjectRecurso.Add('NombreAlamcen', RecLocation.Name);
+        if vAlmacenEncontrado then begin
 
-        VJsonObjectRecurso.Add('RequiereAlmacenamiento', FormatoBoolean(RecLocation."Require Put-away"));
-        VJsonObjectRecurso.Add('RequierePicking', FormatoBoolean(RecLocation."Require Pick"));
+            RecLocation.CalcFields(RecLocation."Tiene Ubicaciones");
+            VJsonObjectRecurso.Add('AlmacenAvanzado', FormatoBoolean(RecLocation."Almacen Avanzado"));
+            VJsonObjectRecurso.Add('TieneUbicaciones', FormatoBoolean(RecLocation."Tiene Ubicaciones"));
+            VJsonObjectRecurso.Add('Location', RecLocation.Code);
+            VJsonObjectRecurso.Add('NombreAlamcen', RecLocation.Name);
+            VJsonObjectRecurso.Add('RequiereAlmacenamiento', FormatoBoolean(RecLocation."Require Put-away"));
+            VJsonObjectRecurso.Add('RequierePicking', FormatoBoolean(RecLocation."Require Pick"));
+            VJsonObjectRecurso.Add('ContRecepciones', FormatoNumero(Contador_Recepciones(lLocation)));
+            VJsonObjectRecurso.Add('ContSubcontrataciones', FormatoNumero(Contador_Subcontrataciones(lLocation)));
+            VJsonObjectRecurso.Add('ContAlmacenamiento', FormatoNumero(Contador_Trabajos(lLocation, 1)));
+            VJsonObjectRecurso.Add('ContPicking', FormatoNumero(Contador_Trabajos(lLocation, 2)));
+            VJsonObjectRecurso.Add('ContInventario', FormatoNumero(Contador_Inventario(lLocation)));
+            VJsonObjectRecurso.Add('ContTrabajos', FormatoNumero(Contador_Trabajos(lLocation, 0)));
+            VJsonObjectRecurso.Add('ContEnvios', FormatoNumero(Contador_Envios(lLocation)));
 
-        VJsonObjectRecurso.Add('ContRecepciones', FormatoNumero(Contador_Recepciones(lLocation)));
-        VJsonObjectRecurso.Add('ContSubcontrataciones', FormatoNumero(Contador_Subcontrataciones(lLocation)));
+        end else begin
 
-        VJsonObjectRecurso.Add('ContAlmacenamiento', FormatoNumero(Contador_Trabajos(lLocation, 1)));
-        VJsonObjectRecurso.Add('ContPicking', FormatoNumero(Contador_Trabajos(lLocation, 2)));
-        VJsonObjectRecurso.Add('ContInventario', FormatoNumero(Contador_Inventario(lLocation)));
-        VJsonObjectRecurso.Add('ContTrabajos', FormatoNumero(Contador_Trabajos(lLocation, 0)));
+            VJsonObjectRecurso.Add('AlmacenAvanzado', FormatoBoolean(false));
+            VJsonObjectRecurso.Add('TieneUbicaciones', FormatoBoolean(false));
+            VJsonObjectRecurso.Add('Location', '');
+            VJsonObjectRecurso.Add('NombreAlamcen', '');
+            VJsonObjectRecurso.Add('RequiereAlmacenamiento', FormatoBoolean(false));
+            VJsonObjectRecurso.Add('RequierePicking', FormatoBoolean(false));
+            VJsonObjectRecurso.Add('ContRecepciones', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContSubcontrataciones', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContAlmacenamiento', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContPicking', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContInventario', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContTrabajos', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContEnvios', FormatoNumero(0));
 
-        VJsonObjectRecurso.Add('ContEnvios', FormatoNumero(Contador_Envios(lLocation)));
+        end;
+
 
         VJsonObjectRecurso.WriteTo(VJsonText);
         exit(VJsonText);
@@ -557,8 +565,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
 
     end;
-
-
 
     procedure WsContenidoUbicacion(xJson: Text): Text
     var
@@ -6529,7 +6535,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
-    [TryFunction]
+    /*[TryFunction]
     local procedure App_Location(VAR xLocation: Text)
     var
         RecWarehouseSetup: Record "Warehouse Setup";
@@ -6541,7 +6547,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             xLocation := RecWarehouseSetup."App Location";
 
 
-    end;
+    end;*/
 
     /// <summary>
     /// AnalizarSeguimientoProducto.

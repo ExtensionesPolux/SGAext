@@ -8,10 +8,10 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             {
                 Caption = 'Aplicación SGA';
 
-                field("App Location"; Rec."App Location")
+                /*field("App Location"; Rec."App Location")
                 {
                     ApplicationArea = all;
-                }
+                }*/
 
                 field("Numero Serie Inventario"; Rec."Numero Serie Inventario")
                 {

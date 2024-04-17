@@ -3,12 +3,12 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
     fields
     {
 
-        field(71740; "App Location"; Code[50])
+        /*field(71740; "App Location"; Code[50])
         {
             DataClassification = ToBeClassified;
             TableRelation = Location.Code;
             Caption = 'SGA App Location', Comment = 'ESP=Almacén Aplicación SGA';
-        }
+        }*/
 
         //Parametros
         field(71741; "Usar Lote Proveedor"; Boolean)
