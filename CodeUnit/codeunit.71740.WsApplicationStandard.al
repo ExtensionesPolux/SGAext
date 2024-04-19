@@ -2066,6 +2066,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         jTipo := DatoJsonTexto(VJsonObjectContenedor, 'Type');
 
+        Clear(RecItem);
+        RecItem.SetRange("No.", jReferencia);
+        if not RecItem.FindFirst() then Error(StrSubstNo(lblErrorReferencia, jReferencia));
+
         //Si es un pedido de transferenc
         if (jTipo = 'T') then begin
 
@@ -2115,10 +2119,18 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 end else
                     TextoContenedorFinal := '';*/
 
+                TextoContenedorFinal := '';
                 //Base para la creación del Nº Contenedor      
-                if (RecWarehouseSetup."Usar Lote Proveedor") then
-                    TextoContenedorFinal := jLoteProveedor
-                else
+                if (RecWarehouseSetup."Usar Lote Proveedor") then begin
+                    if (jLoteProveedor <> '') then
+                        TextoContenedorFinal := jLoteProveedor
+                    else begin
+                        if (RecWarehouseSetup."Lote aut. si proveedor vacio") then
+                            TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true)
+                        else
+                            error(lblErrorLoteProveedor);
+                    end;
+                end else
                     if (RecWarehouseSetup."Lote Automatico") then
                         TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
 
@@ -2155,7 +2167,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jReferencia: Text;
         jRecepcion: Text;
         jUnidades: Integer;
-        jLote: Text;
+        //jLote: Text;
         jSerie: Text;
         jLoteProveedor: Text;
         jLotePreasignado: Text;
@@ -2275,14 +2287,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     end;
                 1://Lote
                     begin
-                        if (NOT RecWhseSetup."Lote Automatico") then begin
-                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                        if (xContenedor = '') then begin
+                            xContenedor := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
                             jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
                             if (jLotePreasignado <> '') THEN
                                 xContenedor := jLotePreasignado
                             ELSE BEGIN
-                                IF (jLote = '') THEN ERROR(lblErrorLote);
-                                xContenedor := jLote;
+                                IF (xContenedor = '') THEN ERROR(lblErrorLote);
                             END;
                         end;
                         Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
@@ -2313,14 +2324,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     end;
                 3://Lote y Serie
                     begin
-                        if (NOT RecWhseSetup."Lote Automatico") then begin
-                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                        if (xContenedor = '') then begin
+                            xContenedor := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
                             jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
                             if (jLotePreasignado <> '') THEN
                                 xContenedor := jLotePreasignado
                             ELSE BEGIN
-                                IF (jLote = '') THEN ERROR(lblErrorLote);
-                                xContenedor := jLote;
+                                IF (xContenedor = '') THEN ERROR(lblErrorLote);
                             END;
                         end;
 
@@ -2346,14 +2356,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     end;
                 4://Lote y Paquete
                     begin
-                        if (NOT RecWhseSetup."Lote Automatico") then begin
-                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                        if (xContenedor = '') then begin
+                            xContenedor := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
                             jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
                             if (jLotePreasignado <> '') THEN
                                 xContenedor := jLotePreasignado
                             ELSE BEGIN
-                                IF (jLote = '') THEN ERROR(lblErrorLote);
-                                xContenedor := jLote;
+                                IF (xContenedor = '') THEN ERROR(lblErrorLote);
                             END;
                         end;
 
@@ -2392,14 +2401,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     begin
 
 
-                        if (NOT RecWhseSetup."Lote Automatico") then begin
-                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                        if (xContenedor = '') then begin
+                            xContenedor := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
                             jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
                             if (jLotePreasignado <> '') THEN
                                 xContenedor := jLotePreasignado
                             ELSE BEGIN
-                                IF (jLote = '') THEN ERROR(lblErrorLote);
-                                xContenedor := jLote;
+                                IF (xContenedor = '') THEN ERROR(lblErrorLote);
                             END;
                         end;
 
@@ -3251,12 +3259,19 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             end else
                 TextoContenedorFinal := '';*/
 
-
-            if (RecWarehouseSetup."Usar Lote Proveedor") then
-                TextoContenedorFinal := jLoteProveedor
-            else
+            if (RecWarehouseSetup."Usar Lote Proveedor") then begin
+                if (jLoteProveedor <> '') then
+                    TextoContenedorFinal := jLoteProveedor
+                else begin
+                    if (RecWarehouseSetup."Lote aut. si proveedor vacio") then
+                        TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true)
+                    else
+                        error(lblErrorLoteProveedor);
+                end;
+            end else
                 if (RecWarehouseSetup."Lote Automatico") then
                     TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
+
 
 
             Recepcionar_Contenedor_Subcontratacion(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
@@ -6827,6 +6842,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         lblErrorSinReferencia: Label 'Item No field is empty', comment = 'ESP=El campo referencia está vacio';
         lblErrorLoteInterno: Label 'Error generating internal Lot No number', comment = 'ESP=Error al generar el número de lote interno';
         lblErrorLote: Label 'Lot No not defined', comment = 'ESP=No se ha definido el lote';
+        lblErrorLoteProveedor: Label 'Vendor Lot No not defined', comment = 'ESP=No se ha definido el lote de proveedor';
         lblErrorSerie: Label 'Serial No not defined', comment = 'ESP=No se ha definido el serie';
         lblErrorPaquete: Label 'Package No not defined', comment = 'ESP=No se ha definido el paquete';
         lblErrorPaqueteGenerico: Label 'Empty Package code not defined', comment = 'ESP=No se ha definido el código de paquete vacío';

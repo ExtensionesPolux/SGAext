@@ -17,12 +17,12 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             Caption = 'Use Vendor Lot No', Comment = 'ESP=Usar Nº. Lote Proveedor';
         }
 
-        /*field(71742; "Usar paquetes"; Boolean)
+        field(71742; "Lote aut. si proveedor vacio"; Boolean)
         {
             DataClassification = ToBeClassified;
-            Caption = 'Use Package', Comment = 'ESP=Usar Paquete';
+            Caption = 'Use Automatic Lot No if empty', Comment = 'ESP=Usar Lote Automático si vacio';
 
-        }*/
+        }
 
         field(71743; "Lote Interno Obligatorio"; Boolean)
         {

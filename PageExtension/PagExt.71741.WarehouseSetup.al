@@ -81,6 +81,12 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
 
                         ApplicationArea = all;
                     }
+                    field("Lote aut. si proveedor vacio"; Rec."Lote aut. si proveedor vacio")
+                    {
+                        ToolTip = 'If vendors lot no empty, use the automatic lot no', comment = 'ESP="Si lote proveedor vacio, usar lote automático"';
+
+                        ApplicationArea = all;
+                    }
                     /*field("Serie Interno Obligatorio"; Rec."Serie Interno Obligatorio")
                     {
                         ToolTip = 'All products must have a unique internal lot no', comment = 'ESP="Todos los productos tienen que llevar un Nº de Serie interno único"';
