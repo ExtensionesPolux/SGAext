@@ -1011,9 +1011,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         jRecurso := DatoJsonTexto(VJsonObjectDatos, 'ResourceNo');
         jLocation := DatoJsonTexto(VJsonObjectDatos, 'Location');
-        jItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
-        jBin := DatoJsonTexto(VJsonObjectDatos, 'Bin');
-        jZone := DatoJsonTexto(VJsonObjectDatos, 'Zone');
+        jItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNoFilter');
+        jBin := DatoJsonTexto(VJsonObjectDatos, 'BinFilter');
+        jZone := DatoJsonTexto(VJsonObjectDatos, 'ZoneFilter');
 
         exit(Inventario_Recurso(jRecurso, jLocation, jZone, jBin, jItemNo));
 
@@ -2066,9 +2066,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         jTipo := DatoJsonTexto(VJsonObjectContenedor, 'Type');
 
-        Clear(RecItem);
-        RecItem.SetRange("No.", jReferencia);
-        if not RecItem.FindFirst() then Error(StrSubstNo(lblErrorReferencia, jReferencia));
+        //Clear(RecItem);
+        //RecItem.SetRange("No.", jReferencia);
+        //if not RecItem.FindFirst() then Error(StrSubstNo(lblErrorReferencia, jReferencia));
 
         //Si es un pedido de transferenc
         if (jTipo = 'T') then begin
@@ -2951,12 +2951,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 if RecLocation."Zona Recepcionados" = '' then ERROR('No se ha definido zona de recepcionados');
             END;
 
-            if not cuWhsePostReceipt.RUN(RecWhseReceiptLine) then begin
+            cuWhsePostReceipt.RUN(RecWhseReceiptLine);
+            /*if not cuWhsePostReceipt.RUN(RecWhseReceiptLine) then begin
                 txtError := GetLastErrorText();
                 ERROR(txtError);
-                //ERROR(lblErrorRegistrar);
 
-            end;
+            end;*/
 
 
 
@@ -3866,10 +3866,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecPurchaseHeader."Posting Date" := Today;
             RecPurchaseHeader.Modify();
             RecPurchaseHeader.Receive := true;
-            IF NOT cuPurchPost.RUN(RecPurchaseHeader) THEN BEGIN
+            cuPurchPost.RUN(RecPurchaseHeader);
+            /*IF NOT cuPurchPost.RUN(RecPurchaseHeader) THEN BEGIN
                 txtError := GetLastErrorText();
                 ERROR(txtError);
-            END;
+            END;*/
 
             //Vaciar_Cantidad_Recibir_Sub(xRecepcion);
 
@@ -5263,12 +5264,14 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         if (xLinea > 0) then
             WhseShipmentLine.SETRANGE("Line No.", xLinea);
 
-        IF WhseShipmentLine.FindFirst THEN BEGIN
+        WhsePostShipmentMgt.RUN(WhseShipmentLine);
+
+        /*IF WhseShipmentLine.FindFirst THEN BEGIN
             IF NOT WhsePostShipmentMgt.RUN(WhseShipmentLine) THEN begin
                 txtError := GetLastErrorText();
                 ERROR(txtError);
             end;
-        END;
+        END;*/
 
         /*IF Estado = 'True' then begin
             PostedWhseShipLine.Reset;
