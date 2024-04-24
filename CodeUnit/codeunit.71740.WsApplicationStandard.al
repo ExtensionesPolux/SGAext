@@ -2528,7 +2528,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecWhseReceiptLine.RESET();
             RecWhseReceiptLine.SETRANGE("No.", xShipmentNo);
             RecWhseReceiptLine.SETRANGE("Item No.", xTrackNo);
-            RecWhseReceiptLine.SETFILTER(RecWhseReceiptLine."Qty. Outstanding", '>%1', xQuantity);
+            RecWhseReceiptLine.SETFILTER(RecWhseReceiptLine."Qty. Outstanding", '>=%1', xQuantity);
             IF NOT RecWhseReceiptLine.FindSet() THEN Error(lblErrorLineasCantidad);
 
             RecWhseReceiptLine.Validate("Qty. to Receive", xQuantity);
