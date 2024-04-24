@@ -5264,14 +5264,15 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         if (xLinea > 0) then
             WhseShipmentLine.SETRANGE("Line No.", xLinea);
 
-        WhsePostShipmentMgt.RUN(WhseShipmentLine);
 
-        /*IF WhseShipmentLine.FindFirst THEN BEGIN
-            IF NOT WhsePostShipmentMgt.RUN(WhseShipmentLine) THEN begin
+        IF WhseShipmentLine.FindSet() THEN BEGIN
+            WhsePostShipmentMgt.RUN(WhseShipmentLine);
+
+            /*IF NOT WhsePostShipmentMgt.RUN(WhseShipmentLine) THEN begin
                 txtError := GetLastErrorText();
                 ERROR(txtError);
-            end;
-        END;*/
+            end;*/
+        END;
 
         /*IF Estado = 'True' then begin
             PostedWhseShipLine.Reset;
