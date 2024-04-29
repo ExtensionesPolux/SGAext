@@ -4630,6 +4630,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                                                                                                                     xSerialNo: Text)
     var
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
+        RecWarehouseActivityLineReg: Record "Warehouse Activity Line";
+
         cuWarehouseActivityRegister: Codeunit "Whse.-Activity-Register";
 
         VJsonObjectAlmacenamiento: JsonObject;
@@ -4641,6 +4643,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseActivityLine.SetRange("No.", xNo);
         RecWarehouseActivityLine.SetRange("Line No.", xLineNoPlace);
         RecWarehouseActivityLine.SetRange("Whse. Document Type", xDocumentType);
+
+        RecWarehouseActivityLine.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
+
         if (xDocumentNo <> '') then
             RecWarehouseActivityLine.SetRange("Whse. Document No.", xDocumentNo);
         if (xDocumentLineNo <> 0) then
@@ -4684,28 +4689,29 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 RecWarehouseActivityLine.Validate("Bin Code", xBinTo);
             end;
             RecWarehouseActivityLine.Modify();
-        end;
 
-        clear(RecWarehouseActivityLine);
-        RecWarehouseActivityLine.SetRange("No.", xNo);
-        RecWarehouseActivityLine.SetRange("Whse. Document Type", xDocumentType);
+        end ELSE
+            Error(lblErrorSinMovimiento);
+
+        clear(RecWarehouseActivityLineReg);
+        RecWarehouseActivityLineReg.SetRange("No.", xNo);
+        RecWarehouseActivityLineReg.SetRange("Whse. Document Type", xDocumentType);
         if (xDocumentNo <> '') then
-            RecWarehouseActivityLine.SetRange("Whse. Document No.", xDocumentNo);
+            RecWarehouseActivityLineReg.SetRange("Whse. Document No.", xDocumentNo);
         if (xDocumentLineNo <> 0) then
-            RecWarehouseActivityLine.SetRange("Whse. Document Line No.", xDocumentLineNo);
-        RecWarehouseActivityLine.SetRange("Item No.", xItemNo);
+            RecWarehouseActivityLineReg.SetRange("Whse. Document Line No.", xDocumentLineNo);
+        RecWarehouseActivityLineReg.SetRange("Item No.", xItemNo);
         if (xLotNo <> '') THEN
-            RecWarehouseActivityLine.SetRange("Lot No.", xLotNo);
+            RecWarehouseActivityLineReg.SetRange("Lot No.", xLotNo);
         if (xSerialNo <> '') THEN
-            RecWarehouseActivityLine.SetRange("Serial No.", xSerialNo);
+            RecWarehouseActivityLineReg.SetRange("Serial No.", xSerialNo);
 
-        //RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
-        if RecWarehouseActivityLine.FindSet() then
-            cuWarehouseActivityRegister.run(RecWarehouseActivityLine)
-        /*IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) then begin
-            txtError := GetLastErrorText();
-            ERROR(txtError);
-        end*/
+        RecWarehouseActivityLineReg.SetRange("Source No.", RecWarehouseActivityLine."Source No.");
+        RecWarehouseActivityLineReg.SetRange("Source Line No.", RecWarehouseActivityLine."Source Line No.");
+        //RecWarehouseActivityLineReg.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
+
+        if RecWarehouseActivityLineReg.FindSet() then
+            cuWarehouseActivityRegister.run(RecWarehouseActivityLineReg)
         ELSE
             Error(lblErrorSinMovimiento);
     end;
