@@ -748,6 +748,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jBinTo: Text;
         jSerialNo: Text;
         jQuantity: Decimal;
+        jLineNoTake: Integer;
+        jLineNoPlace: Integer;
     begin
 
 
@@ -765,7 +767,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         jNo := DatoJsonTexto(VJsonObjectDatos, 'No');
 
-        exit(Registrar_Almacenamiento(jNo, jLotNo, jItemNo, jBinTo, jSerialNo, jQuantity));
+        jLineNoTake := DatoJsonInteger(VJsonObjectDatos, 'LineNoTake');
+        jLineNoPlace := DatoJsonInteger(VJsonObjectDatos, 'LineNoPlace');
+
+        exit(Registrar_Almacenamiento(jNo, jLotNo, jItemNo, jBinTo, jSerialNo, jQuantity, jLineNoTake, jLineNoPlace));
 
     end;
 
@@ -1685,8 +1690,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
 
                         VJsonObjectLineas.Add('No', Format(RecWarehouseActivityLine."No."));
+
                         VJsonObjectLineas.Add('LineNoTake', FormatoNumero(RecWarehouseActivityLine."Line No."));
                         VJsonObjectLineas.Add('LineNoPlace', FormatoNumero(lLineNoPlace));
+
+                        VJsonObjectLineas.Add('SourceNo', RecWarehouseActivityLine."Source No.");
+                        VJsonObjectLineas.Add('SourceLineNo', RecWarehouseActivityLine."Source Line No.");
 
                         VJsonObjectLineas.Add('Type', Format(RecWarehouseActivityLine."Activity Type"));
                         VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
@@ -4529,6 +4538,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
                 repeat
                     VJsonObjectLineas.Add('No', RecWarehouseActivityLine."No.");
+                    VJsonObjectLineas.Add('SourceNo', RecWarehouseActivityLine."Source No.");
+                    VJsonObjectLineas.Add('SourceLineNo', RecWarehouseActivityLine."Source Line No.");
                     VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
                     VJsonObjectLineas.Add('Description', Descripcion_ItemNo(RecWarehouseActivityLine."Item No."));
                     VJsonObjectLineas.Add('BinFrom', lUbicacionRecepcion);
@@ -4557,7 +4568,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit(VJsonObjectAlmto);
     end;
 
-    local procedure Registrar_Almacenamiento(xNo: Text; xLotNo: Text; xItemNo: Text; jBinTo: Text; xSerialNo: Text; xQuantity: decimal): Text
+    local procedure Registrar_Almacenamiento(xNo: Text; xLotNo: Text; xItemNo: Text; jBinTo: Text; xSerialNo: Text; xQuantity: decimal; xLineNoTake: Integer; xLineNoPlace: integer): Text
     var
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
         cuWarehouseActivityRegister: Codeunit "Whse.-Activity-Register";
@@ -4576,7 +4587,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecWarehouseActivityLine.SetRange("Serial No.", xSerialNo);
 
         RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
+        RecWarehouseActivityLine.SetRange("Line No.", xLineNoPlace);
         RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Place);
+
         if RecWarehouseActivityLine.FindFirst() then begin
             RecWarehouseActivityLine.Validate("Bin Code", jBinTo);
             if (RecWarehouseActivityLine."Lot No." = '') then RecWarehouseActivityLine."Lot No." := xLotNo;
@@ -4585,6 +4598,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;
 
         clear(RecWarehouseActivityLine);
+        RecWarehouseActivityLine.SetRange("No.", xNo);
         RecWarehouseActivityLine.SetRange("Item No.", xItemNo);
         if (xLotNo <> '') THEN
             RecWarehouseActivityLine.SetRange("Lot No.", xLotNo);
@@ -4592,7 +4606,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecWarehouseActivityLine.SetRange("Serial No.", xSerialNo);
 
         RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
-        //RecWarehouseActivityLine.SetFilter("Line No.", '=%1|%2', lLineNoFrom, lLineNoTo);
+        RecWarehouseActivityLine.SetFilter("Line No.", '=%1|%2', xLineNoPlace, xLineNoPlace);
+
         if RecWarehouseActivityLine.FindSet() then
             cuWarehouseActivityRegister.run(RecWarehouseActivityLine)
         /*IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) THEN begin
