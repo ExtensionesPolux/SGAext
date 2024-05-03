@@ -74,8 +74,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             VJsonObjectRecurso.Add('RequierePicking', FormatoBoolean(RecLocation."Require Pick"));
             VJsonObjectRecurso.Add('ContRecepciones', FormatoNumero(Contador_Recepciones(lLocation)));
             VJsonObjectRecurso.Add('ContSubcontrataciones', FormatoNumero(Contador_Subcontrataciones(lLocation)));
-            VJsonObjectRecurso.Add('ContAlmacenamiento', FormatoNumero(Contador_Trabajos(lLocation, 1)));
-            VJsonObjectRecurso.Add('ContPicking', FormatoNumero(Contador_Trabajos(lLocation, 2)));
+            VJsonObjectRecurso.Add('ContAlmacenamiento', FormatoNumero(Contador_Trabajos(lLocation, 0)));
+            VJsonObjectRecurso.Add('ContPicking', FormatoNumero(Contador_Trabajos(lLocation, 1)));
+            VJsonObjectRecurso.Add('ContPickingProd', FormatoNumero(Contador_Trabajos(lLocation, 2)));
             VJsonObjectRecurso.Add('ContInventario', FormatoNumero(Contador_Inventario(lLocation)));
             VJsonObjectRecurso.Add('ContTrabajos', FormatoNumero(Contador_Trabajos(lLocation, 0)));
             VJsonObjectRecurso.Add('ContEnvios', FormatoNumero(Contador_Envios(lLocation)));
@@ -147,31 +148,40 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     /// Contador_Trabajos.
     /// </summary>
     /// <param name="xLocation">Alamcen</param>
-    /// <param name="xTipo">0:Almacenamiento 1:Picking</param>
+    /// <param name="xTipo">0:Almacenamiento 1:Picking 2:Picking Fabricacion</param>
     /// <returns>Return value of type Integer.</returns>
     local procedure Contador_Trabajos(xLocation: Text; xTipo: Integer): Integer
     var
-        RecWarehouseActivityHeader: Record "Warehouse Activity Header";
+        //RecWarehouseActivityHeader: Record "Warehouse Activity Header";
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
         Contador: Integer;
     begin
         Contador := 0;
-        RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."Location Code", xLocation);
+
+        Clear(RecWarehouseActivityLine);
+        RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Location Code", xLocation);
         case xTipo of
+            0:
+                begin
+                    RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Activity Type", RecWarehouseActivityLine."Activity Type"::"Put-away");
+                end;
             1:
-                RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader.Type, RecWarehouseActivityHeader.Type::"Put-away");
+                begin
+                    RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Activity Type", RecWarehouseActivityLine."Activity Type"::Pick);
+                    RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Source Document", '<>%1', RecWarehouseActivityLine."Source Document"::"Prod. Consumption");
+                end;
             2:
-                RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader.Type, RecWarehouseActivityHeader.Type::Pick);
+                begin
+                    RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Activity Type", RecWarehouseActivityLine."Activity Type"::Pick);
+                    RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Source Document", '=%1', RecWarehouseActivityLine."Source Document"::"Prod. Consumption");
+                end;
         end;
-        if RecWarehouseActivityHeader.findset then
-            repeat
-                Clear(RecWarehouseActivityLine);
-                clear(RecWarehouseActivityLine);
-                RecWarehouseActivityLine.SetRange("No.", RecWarehouseActivityHeader."No.");
-                RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Place);
-                RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Qty. Outstanding", '>0');
-                Contador += RecWarehouseActivityLine.Count();
-            until RecWarehouseActivityHeader.Next() = 0;
+        //repeat
+
+        //RecWarehouseActivityLine.SetRange("No.", RecWarehouseActivityHeader."No.");
+        RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Place);
+        RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Qty. Outstanding", '>0');
+        Contador += RecWarehouseActivityLine.Count();
 
         exit(Contador);
     end;
@@ -1425,7 +1435,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-
     procedure WsCrearPaquete(): Text
     var
         VJsonObjectPaquete: JsonObject;
@@ -1625,7 +1634,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     procedure Movimientos_Almacen(xNo: Code[20]; xLocation: Text): Text
     var
-        RecWarehouseActivityHeader: Record "Warehouse Activity Header";
+        //RecWarehouseActivityHeader: Record "Warehouse Activity Header";
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
         RecWarehouseActivityLineAux: Record "Warehouse Activity Line";
 
@@ -1644,114 +1653,119 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         RecWarehouseSetup.get();
 
-        Clear(RecWarehouseActivityHeader);
-        if xNo <> '' then
-            RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."No.", xNo);
+        //Clear(RecWarehouseActivityHeader);
+        //if xNo <> '' then
+        //    RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."No.", xNo);
 
-        RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."Location Code", xLocation);
+        //RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."Location Code", xLocation);
         //RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader.Type, RecWarehouseActivityHeader.Type::Pick);
-        if RecWarehouseActivityHeader.findset then begin
+        //if RecWarehouseActivityHeader.findset then begin
 
-            VJsonObjectPicking.Add('No', RecWarehouseActivityHeader."No.");
-            VJsonObjectPicking.Add('SystemDate', FormatoFecha(RecWarehouseActivityHeader.SystemCreatedAt));
-            VJsonObjectPicking.Add('Type', Format(RecWarehouseActivityHeader.Type));
+        // VJsonObjectPicking.Add('No', RecWarehouseActivityHeader."No.");
+        //VJsonObjectPicking.Add('SystemDate', FormatoFecha(RecWarehouseActivityHeader.SystemCreatedAt));
+        //VJsonObjectPicking.Add('Type', Format(RecWarehouseActivityHeader.Type));
 
-            //VACIAR CANTIDAD A MANIPULAR
-            clear(RecWarehouseActivityLine);
-            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."No.", RecWarehouseActivityHeader."No.");
-            //RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Document", RecWarehouseActivityLine."Source Document"::"Sales Order");
-            RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Lot No.", '=%1', '');
-            IF RecWarehouseActivityLine.FindSet() THEN
-                repeat
-                    RecWarehouseActivityLine.Validate("Qty. to Handle", 0);
-                //RecWarehouseActivityLine.Modify();
-                UNTIL RecWarehouseActivityLine.Next() = 0;
-
+        //VACIAR CANTIDAD A MANIPULAR
+        clear(RecWarehouseActivityLine);
+        if xNo <> '' then
+            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."No.", xNo);
+        //RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Document", RecWarehouseActivityLine."Source Document"::"Sales Order");
+        RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Lot No.", '=%1', '');
+        IF RecWarehouseActivityLine.FindSet() THEN
             repeat
-                lLineNoPlace := 0;
-                clear(RecWarehouseActivityLine);
-                RecWarehouseActivityLine.SetRange("No.", RecWarehouseActivityHeader."No.");
-                RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Take);
-                RecWarehouseActivityLine.SetFilter("Qty. Outstanding", '>%1', RecWarehouseActivityLine."Qty. to Handle");
-                if RecWarehouseActivityLine.FindSet() then begin
-                    repeat
+                RecWarehouseActivityLine.Validate("Qty. to Handle", 0);
+            //RecWarehouseActivityLine.Modify();
+            UNTIL RecWarehouseActivityLine.Next() = 0;
 
-                        clear(RecWarehouseActivityLineAux);
-                        RecWarehouseActivityLineAux.SetRange("No.", RecWarehouseActivityHeader."No.");
-                        RecWarehouseActivityLineAux.SetRange("Item No.", RecWarehouseActivityLine."Item No.");
-                        RecWarehouseActivityLineAux.SetRange("Source Line No.", RecWarehouseActivityLine."Source Line No.");
-                        RecWarehouseActivityLineAux.SetRange("Source Subline No.", RecWarehouseActivityLine."Source Subline No.");
-                        RecWarehouseActivityLineAux.SetFilter("Line No.", '>%1', RecWarehouseActivityLine."Line No.");
-                        RecWarehouseActivityLineAux.SetRange("Action Type", RecWarehouseActivityLineAux."Action Type"::Place);
-                        if RecWarehouseActivityLineAux.FindFirst() then begin
-                            lUbicacionEnvio := RecWarehouseActivityLineAux."Bin Code";
-                            lLineNoPlace := RecWarehouseActivityLineAux."Line No.";
+        //repeat
+        lLineNoPlace := 0;
+        clear(RecWarehouseActivityLine);
+        //RecWarehouseActivityLine.SetRange("No.", RecWarehouseActivityHeader."No.");
+        RecWarehouseActivityLine.SetRange("Location Code", xLocation);
+        RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Take);
+        RecWarehouseActivityLine.SetFilter("Qty. Outstanding", '>%1', RecWarehouseActivityLine."Qty. to Handle");
+        if RecWarehouseActivityLine.FindSet() then begin
+            repeat
+
+                clear(RecWarehouseActivityLineAux);
+                RecWarehouseActivityLineAux.SetRange("No.", RecWarehouseActivityLine."No.");
+                RecWarehouseActivityLineAux.SetRange("Item No.", RecWarehouseActivityLine."Item No.");
+                RecWarehouseActivityLineAux.SetRange("Source Line No.", RecWarehouseActivityLine."Source Line No.");
+                RecWarehouseActivityLineAux.SetRange("Source Subline No.", RecWarehouseActivityLine."Source Subline No.");
+                RecWarehouseActivityLineAux.SetFilter("Line No.", '>%1', RecWarehouseActivityLine."Line No.");
+                RecWarehouseActivityLineAux.SetRange("Action Type", RecWarehouseActivityLineAux."Action Type"::Place);
+                if RecWarehouseActivityLineAux.FindFirst() then begin
+                    lUbicacionEnvio := RecWarehouseActivityLineAux."Bin Code";
+                    lLineNoPlace := RecWarehouseActivityLineAux."Line No.";
+                end;
+
+
+                VJsonObjectLineas.Add('No', Format(RecWarehouseActivityLine."No."));
+
+                VJsonObjectLineas.Add('LineNoTake', FormatoNumero(RecWarehouseActivityLine."Line No."));
+                VJsonObjectLineas.Add('LineNoPlace', FormatoNumero(lLineNoPlace));
+
+                VJsonObjectLineas.Add('SourceNo', RecWarehouseActivityLine."Source No.");
+                VJsonObjectLineas.Add('SourceLineNo', RecWarehouseActivityLine."Source Line No.");
+
+                VJsonObjectLineas.Add('Type', Format(RecWarehouseActivityLine."Activity Type"));
+                VJsonObjectLineas.Add('SourceType', Format(RecWarehouseActivityLine."Source Type"));
+                VJsonObjectLineas.Add('SourceDocument', Format(RecWarehouseActivityLine."Source Document"));
+
+                VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
+                VJsonObjectLineas.Add('Description', Descripcion_ItemNo(RecWarehouseActivityLine."Item No."));
+
+                VJsonObjectLineas.Add('DocumentType', FORMAT(RecWarehouseActivityLine."Whse. Document Type"));
+                VJsonObjectLineas.Add('DocumentNo', RecWarehouseActivityLine."Whse. Document No.");
+                VJsonObjectLineas.Add('DocumentLineNo', RecWarehouseActivityLine."Whse. Document Line No.");
+
+                VJsonObjectLineas.Add('BinFrom', RecWarehouseActivityLine."Bin Code");
+                VJsonObjectLineas.Add('BinTo', lUbicacionEnvio);
+                VJsonObjectLineas.Add('LotNo', RecWarehouseActivityLine."Lot No.");
+                VJsonObjectLineas.Add('SerialNo', RecWarehouseActivityLine."Serial No.");
+                VJsonObjectLineas.Add('PackageNo', RecWarehouseActivityLine."Package No.");
+
+                /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
+                case TipoSeguimientoProducto(RecWarehouseActivityLine."Item No.") of
+                    0:
+                        begin
+                            VJsonObjectLineas.Add('TrackNo', '');
+                            VJsonObjectLineas.Add('TipoTrack', 'I');
                         end;
-
-
-                        VJsonObjectLineas.Add('No', Format(RecWarehouseActivityLine."No."));
-
-                        VJsonObjectLineas.Add('LineNoTake', FormatoNumero(RecWarehouseActivityLine."Line No."));
-                        VJsonObjectLineas.Add('LineNoPlace', FormatoNumero(lLineNoPlace));
-
-                        VJsonObjectLineas.Add('SourceNo', RecWarehouseActivityLine."Source No.");
-                        VJsonObjectLineas.Add('SourceLineNo', RecWarehouseActivityLine."Source Line No.");
-
-                        VJsonObjectLineas.Add('Type', Format(RecWarehouseActivityLine."Activity Type"));
-                        VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
-                        VJsonObjectLineas.Add('Description', Descripcion_ItemNo(RecWarehouseActivityLine."Item No."));
-
-                        VJsonObjectLineas.Add('DocumentType', FORMAT(RecWarehouseActivityLine."Whse. Document Type"));
-                        VJsonObjectLineas.Add('DocumentNo', RecWarehouseActivityLine."Whse. Document No.");
-                        VJsonObjectLineas.Add('DocumentLineNo', RecWarehouseActivityLine."Whse. Document Line No.");
-
-                        VJsonObjectLineas.Add('BinFrom', RecWarehouseActivityLine."Bin Code");
-                        VJsonObjectLineas.Add('BinTo', lUbicacionEnvio);
-                        VJsonObjectLineas.Add('LotNo', RecWarehouseActivityLine."Lot No.");
-                        VJsonObjectLineas.Add('SerialNo', RecWarehouseActivityLine."Serial No.");
-                        VJsonObjectLineas.Add('PackageNo', RecWarehouseActivityLine."Package No.");
-
-                        /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
-                        case TipoSeguimientoProducto(RecWarehouseActivityLine."Item No.") of
-                            0:
-                                begin
-                                    VJsonObjectLineas.Add('TrackNo', '');
-                                    VJsonObjectLineas.Add('TipoTrack', 'I');
-                                end;
-                            2, 3, 5, 6:
-                                begin
-                                    VJsonObjectLineas.Add('TrackNo', RecWarehouseActivityLine."Serial No.");
-                                    VJsonObjectLineas.Add('TipoTrack', 'S');
-                                end;
-                            1, 4:
-                                begin
-                                    VJsonObjectLineas.Add('TrackNo', RecWarehouseActivityLine."Lot No.");
-                                    VJsonObjectLineas.Add('TipoTrack', 'L');
-                                end;
-
+                    2, 3, 5, 6:
+                        begin
+                            VJsonObjectLineas.Add('TrackNo', RecWarehouseActivityLine."Serial No.");
+                            VJsonObjectLineas.Add('TipoTrack', 'S');
                         end;
-
-                        VJsonObjectLineas.Add('Quantity', QuitarPunto(Format(RecWarehouseActivityLine.Quantity)));
-                        VJsonObjectLineas.Add('QtyToHandle', QuitarPunto(Format(RecWarehouseActivityLine."Qty. to Handle")));
-                        VJsonObjectLineas.Add('QtyOutstanding', QuitarPunto(Format(RecWarehouseActivityLine."Qty. Outstanding")));
-                        VJsonArrayLineas.Add(VJsonObjectLineas.Clone());
-
-                        clear(VJsonObjectLineas);
-                    until RecWarehouseActivityLine.Next() = 0;
+                    1, 4:
+                        begin
+                            VJsonObjectLineas.Add('TrackNo', RecWarehouseActivityLine."Lot No.");
+                            VJsonObjectLineas.Add('TipoTrack', 'L');
+                        end;
 
                 end;
 
-                VJsonObjectPicking.Add('Lines', VJsonArrayLineas.Clone());
-                Clear(VJsonArrayLineas);
+                VJsonObjectLineas.Add('Quantity', QuitarPunto(Format(RecWarehouseActivityLine.Quantity)));
+                VJsonObjectLineas.Add('QtyToHandle', QuitarPunto(Format(RecWarehouseActivityLine."Qty. to Handle")));
+                VJsonObjectLineas.Add('QtyOutstanding', QuitarPunto(Format(RecWarehouseActivityLine."Qty. Outstanding")));
+                VJsonArrayLineas.Add(VJsonObjectLineas.Clone());
 
-                VJsonArrayPicking.Add(VJsonObjectPicking.Clone());
-                clear(VJsonObjectPicking);
-
-            until RecWarehouseActivityHeader.Next() = 0
+                clear(VJsonObjectLineas);
+            until RecWarehouseActivityLine.Next() = 0;
 
         end;
 
-        VJsonArrayPicking.WriteTo(VJsonText);
+        //VJsonObjectPicking.Add('Lines', VJsonArrayLineas.Clone());
+        //Clear(VJsonArrayLineas);
+
+        //VJsonArrayPicking.Add(VJsonObjectPicking.Clone());
+        //clear(VJsonObjectPicking);
+
+        ///until RecWarehouseActivityHeader.Next() = 0
+
+        //end;
+
+        VJsonArrayLineas.WriteTo(VJsonText);
 
         exit(VJsonText);
 
