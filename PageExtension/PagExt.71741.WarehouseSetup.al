@@ -41,7 +41,10 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
-
+                    field("Ver Picking Fab"; Rec."Ver Picking Fab")
+                    {
+                        ApplicationArea = all;
+                    }
                     field("Ver Altas"; Rec."Ver Altas")
                     {
                         ApplicationArea = all;

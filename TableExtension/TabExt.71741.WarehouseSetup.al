@@ -85,6 +85,11 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             DataClassification = ToBeClassified;
             Caption = 'See New Items Registrations', Comment = 'ESP=Ver Alta Productos';
         }
+        field(71755; "Ver Picking Fab"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'See Manufacturing Picking', Comment = 'ESP=Ver Picking Fabricación';
+        }
 
         // Envíos y recepciones
         field(71760; "Cantidad envio a cero"; Boolean)
