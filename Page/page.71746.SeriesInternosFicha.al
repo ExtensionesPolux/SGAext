@@ -47,7 +47,7 @@ page 71746 "Series Internos Ficha"
                 }
             }
         }
-        area(FactBoxes)
+        /*area(FactBoxes)
         {
             part(AlertaSerieFactBox; AlertaSerieFactBox)
             {
@@ -55,6 +55,6 @@ page 71746 "Series Internos Ficha"
                 SubPageLink = "Serial No." = FIELD("Serial No.");
 
             }
-        }
+        }*/
     }
 }

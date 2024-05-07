@@ -79,7 +79,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             VJsonObjectRecurso.Add('ContPicking', FormatoNumero(Contador_Trabajos(lLocation, 1)));
             VJsonObjectRecurso.Add('ContPickingProd', FormatoNumero(Contador_Trabajos(lLocation, 2)));
             VJsonObjectRecurso.Add('ContInventario', FormatoNumero(Contador_Inventario(lLocation)));
-            VJsonObjectRecurso.Add('ContTrabajos', FormatoNumero(Contador_Trabajos(lLocation, 0)));
+            VJsonObjectRecurso.Add('ContTrabajos', FormatoNumero(Contador_Trabajos(lLocation, 9)));
             VJsonObjectRecurso.Add('ContEnvios', FormatoNumero(Contador_Envios(lLocation)));
 
         end else begin
@@ -149,7 +149,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     /// Contador_Trabajos.
     /// </summary>
     /// <param name="xLocation">Alamcen</param>
-    /// <param name="xTipo">0:Almacenamiento 1:Picking 2:Picking Fabricacion</param>
+    /// <param name="xTipo">0:Almacenamiento 1:Picking 2:Picking Fabricacion 9:Todos</param>
     /// <returns>Return value of type Integer.</returns>
     local procedure Contador_Trabajos(xLocation: Text; xTipo: Integer): Integer
     var
@@ -2473,6 +2473,26 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
 
         IF jEnAlerta THEN BEGIN
+
+            jText := DatoJsonTexto(VJsonObjectContenedor, 'AlertText');
+            jFoto := DatoJsonTexto(VJsonObjectContenedor, 'AlertPhoto');
+            RecWhseReceiptLine.Alerta := jText;
+            If (jFoto <> '') THEN BEGIN
+
+                NombreFoto := 'A-' + jSerie + '.jpg';
+
+                cuTempBlob.CreateOutStream(oStream);
+                cuBase64.FromBase64(jFoto, oStream);
+
+                cuTempBlob.CreateInStream(iStream);
+                Clear(RecSerie.Foto);
+                RecWhseReceiptLine.Foto.ImportStream(iStream, NombreFoto);
+
+            END;
+            RecWhseReceiptLine.Modify();
+
+            /*
+
             if (jSerie <> '') then begin
                 Clear(RecSerie);
                 RecSerie.SetRange("Item No.", jReferencia);
@@ -2520,6 +2540,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     end;
                 end;
             end;
+
+            */
         END;
 
 

@@ -268,10 +268,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page AlertaFactBox - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 1377536918 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 367041862 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Alertas</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page AlertaSerieFactBox - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AlertaRegFactBox - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1550665627 - Control 3891454143 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Almacen</source>
@@ -428,6 +428,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Phys_Inv_Order_Laqtia - Action Diario - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 3013621822 - Control 367041862 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3013621822">
+          <source>Alerta</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Posted Whse. Receipt - Control AlertaRegFactBox - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2976122562 - Control 441647185 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 454122980">
+          <source>Alert</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Alerta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension PostedWhseReceiptSubform - Control Alerta - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2976122562 - Control 3560088070 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 454122980">
+          <source>Photo</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Foto"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension PostedWhseReceiptSubform - Control Foto - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>Aplicación SGA</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -452,6 +467,11 @@
           <source>View inventory quantity</source>
           <note from="Developer" annotates="general" priority="2">ESP="Ver cantidad inventario"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control Ver cantidad inventario - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2447066187 - Control 1622517182 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2447066187">
+          <source>Alerta</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Receipt - Control AlertaFactBox - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Aplicación SGA</source>
@@ -497,6 +517,16 @@
           <source>Read</source>
           <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Whse. Phys. Invt. Journal - Control Leido - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 3284144913 - Control 441647185 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3986227771">
+          <source>Alert</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Alerta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension WhseReceiptSubform - Control Alerta - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 3284144913 - Control 3560088070 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3986227771">
+          <source>Photo</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Foto"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension WhseReceiptSubform - Control Foto - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 421183472 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Azure Code</source>
@@ -663,6 +693,16 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Phys_Invt_record_Header - Field App - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 3493931752 - Field 441647185 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3493931752">
+          <source>Alert</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Alerta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Posted Whse. Receipt Line - Field Alerta - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3493931752 - Field 3560088070 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3493931752">
+          <source>Photo</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Foto"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Posted Whse. Receipt Line - Field Foto - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 1518918944 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
           <source>Copy Allow</source>
           <note from="Developer" annotates="general" priority="2">ESP=Permitir Copiar</note>
@@ -722,6 +762,16 @@
           <source>Read</source>
           <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Journal Line - Field Leido - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3159546305 - Field 441647185 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3159546305">
+          <source>Alert</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Alerta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Receipt Line - Field Alerta - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3159546305 - Field 3560088070 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3159546305">
+          <source>Photo</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Foto"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Receipt Line - Field Foto - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 4287287883 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Reset Shipment quantity</source>

@@ -4,12 +4,16 @@ page 71743 "AlertaFactBox"
     PageType = CardPart;
     ApplicationArea = All;
     UsageCategory = Administration;
-    SourceTable = "Lot No. Information";
+    SourceTable = "Warehouse Receipt Line";
 
     layout
     {
         area(Content)
         {
+            field(Alerta; Rec.Alerta)
+            {
+                ApplicationArea = All;
+            }
             field(Foto; Rec.Foto)
             {
                 ApplicationArea = All;

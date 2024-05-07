@@ -50,7 +50,7 @@ page 71742 "Lotes Internos Ficha"
                 }
             }
         }
-        area(FactBoxes)
+        /*area(FactBoxes)
         {
             part(AlertaFactBox; AlertaFactBox)
             {
@@ -58,7 +58,7 @@ page 71742 "Lotes Internos Ficha"
                 SubPageLink = "Lot No." = FIELD("Lot No.");
 
             }
-        }
+        }*/
     }
 
     actions
