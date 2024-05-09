@@ -5401,7 +5401,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         RecWarehouseSetup.Get();
 
-        lTipo := Tipo_Trazabilidad(xTrackNo);
+        lTipo := 'N';
+        if (xTrackNo <> '') then
+            lTipo := Tipo_Trazabilidad(xTrackNo)
+        else
+            if (xItemNo <> '') then lTipo := Tipo_Trazabilidad(xItemNo);
 
         if (lTipo = 'N') THEN ERROR(lblErrorTrackNo + ' (' + xTrackNo + ')');
 
