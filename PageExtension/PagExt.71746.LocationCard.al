@@ -60,6 +60,26 @@ pageextension 71746 LocationCard extends "Location Card"
 
                 }
 
+                group(Diarios)
+                {
+                    field(AppWhseJournalTemplateName; Rec.AppWhseJournalTemplateName)
+                    {
+                        ApplicationArea = all;
+                    }
+                    field(AppWhseJournalBatchName; Rec.AppWhseJournalBatchName)
+                    {
+                        ApplicationArea = all;
+                    }
+                    field(AppItemJournalTemplateName; Rec.AppItemJournalTemplateName)
+                    {
+                        ApplicationArea = all;
+                    }
+                    field(AppItemJournalBatchName; Rec.AppItemJournalBatchName)
+                    {
+                        ApplicationArea = all;
+                    }
+                }
+
             }
 
         }

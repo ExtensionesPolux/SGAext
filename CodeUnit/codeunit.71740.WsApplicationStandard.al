@@ -34,21 +34,16 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         IF NOT RecRecursos.FindFirst() THEN
             exit(lblErrorRecurso);
 
-        if lLocation = '' then begin
-            App_Location(lLocation);
-        end;
+        vAlmacenEncontrado := false;
 
-        Clear(RecLocation);
-        RecLocation.SetRange(RecLocation.Code, lLocation);
-        if NOT RecLocation.FindFirst() then
-            vAlmacenEncontrado := false;
-
-        if not vAlmacenEncontrado then begin
+        if lLocation <> '' then begin
             Clear(RecLocation);
-            if not RecLocation.FindFirst() then
-                Error(lblErrorAlmacen);
+            RecLocation.SetRange(RecLocation.Code, lLocation);
+            if NOT RecLocation.FindFirst() then
+                vAlmacenEncontrado := false
+            else
+                vAlmacenEncontrado := true;
         end;
-
 
         VJsonObjectRecurso.Add('No', RecRecursos."No.");
         VJsonObjectRecurso.Add('Name', RecRecursos.Name);
@@ -60,39 +55,51 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         //VJsonObjectRecurso.Add('UsarPaquete', FormatoBoolean(RecWarehouseSetup."Usar paquetes"));
         VJsonObjectRecurso.Add('VerRecepcion', FormatoBoolean(RecWarehouseSetup."Ver Recepcion"));
         VJsonObjectRecurso.Add('VerSubcontratacion', FormatoBoolean(RecWarehouseSetup."Ver Subcontratacion"));
-
         VJsonObjectRecurso.Add('VerSalidas', FormatoBoolean(RecWarehouseSetup."Ver Salidas"));
         VJsonObjectRecurso.Add('VerInventario', FormatoBoolean(RecWarehouseSetup."Ver Inventario"));
         VJsonObjectRecurso.Add('VerMovimientos', FormatoBoolean(RecWarehouseSetup."Ver Movimientos"));
-
-
-        RecLocation.CalcFields(RecLocation."Tiene Ubicaciones");
-        VJsonObjectRecurso.Add('AlmacenAvanzado', FormatoBoolean(RecLocation."Almacen Avanzado"));
-        VJsonObjectRecurso.Add('TieneUbicaciones', FormatoBoolean(RecLocation."Tiene Ubicaciones"));
-
-
-
+        VJsonObjectRecurso.Add('VerPickingFab', FormatoBoolean(RecWarehouseSetup."Ver Picking Fab"));
+        VJsonObjectRecurso.Add('VerAltas', FormatoBoolean(RecWarehouseSetup."Ver Altas"));
         VJsonObjectRecurso.Add('LoteInternoObligatorio', FormatoBoolean(RecWarehouseSetup."Lote Interno Obligatorio"));
         VJsonObjectRecurso.Add('UsarLoteProveedor', FormatoBoolean(RecWarehouseSetup."Usar Lote Proveedor"));
         VJsonObjectRecurso.Add('LoteAutomatico', FormatoBoolean(RecWarehouseSetup."Lote Automatico"));
 
+        if vAlmacenEncontrado then begin
 
+            RecLocation.CalcFields(RecLocation."Tiene Ubicaciones");
+            VJsonObjectRecurso.Add('AlmacenAvanzado', FormatoBoolean(RecLocation."Almacen Avanzado"));
+            VJsonObjectRecurso.Add('TieneUbicaciones', FormatoBoolean(RecLocation."Tiene Ubicaciones"));
+            VJsonObjectRecurso.Add('Location', RecLocation.Code);
+            VJsonObjectRecurso.Add('NombreAlamcen', RecLocation.Name);
+            VJsonObjectRecurso.Add('RequiereAlmacenamiento', FormatoBoolean(RecLocation."Require Put-away"));
+            VJsonObjectRecurso.Add('RequierePicking', FormatoBoolean(RecLocation."Require Pick"));
+            VJsonObjectRecurso.Add('ContRecepciones', FormatoNumero(Contador_Recepciones(lLocation)));
+            VJsonObjectRecurso.Add('ContSubcontrataciones', FormatoNumero(Contador_Subcontrataciones(lLocation)));
+            VJsonObjectRecurso.Add('ContAlmacenamiento', FormatoNumero(Contador_Trabajos(lLocation, 0)));
+            VJsonObjectRecurso.Add('ContPicking', FormatoNumero(Contador_Trabajos(lLocation, 1)));
+            VJsonObjectRecurso.Add('ContPickingProd', FormatoNumero(Contador_Trabajos(lLocation, 2)));
+            VJsonObjectRecurso.Add('ContInventario', FormatoNumero(Contador_Inventario(lLocation)));
+            VJsonObjectRecurso.Add('ContTrabajos', FormatoNumero(Contador_Trabajos(lLocation, 9)));
+            VJsonObjectRecurso.Add('ContEnvios', FormatoNumero(Contador_Envios(lLocation)));
 
-        VJsonObjectRecurso.Add('Location', RecLocation.Code);
-        VJsonObjectRecurso.Add('NombreAlamcen', RecLocation.Name);
+        end else begin
 
-        VJsonObjectRecurso.Add('RequiereAlmacenamiento', FormatoBoolean(RecLocation."Require Put-away"));
-        VJsonObjectRecurso.Add('RequierePicking', FormatoBoolean(RecLocation."Require Pick"));
+            VJsonObjectRecurso.Add('AlmacenAvanzado', FormatoBoolean(false));
+            VJsonObjectRecurso.Add('TieneUbicaciones', FormatoBoolean(false));
+            VJsonObjectRecurso.Add('Location', '');
+            VJsonObjectRecurso.Add('NombreAlamcen', '');
+            VJsonObjectRecurso.Add('RequiereAlmacenamiento', FormatoBoolean(false));
+            VJsonObjectRecurso.Add('RequierePicking', FormatoBoolean(false));
+            VJsonObjectRecurso.Add('ContRecepciones', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContSubcontrataciones', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContAlmacenamiento', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContPicking', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContInventario', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContTrabajos', FormatoNumero(0));
+            VJsonObjectRecurso.Add('ContEnvios', FormatoNumero(0));
 
-        VJsonObjectRecurso.Add('ContRecepciones', FormatoNumero(Contador_Recepciones(lLocation)));
-        VJsonObjectRecurso.Add('ContSubcontrataciones', FormatoNumero(Contador_Subcontrataciones(lLocation)));
+        end;
 
-        VJsonObjectRecurso.Add('ContAlmacenamiento', FormatoNumero(Contador_Trabajos(lLocation, 1)));
-        VJsonObjectRecurso.Add('ContPicking', FormatoNumero(Contador_Trabajos(lLocation, 2)));
-        VJsonObjectRecurso.Add('ContInventario', FormatoNumero(Contador_Inventario(lLocation)));
-        VJsonObjectRecurso.Add('ContTrabajos', FormatoNumero(Contador_Trabajos(lLocation, 0)));
-
-        VJsonObjectRecurso.Add('ContEnvios', FormatoNumero(Contador_Envios(lLocation)));
 
         VJsonObjectRecurso.WriteTo(VJsonText);
         exit(VJsonText);
@@ -142,31 +149,40 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     /// Contador_Trabajos.
     /// </summary>
     /// <param name="xLocation">Alamcen</param>
-    /// <param name="xTipo">0:Almacenamiento 1:Picking</param>
+    /// <param name="xTipo">0:Almacenamiento 1:Picking 2:Picking Fabricacion 9:Todos</param>
     /// <returns>Return value of type Integer.</returns>
     local procedure Contador_Trabajos(xLocation: Text; xTipo: Integer): Integer
     var
-        RecWarehouseActivityHeader: Record "Warehouse Activity Header";
+        //RecWarehouseActivityHeader: Record "Warehouse Activity Header";
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
         Contador: Integer;
     begin
         Contador := 0;
-        RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."Location Code", xLocation);
+
+        Clear(RecWarehouseActivityLine);
+        RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Location Code", xLocation);
         case xTipo of
+            0:
+                begin
+                    RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Activity Type", RecWarehouseActivityLine."Activity Type"::"Put-away");
+                end;
             1:
-                RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader.Type, RecWarehouseActivityHeader.Type::"Put-away");
+                begin
+                    RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Activity Type", RecWarehouseActivityLine."Activity Type"::Pick);
+                    RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Source Document", '<>%1', RecWarehouseActivityLine."Source Document"::"Prod. Consumption");
+                end;
             2:
-                RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader.Type, RecWarehouseActivityHeader.Type::Pick);
+                begin
+                    RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Activity Type", RecWarehouseActivityLine."Activity Type"::Pick);
+                    RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Source Document", '=%1', RecWarehouseActivityLine."Source Document"::"Prod. Consumption");
+                end;
         end;
-        if RecWarehouseActivityHeader.findset then
-            repeat
-                Clear(RecWarehouseActivityLine);
-                clear(RecWarehouseActivityLine);
-                RecWarehouseActivityLine.SetRange("No.", RecWarehouseActivityHeader."No.");
-                RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Place);
-                RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Qty. Outstanding", '>0');
-                Contador += RecWarehouseActivityLine.Count();
-            until RecWarehouseActivityHeader.Next() = 0;
+        //repeat
+
+        //RecWarehouseActivityLine.SetRange("No.", RecWarehouseActivityHeader."No.");
+        RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Place);
+        RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Qty. Outstanding", '>0');
+        Contador += RecWarehouseActivityLine.Count();
 
         exit(Contador);
     end;
@@ -561,8 +577,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-
-
     procedure WsContenidoUbicacion(xJson: Text): Text
     var
         RecLocations: Record Location;
@@ -745,6 +759,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jBinTo: Text;
         jSerialNo: Text;
         jQuantity: Decimal;
+        jLineNoTake: Integer;
+        jLineNoPlace: Integer;
     begin
 
 
@@ -762,7 +778,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         jNo := DatoJsonTexto(VJsonObjectDatos, 'No');
 
-        exit(Registrar_Almacenamiento(jNo, jLotNo, jItemNo, jBinTo, jSerialNo, jQuantity));
+        jLineNoTake := DatoJsonInteger(VJsonObjectDatos, 'LineNoTake');
+        jLineNoPlace := DatoJsonInteger(VJsonObjectDatos, 'LineNoPlace');
+
+        exit(Registrar_Almacenamiento(jNo, jLotNo, jItemNo, jBinTo, jSerialNo, jQuantity, jLineNoTake, jLineNoPlace));
 
     end;
 
@@ -1008,9 +1027,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         jRecurso := DatoJsonTexto(VJsonObjectDatos, 'ResourceNo');
         jLocation := DatoJsonTexto(VJsonObjectDatos, 'Location');
-        jItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
-        jBin := DatoJsonTexto(VJsonObjectDatos, 'Bin');
-        jZone := DatoJsonTexto(VJsonObjectDatos, 'Zone');
+        jItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNoFilter');
+        jBin := DatoJsonTexto(VJsonObjectDatos, 'BinFilter');
+        jZone := DatoJsonTexto(VJsonObjectDatos, 'ZoneFilter');
 
         exit(Inventario_Recurso(jRecurso, jLocation, jZone, jBin, jItemNo));
 
@@ -1229,6 +1248,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 rDocumentType := rDocumentType::Shipment;
             'Movement Worksheet':
                 rDocumentType := rDocumentType::"Movement Worksheet";
+            'Production':
+                rDocumentType := rDocumentType::Production;
         end;
 
         Registrar_Movimiento(jNo, jLineNoTake, jLineNoPlace, rDocumentType, jDocumentNo, jDocumentLineNo, jBinFrom, jBinTo, jQuantity, jItemNo, jLotNo, jSerialNo);
@@ -1416,7 +1437,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         EXIT(Lineas_Registro_Inventario_Recurso(jRecurso, jLocation, jOrderNo, jRecordingNo));
 
     end;
-
 
     procedure WsCrearPaquete(): Text
     var
@@ -1617,7 +1637,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     procedure Movimientos_Almacen(xNo: Code[20]; xLocation: Text): Text
     var
-        RecWarehouseActivityHeader: Record "Warehouse Activity Header";
+        //RecWarehouseActivityHeader: Record "Warehouse Activity Header";
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
         RecWarehouseActivityLineAux: Record "Warehouse Activity Line";
 
@@ -1636,110 +1656,125 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         RecWarehouseSetup.get();
 
-        Clear(RecWarehouseActivityHeader);
-        if xNo <> '' then
-            RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."No.", xNo);
+        //Clear(RecWarehouseActivityHeader);
+        //if xNo <> '' then
+        //    RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."No.", xNo);
 
-        RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."Location Code", xLocation);
+        //RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader."Location Code", xLocation);
         //RecWarehouseActivityHeader.SetRange(RecWarehouseActivityHeader.Type, RecWarehouseActivityHeader.Type::Pick);
-        if RecWarehouseActivityHeader.findset then begin
+        //if RecWarehouseActivityHeader.findset then begin
 
-            VJsonObjectPicking.Add('No', RecWarehouseActivityHeader."No.");
-            VJsonObjectPicking.Add('SystemDate', FormatoFecha(RecWarehouseActivityHeader.SystemCreatedAt));
-            VJsonObjectPicking.Add('Type', Format(RecWarehouseActivityHeader.Type));
+        // VJsonObjectPicking.Add('No', RecWarehouseActivityHeader."No.");
+        //VJsonObjectPicking.Add('SystemDate', FormatoFecha(RecWarehouseActivityHeader.SystemCreatedAt));
+        //VJsonObjectPicking.Add('Type', Format(RecWarehouseActivityHeader.Type));
 
-            //VACIAR CANTIDAD A MANIPULAR
-            clear(RecWarehouseActivityLine);
-            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."No.", RecWarehouseActivityHeader."No.");
-            //RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Document", RecWarehouseActivityLine."Source Document"::"Sales Order");
-            RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Lot No.", '=%1', '');
-            IF RecWarehouseActivityLine.FindSet() THEN
-                repeat
-                    RecWarehouseActivityLine.Validate("Qty. to Handle", 0);
-                //RecWarehouseActivityLine.Modify();
-                UNTIL RecWarehouseActivityLine.Next() = 0;
-
+        //VACIAR CANTIDAD A MANIPULAR
+        clear(RecWarehouseActivityLine);
+        if xNo <> '' then
+            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."No.", xNo);
+        //RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Document", RecWarehouseActivityLine."Source Document"::"Sales Order");
+        RecWarehouseActivityLine.SetFilter(RecWarehouseActivityLine."Lot No.", '=%1', '');
+        IF RecWarehouseActivityLine.FindSet() THEN
             repeat
-                lLineNoPlace := 0;
-                clear(RecWarehouseActivityLine);
-                RecWarehouseActivityLine.SetRange("No.", RecWarehouseActivityHeader."No.");
-                RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Take);
-                RecWarehouseActivityLine.SetFilter("Qty. Outstanding", '>%1', RecWarehouseActivityLine."Qty. to Handle");
-                if RecWarehouseActivityLine.FindSet() then begin
-                    repeat
+                RecWarehouseActivityLine.Validate("Qty. to Handle", 0);
+            //RecWarehouseActivityLine.Modify();
+            UNTIL RecWarehouseActivityLine.Next() = 0;
 
-                        clear(RecWarehouseActivityLineAux);
-                        RecWarehouseActivityLineAux.SetRange("No.", RecWarehouseActivityHeader."No.");
-                        RecWarehouseActivityLineAux.SetRange("Item No.", RecWarehouseActivityLine."Item No.");
-                        RecWarehouseActivityLineAux.SetRange("Source Line No.", RecWarehouseActivityLine."Source Line No.");
-                        RecWarehouseActivityLineAux.SetRange("Source Subline No.", RecWarehouseActivityLine."Source Subline No.");
-                        RecWarehouseActivityLineAux.SetFilter("Line No.", '>%1', RecWarehouseActivityLine."Line No.");
-                        RecWarehouseActivityLineAux.SetRange("Action Type", RecWarehouseActivityLineAux."Action Type"::Place);
-                        if RecWarehouseActivityLineAux.FindFirst() then begin
-                            lUbicacionEnvio := RecWarehouseActivityLineAux."Bin Code";
-                            lLineNoPlace := RecWarehouseActivityLineAux."Line No.";
-                        end;
+        //repeat
+        lLineNoPlace := 0;
+        clear(RecWarehouseActivityLine);
+        //RecWarehouseActivityLine.SetRange("No.", RecWarehouseActivityHeader."No.");
+        RecWarehouseActivityLine.SetRange("Location Code", xLocation);
+        RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Take);
+        RecWarehouseActivityLine.SetFilter("Qty. Outstanding", '>%1', RecWarehouseActivityLine."Qty. to Handle");
+        if RecWarehouseActivityLine.FindSet() then begin
+            repeat
+
+                clear(RecWarehouseActivityLineAux);
+                RecWarehouseActivityLineAux.SetRange("No.", RecWarehouseActivityLine."No.");
+                RecWarehouseActivityLineAux.SetRange("Item No.", RecWarehouseActivityLine."Item No.");
+                RecWarehouseActivityLineAux.SetRange("Source Line No.", RecWarehouseActivityLine."Source Line No.");
+                RecWarehouseActivityLineAux.SetRange("Source Subline No.", RecWarehouseActivityLine."Source Subline No.");
+                RecWarehouseActivityLineAux.SetFilter("Line No.", '>%1', RecWarehouseActivityLine."Line No.");
+                RecWarehouseActivityLineAux.SetRange("Action Type", RecWarehouseActivityLineAux."Action Type"::Place);
+                if RecWarehouseActivityLineAux.FindFirst() then begin
+                    lUbicacionEnvio := RecWarehouseActivityLineAux."Bin Code";
+                    lLineNoPlace := RecWarehouseActivityLineAux."Line No.";
+                end;
 
 
-                        VJsonObjectLineas.Add('No', Format(RecWarehouseActivityLine."No."));
-                        VJsonObjectLineas.Add('LineNoTake', FormatoNumero(RecWarehouseActivityLine."Line No."));
-                        VJsonObjectLineas.Add('LineNoPlace', FormatoNumero(lLineNoPlace));
+                VJsonObjectLineas.Add('No', Format(RecWarehouseActivityLine."No."));
 
+                VJsonObjectLineas.Add('LineNoTake', FormatoNumero(RecWarehouseActivityLine."Line No."));
+                VJsonObjectLineas.Add('LineNoPlace', FormatoNumero(lLineNoPlace));
+
+                VJsonObjectLineas.Add('SourceNo', RecWarehouseActivityLine."Source No.");
+                VJsonObjectLineas.Add('SourceLineNo', RecWarehouseActivityLine."Source Line No.");
+
+                if (RecWarehouseActivityLine."Activity Type" = RecWarehouseActivityLine."Activity Type"::Pick) then begin
+                    if (RecWarehouseActivityLine."Source Document" = RecWarehouseActivityLine."Source Document"::"Prod. Consumption") then
+                        VJsonObjectLineas.Add('Type', 'Fab')
+                    else
                         VJsonObjectLineas.Add('Type', Format(RecWarehouseActivityLine."Activity Type"));
-                        VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
-                        VJsonObjectLineas.Add('Description', Descripcion_ItemNo(RecWarehouseActivityLine."Item No."));
+                end else
+                    VJsonObjectLineas.Add('Type', Format(RecWarehouseActivityLine."Activity Type"));
+                VJsonObjectLineas.Add('SourceType', Format(RecWarehouseActivityLine."Source Type"));
+                VJsonObjectLineas.Add('SourceDocument', Format(RecWarehouseActivityLine."Source Document"));
 
-                        VJsonObjectLineas.Add('DocumentType', FORMAT(RecWarehouseActivityLine."Whse. Document Type"));
-                        VJsonObjectLineas.Add('DocumentNo', RecWarehouseActivityLine."Whse. Document No.");
-                        VJsonObjectLineas.Add('DocumentLineNo', RecWarehouseActivityLine."Whse. Document Line No.");
+                VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
+                VJsonObjectLineas.Add('Description', Descripcion_ItemNo(RecWarehouseActivityLine."Item No."));
 
-                        VJsonObjectLineas.Add('BinFrom', RecWarehouseActivityLine."Bin Code");
-                        VJsonObjectLineas.Add('BinTo', lUbicacionEnvio);
-                        VJsonObjectLineas.Add('LotNo', RecWarehouseActivityLine."Lot No.");
-                        VJsonObjectLineas.Add('SerialNo', RecWarehouseActivityLine."Serial No.");
-                        VJsonObjectLineas.Add('PackageNo', RecWarehouseActivityLine."Package No.");
+                VJsonObjectLineas.Add('DocumentType', FORMAT(RecWarehouseActivityLine."Whse. Document Type"));
+                VJsonObjectLineas.Add('DocumentNo', RecWarehouseActivityLine."Source No.");
+                VJsonObjectLineas.Add('DocumentLineNo', RecWarehouseActivityLine."Source Line No.");
 
-                        /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
-                        case TipoSeguimientoProducto(RecWarehouseActivityLine."Item No.") of
-                            0:
-                                begin
-                                    VJsonObjectLineas.Add('TrackNo', '');
-                                    VJsonObjectLineas.Add('TipoTrack', 'I');
-                                end;
-                            2, 3, 5, 6:
-                                begin
-                                    VJsonObjectLineas.Add('TrackNo', RecWarehouseActivityLine."Serial No.");
-                                    VJsonObjectLineas.Add('TipoTrack', 'S');
-                                end;
-                            1, 4:
-                                begin
-                                    VJsonObjectLineas.Add('TrackNo', RecWarehouseActivityLine."Lot No.");
-                                    VJsonObjectLineas.Add('TipoTrack', 'L');
-                                end;
+                VJsonObjectLineas.Add('BinFrom', RecWarehouseActivityLine."Bin Code");
+                VJsonObjectLineas.Add('BinTo', lUbicacionEnvio);
+                VJsonObjectLineas.Add('LotNo', RecWarehouseActivityLine."Lot No.");
+                VJsonObjectLineas.Add('SerialNo', RecWarehouseActivityLine."Serial No.");
+                VJsonObjectLineas.Add('PackageNo', RecWarehouseActivityLine."Package No.");
 
+                /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
+                case TipoSeguimientoProducto(RecWarehouseActivityLine."Item No.") of
+                    0:
+                        begin
+                            VJsonObjectLineas.Add('TrackNo', '');
+                            VJsonObjectLineas.Add('TipoTrack', 'I');
                         end;
-
-                        VJsonObjectLineas.Add('Quantity', QuitarPunto(Format(RecWarehouseActivityLine.Quantity)));
-                        VJsonObjectLineas.Add('QtyToHandle', QuitarPunto(Format(RecWarehouseActivityLine."Qty. to Handle")));
-                        VJsonObjectLineas.Add('QtyOutstanding', QuitarPunto(Format(RecWarehouseActivityLine."Qty. Outstanding")));
-                        VJsonArrayLineas.Add(VJsonObjectLineas.Clone());
-
-                        clear(VJsonObjectLineas);
-                    until RecWarehouseActivityLine.Next() = 0;
+                    2, 3, 5, 6:
+                        begin
+                            VJsonObjectLineas.Add('TrackNo', RecWarehouseActivityLine."Serial No.");
+                            VJsonObjectLineas.Add('TipoTrack', 'S');
+                        end;
+                    1, 4:
+                        begin
+                            VJsonObjectLineas.Add('TrackNo', RecWarehouseActivityLine."Lot No.");
+                            VJsonObjectLineas.Add('TipoTrack', 'L');
+                        end;
 
                 end;
 
-                VJsonObjectPicking.Add('Lines', VJsonArrayLineas.Clone());
-                Clear(VJsonArrayLineas);
+                VJsonObjectLineas.Add('Quantity', QuitarPunto(Format(RecWarehouseActivityLine.Quantity)));
+                VJsonObjectLineas.Add('QtyToHandle', QuitarPunto(Format(RecWarehouseActivityLine."Qty. to Handle")));
+                VJsonObjectLineas.Add('QtyOutstanding', QuitarPunto(Format(RecWarehouseActivityLine."Qty. Outstanding")));
+                VJsonArrayLineas.Add(VJsonObjectLineas.Clone());
 
-                VJsonArrayPicking.Add(VJsonObjectPicking.Clone());
-                clear(VJsonObjectPicking);
-
-            until RecWarehouseActivityHeader.Next() = 0
+                clear(VJsonObjectLineas);
+            until RecWarehouseActivityLine.Next() = 0;
 
         end;
 
-        VJsonArrayPicking.WriteTo(VJsonText);
+        //VJsonObjectPicking.Add('Lines', VJsonArrayLineas.Clone());
+        //Clear(VJsonArrayLineas);
+
+        //VJsonArrayPicking.Add(VJsonObjectPicking.Clone());
+        //clear(VJsonObjectPicking);
+
+        ///until RecWarehouseActivityHeader.Next() = 0
+
+        //end;
+
+        VJsonArrayLineas.WriteTo(VJsonText);
 
         exit(VJsonText);
 
@@ -2063,6 +2098,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         jTipo := DatoJsonTexto(VJsonObjectContenedor, 'Type');
 
+        //Clear(RecItem);
+        //RecItem.SetRange("No.", jReferencia);
+        //if not RecItem.FindFirst() then Error(StrSubstNo(lblErrorReferencia, jReferencia));
+
         //Si es un pedido de transferenc
         if (jTipo = 'T') then begin
 
@@ -2112,10 +2151,18 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 end else
                     TextoContenedorFinal := '';*/
 
+                TextoContenedorFinal := '';
                 //Base para la creación del Nº Contenedor      
-                if (RecWarehouseSetup."Usar Lote Proveedor") then
-                    TextoContenedorFinal := jLoteProveedor
-                else
+                if (RecWarehouseSetup."Usar Lote Proveedor") then begin
+                    if (jLoteProveedor <> '') then
+                        TextoContenedorFinal := jLoteProveedor
+                    else begin
+                        if (RecWarehouseSetup."Lote aut. si proveedor vacio") then
+                            TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true)
+                        else
+                            error(lblErrorLoteProveedor);
+                    end;
+                end else
                     if (RecWarehouseSetup."Lote Automatico") then
                         TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
 
@@ -2152,7 +2199,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         jReferencia: Text;
         jRecepcion: Text;
         jUnidades: Integer;
-        jLote: Text;
+        //jLote: Text;
         jSerie: Text;
         jLoteProveedor: Text;
         jLotePreasignado: Text;
@@ -2272,14 +2319,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     end;
                 1://Lote
                     begin
-                        if (NOT RecWhseSetup."Lote Automatico") then begin
-                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                        if (xContenedor = '') then begin
+                            xContenedor := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
                             jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
                             if (jLotePreasignado <> '') THEN
                                 xContenedor := jLotePreasignado
                             ELSE BEGIN
-                                IF (jLote = '') THEN ERROR(lblErrorLote);
-                                xContenedor := jLote;
+                                IF (xContenedor = '') THEN ERROR(lblErrorLote);
                             END;
                         end;
                         Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
@@ -2310,14 +2356,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     end;
                 3://Lote y Serie
                     begin
-                        if (NOT RecWhseSetup."Lote Automatico") then begin
-                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                        if (xContenedor = '') then begin
+                            xContenedor := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
                             jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
                             if (jLotePreasignado <> '') THEN
                                 xContenedor := jLotePreasignado
                             ELSE BEGIN
-                                IF (jLote = '') THEN ERROR(lblErrorLote);
-                                xContenedor := jLote;
+                                IF (xContenedor = '') THEN ERROR(lblErrorLote);
                             END;
                         end;
 
@@ -2343,14 +2388,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     end;
                 4://Lote y Paquete
                     begin
-                        if (NOT RecWhseSetup."Lote Automatico") then begin
-                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                        if (xContenedor = '') then begin
+                            xContenedor := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
                             jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
                             if (jLotePreasignado <> '') THEN
                                 xContenedor := jLotePreasignado
                             ELSE BEGIN
-                                IF (jLote = '') THEN ERROR(lblErrorLote);
-                                xContenedor := jLote;
+                                IF (xContenedor = '') THEN ERROR(lblErrorLote);
                             END;
                         end;
 
@@ -2389,14 +2433,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     begin
 
 
-                        if (NOT RecWhseSetup."Lote Automatico") then begin
-                            jLote := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
+                        if (xContenedor = '') then begin
+                            xContenedor := DatoJsonTexto(VJsonObjectContenedor, 'LotNo');
                             jLotePreasignado := DatoJsonTexto(VJsonObjectContenedor, 'LotNoPre');
                             if (jLotePreasignado <> '') THEN
                                 xContenedor := jLotePreasignado
                             ELSE BEGIN
-                                IF (jLote = '') THEN ERROR(lblErrorLote);
-                                xContenedor := jLote;
+                                IF (xContenedor = '') THEN ERROR(lblErrorLote);
                             END;
                         end;
 
@@ -2430,6 +2473,26 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
 
         IF jEnAlerta THEN BEGIN
+
+            jText := DatoJsonTexto(VJsonObjectContenedor, 'AlertText');
+            jFoto := DatoJsonTexto(VJsonObjectContenedor, 'AlertPhoto');
+            RecWhseReceiptLine.Alerta := jText;
+            If (jFoto <> '') THEN BEGIN
+
+                NombreFoto := 'A-' + jSerie + '.jpg';
+
+                cuTempBlob.CreateOutStream(oStream);
+                cuBase64.FromBase64(jFoto, oStream);
+
+                cuTempBlob.CreateInStream(iStream);
+                Clear(RecSerie.Foto);
+                RecWhseReceiptLine.Foto.ImportStream(iStream, NombreFoto);
+
+            END;
+            RecWhseReceiptLine.Modify();
+
+            /*
+
             if (jSerie <> '') then begin
                 Clear(RecSerie);
                 RecSerie.SetRange("Item No.", jReferencia);
@@ -2477,6 +2540,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     end;
                 end;
             end;
+
+            */
         END;
 
 
@@ -2517,7 +2582,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecWhseReceiptLine.RESET();
             RecWhseReceiptLine.SETRANGE("No.", xShipmentNo);
             RecWhseReceiptLine.SETRANGE("Item No.", xTrackNo);
-            RecWhseReceiptLine.SETFILTER(RecWhseReceiptLine."Qty. Outstanding", '>%1', xQuantity);
+            RecWhseReceiptLine.SETFILTER(RecWhseReceiptLine."Qty. Outstanding", '>=%1', xQuantity);
             IF NOT RecWhseReceiptLine.FindSet() THEN Error(lblErrorLineasCantidad);
 
             RecWhseReceiptLine.Validate("Qty. to Receive", xQuantity);
@@ -2940,12 +3005,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 if RecLocation."Zona Recepcionados" = '' then ERROR('No se ha definido zona de recepcionados');
             END;
 
-            if not cuWhsePostReceipt.RUN(RecWhseReceiptLine) then begin
+            cuWhsePostReceipt.RUN(RecWhseReceiptLine);
+            /*if not cuWhsePostReceipt.RUN(RecWhseReceiptLine) then begin
                 txtError := GetLastErrorText();
                 ERROR(txtError);
-                //ERROR(lblErrorRegistrar);
 
-            end;
+            end;*/
 
 
 
@@ -3248,12 +3313,19 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             end else
                 TextoContenedorFinal := '';*/
 
-
-            if (RecWarehouseSetup."Usar Lote Proveedor") then
-                TextoContenedorFinal := jLoteProveedor
-            else
+            if (RecWarehouseSetup."Usar Lote Proveedor") then begin
+                if (jLoteProveedor <> '') then
+                    TextoContenedorFinal := jLoteProveedor
+                else begin
+                    if (RecWarehouseSetup."Lote aut. si proveedor vacio") then
+                        TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true)
+                    else
+                        error(lblErrorLoteProveedor);
+                end;
+            end else
                 if (RecWarehouseSetup."Lote Automatico") then
                     TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
+
 
 
             Recepcionar_Contenedor_Subcontratacion(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
@@ -3848,10 +3920,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecPurchaseHeader."Posting Date" := Today;
             RecPurchaseHeader.Modify();
             RecPurchaseHeader.Receive := true;
-            IF NOT cuPurchPost.RUN(RecPurchaseHeader) THEN BEGIN
+            cuPurchPost.RUN(RecPurchaseHeader);
+            /*IF NOT cuPurchPost.RUN(RecPurchaseHeader) THEN BEGIN
                 txtError := GetLastErrorText();
                 ERROR(txtError);
-            END;
+            END;*/
 
             //Vaciar_Cantidad_Recibir_Sub(xRecepcion);
 
@@ -4510,6 +4583,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
                 repeat
                     VJsonObjectLineas.Add('No', RecWarehouseActivityLine."No.");
+                    VJsonObjectLineas.Add('SourceNo', RecWarehouseActivityLine."Source No.");
+                    VJsonObjectLineas.Add('SourceLineNo', RecWarehouseActivityLine."Source Line No.");
                     VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
                     VJsonObjectLineas.Add('Description', Descripcion_ItemNo(RecWarehouseActivityLine."Item No."));
                     VJsonObjectLineas.Add('BinFrom', lUbicacionRecepcion);
@@ -4538,7 +4613,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit(VJsonObjectAlmto);
     end;
 
-    local procedure Registrar_Almacenamiento(xNo: Text; xLotNo: Text; xItemNo: Text; jBinTo: Text; xSerialNo: Text; xQuantity: decimal): Text
+    local procedure Registrar_Almacenamiento(xNo: Text; xLotNo: Text; xItemNo: Text; jBinTo: Text; xSerialNo: Text; xQuantity: decimal; xLineNoTake: Integer; xLineNoPlace: integer): Text
     var
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
         cuWarehouseActivityRegister: Codeunit "Whse.-Activity-Register";
@@ -4557,7 +4632,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecWarehouseActivityLine.SetRange("Serial No.", xSerialNo);
 
         RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
+        RecWarehouseActivityLine.SetRange("Line No.", xLineNoPlace);
         RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Place);
+
         if RecWarehouseActivityLine.FindFirst() then begin
             RecWarehouseActivityLine.Validate("Bin Code", jBinTo);
             if (RecWarehouseActivityLine."Lot No." = '') then RecWarehouseActivityLine."Lot No." := xLotNo;
@@ -4566,6 +4643,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;
 
         clear(RecWarehouseActivityLine);
+        RecWarehouseActivityLine.SetRange("No.", xNo);
         RecWarehouseActivityLine.SetRange("Item No.", xItemNo);
         if (xLotNo <> '') THEN
             RecWarehouseActivityLine.SetRange("Lot No.", xLotNo);
@@ -4573,7 +4651,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecWarehouseActivityLine.SetRange("Serial No.", xSerialNo);
 
         RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
-        //RecWarehouseActivityLine.SetFilter("Line No.", '=%1|%2', lLineNoFrom, lLineNoTo);
+        RecWarehouseActivityLine.SetFilter("Line No.", '=%1|%2', xLineNoPlace, xLineNoPlace);
+
         if RecWarehouseActivityLine.FindSet() then
             cuWarehouseActivityRegister.run(RecWarehouseActivityLine)
         /*IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) THEN begin
@@ -4611,6 +4690,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                                                                                                                     xSerialNo: Text)
     var
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
+        RecWarehouseActivityLineReg: Record "Warehouse Activity Line";
+
         cuWarehouseActivityRegister: Codeunit "Whse.-Activity-Register";
 
         VJsonObjectAlmacenamiento: JsonObject;
@@ -4622,13 +4703,18 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseActivityLine.SetRange("No.", xNo);
         RecWarehouseActivityLine.SetRange("Line No.", xLineNoPlace);
         RecWarehouseActivityLine.SetRange("Whse. Document Type", xDocumentType);
+
+        RecWarehouseActivityLine.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
+
         if (xDocumentNo <> '') then
-            RecWarehouseActivityLine.SetRange("Whse. Document No.", xDocumentNo);
+            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source No.", xDocumentNo);
         if (xDocumentLineNo <> 0) then
-            RecWarehouseActivityLine.SetRange("Whse. Document Line No.", xDocumentLineNo);
+            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Line No.", xDocumentLineNo);
         RecWarehouseActivityLine.SetRange("Item No.", xItemNo);
 
-        if (xDocumentType <> RecWarehouseActivityLine."Whse. Document Type"::Shipment) then begin
+        if ((xDocumentType <> RecWarehouseActivityLine."Whse. Document Type"::Shipment)
+            and (xDocumentType <> RecWarehouseActivityLine."Whse. Document Type"::Production))
+        then begin
             if (xLotNo <> '') THEN
                 RecWarehouseActivityLine.SetRange("Lot No.", xLotNo);
             if (xSerialNo <> '') THEN
@@ -4653,7 +4739,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
             end;
 
-            if (RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Shipment) then begin
+            if ((RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Shipment)
+                OR (RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Production))
+             then begin
                 if (xLotNo <> '') THEN
                     RecWarehouseActivityLine.Validate("Lot No.", xLotNo);
                 if (xSerialNo <> '') THEN
@@ -4665,28 +4753,29 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 RecWarehouseActivityLine.Validate("Bin Code", xBinTo);
             end;
             RecWarehouseActivityLine.Modify();
-        end;
 
-        clear(RecWarehouseActivityLine);
-        RecWarehouseActivityLine.SetRange("No.", xNo);
-        RecWarehouseActivityLine.SetRange("Whse. Document Type", xDocumentType);
-        if (xDocumentNo <> '') then
-            RecWarehouseActivityLine.SetRange("Whse. Document No.", xDocumentNo);
-        if (xDocumentLineNo <> 0) then
-            RecWarehouseActivityLine.SetRange("Whse. Document Line No.", xDocumentLineNo);
-        RecWarehouseActivityLine.SetRange("Item No.", xItemNo);
+        end ELSE
+            Error(lblErrorSinMovimiento);
+
+        clear(RecWarehouseActivityLineReg);
+        RecWarehouseActivityLineReg.SetRange("No.", xNo);
+        RecWarehouseActivityLineReg.SetRange("Whse. Document Type", xDocumentType);
+        //if (xDocumentNo <> '') then
+        //    RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source No.", xDocumentNo);
+        //if (xDocumentLineNo <> 0) then
+        //    RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Line No.", xDocumentLineNo);
+        RecWarehouseActivityLineReg.SetRange("Item No.", xItemNo);
         if (xLotNo <> '') THEN
-            RecWarehouseActivityLine.SetRange("Lot No.", xLotNo);
+            RecWarehouseActivityLineReg.SetRange("Lot No.", xLotNo);
         if (xSerialNo <> '') THEN
-            RecWarehouseActivityLine.SetRange("Serial No.", xSerialNo);
+            RecWarehouseActivityLineReg.SetRange("Serial No.", xSerialNo);
 
-        //RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
-        if RecWarehouseActivityLine.FindSet() then
-            cuWarehouseActivityRegister.run(RecWarehouseActivityLine)
-        /*IF NOT cuWarehouseActivityRegister.run(RecWarehouseActivityLine) then begin
-            txtError := GetLastErrorText();
-            ERROR(txtError);
-        end*/
+        RecWarehouseActivityLineReg.SetRange("Source No.", RecWarehouseActivityLine."Source No.");
+        RecWarehouseActivityLineReg.SetRange("Source Line No.", RecWarehouseActivityLine."Source Line No.");
+        //RecWarehouseActivityLineReg.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
+
+        if RecWarehouseActivityLineReg.FindSet() then
+            cuWarehouseActivityRegister.run(RecWarehouseActivityLineReg)
         ELSE
             Error(lblErrorSinMovimiento);
     end;
@@ -4709,9 +4798,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         RecWarehouseActivityLine.SetRange("Line No.", xLineNoTake);
         RecWarehouseActivityLine.SetRange("Whse. Document Type", xDocumentType);
         if (xDocumentNo <> '') then
-            RecWarehouseActivityLine.SetRange("Whse. Document No.", xDocumentNo);
+            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source No.", xDocumentNo);
         if (xDocumentLineNo <> 0) then
-            RecWarehouseActivityLine.SetRange("Whse. Document Line No.", xDocumentLineNo);
+            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Line No.", xDocumentLineNo);
         RecWarehouseActivityLine.SetRange("Item No.", xItemNo);
 
         RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
@@ -4725,7 +4814,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             if (xSerialNo <> '') THEN
                 RecWarehouseActivityLine.Validate("Serial No.", xSerialNo);
             RecWarehouseActivityLine.Modify();
-        end;
+        end ELSE
+            Error(lblErrorSinMovimiento);
 
     end;
 
@@ -5245,11 +5335,14 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         if (xLinea > 0) then
             WhseShipmentLine.SETRANGE("Line No.", xLinea);
 
-        IF WhseShipmentLine.FindFirst THEN BEGIN
-            IF NOT WhsePostShipmentMgt.RUN(WhseShipmentLine) THEN begin
+
+        IF WhseShipmentLine.FindSet() THEN BEGIN
+            WhsePostShipmentMgt.RUN(WhseShipmentLine);
+
+            /*IF NOT WhsePostShipmentMgt.RUN(WhseShipmentLine) THEN begin
                 txtError := GetLastErrorText();
                 ERROR(txtError);
-            end;
+            end;*/
         END;
 
         /*IF Estado = 'True' then begin
@@ -5308,7 +5401,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         RecWarehouseSetup.Get();
 
-        lTipo := Tipo_Trazabilidad(xTrackNo);
+        lTipo := 'N';
+        if (xTrackNo <> '') then
+            lTipo := Tipo_Trazabilidad(xTrackNo)
+        else
+            if (xItemNo <> '') then lTipo := Tipo_Trazabilidad(xItemNo);
 
         if (lTipo = 'N') THEN ERROR(lblErrorTrackNo + ' (' + xTrackNo + ')');
 
@@ -5581,9 +5678,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
-
-
-
     procedure Validar_Linea_Inventario_Almacen_Avanzado(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xItemNo: Text; xLocation: Text): Text
     var
 
@@ -5636,7 +5730,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;
 
     end;
-
 
     procedure Agregar_Linea_Inventario_Almacen_Avanzado(xTrackNo: Text; xBin: Text; xQuantity: Decimal; xTipo: Code[1]; xItemNo: Text; xLocation: Text): Text
     var
@@ -5987,6 +6080,359 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     #endregion
 
+
+
+    #region AJUSTE
+
+
+    procedure WsAjustar(xJson: Text): Text
+    var
+
+        RecLocation: Record Location;
+        RecWarehouseSetup: Record "Warehouse Setup";
+        QueryContPaquete: Query "Lot Numbers by Bin";
+
+        VJsonObjectDatos: JsonObject;
+
+        lContenedor: Text;
+        lAlmacen: Text;
+
+        RecLotNo: Record "Lot No. Information";
+        RecSerialNo: Record "Serial No. Information";
+
+        lUbicadionDesde: Text;
+        lUbicacionHasta: Text;
+        lCantidad: Decimal;
+        lResource: Text;
+        lItemNo: Text;
+        lLotNo: Text;
+        lSerialNo: Text;
+        lPackageNo: Text;
+        newPackageNo: Text;
+        ltipo: Text;
+        lTrackNo: Text;
+        lPositivo: Boolean;
+    begin
+
+        If not VJsonObjectDatos.ReadFrom(xJson) then
+            Error('Respuesta no valida. Se esperaba un Json');
+
+        lContenedor := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
+        lTipo := DatoJsonTexto(VJsonObjectDatos, 'Tipo');
+        lUbicadionDesde := DatoJsonTexto(VJsonObjectDatos, 'BinFrom');
+
+        lItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
+        lUbicadionDesde := DatoJsonTexto(VJsonObjectDatos, 'BinFrom');
+        lCantidad := DatoJsonDecimal(VJsonObjectDatos, 'Quantity');
+        lResource := DatoJsonTexto(VJsonObjectDatos, 'Resource');
+        lAlmacen := DatoJsonTexto(VJsonObjectDatos, 'Location');
+        lLotNo := DatoJsonTexto(VJsonObjectDatos, 'LotNo');
+        lSerialNo := DatoJsonTexto(VJsonObjectDatos, 'SerialNo');
+        lPackageNo := DatoJsonTexto(VJsonObjectDatos, 'PackageNo');
+
+        lPositivo := DatoJsonBoolean(VJsonObjectDatos, 'Positive');
+
+        IF (lLotNo <> '') then begin
+            Clear(RecLotNo);
+            RecLotNo.SetRange("Item No.", lItemNo);
+            RecLotNo.SetRange("Lot No.", lLotNo);
+            if not RecLotNo.FindFirst() then
+                Crear_Lote(lLotNo, lItemNo, lCantidad, '', '');
+        end;
+
+        IF (lSerialNo <> '') then begin
+            Clear(RecSerialNo);
+            RecSerialNo.SetRange("Item No.", lItemNo);
+            RecSerialNo.SetRange("Serial No.", lSerialNo);
+            if not RecSerialNo.FindFirst() then
+                Crear_Serie(lSerialNo, lItemNo, lCantidad, '', '');
+        end;
+
+        RecLocation.Get(lAlmacen);
+        IF RecLocation."Almacen Avanzado" then
+            Diario_Almacen(lLotNo, lSerialNo, lItemNo, lCantidad, lUbicadionDesde, lAlmacen, lPositivo, 'APP_AJ')
+        ELSE
+            Diario_Producto(lAlmacen, lItemNo, lCantidad, lLotNo, lSerialNo, lPositivo, 'APP_AJ');
+
+        exit('OK');
+
+    end;
+
+
+
+
+    local procedure Diario_Almacen(xLote: Code[50]; xSerie: Code[50]; xReferencia: Code[20]; xCantidad: Decimal; xUbicacion: Code[20]; xLocation: Code[10]; xPositivo: Boolean; xDoc: Text)
+    var
+        RecLocation: Record Location;
+        LRecWarehouseJournalLine: Record "Warehouse Journal Line";
+        LRecItemTracking: Record "Whse. Item Tracking Line";
+        //RecWarehouseSetup: Record "Warehouse Setup";
+        RecBin: Record Bin;
+        RecBinAjus: Record Bin;
+
+        vNumeroLinea: Integer;
+        vNumeroLineaTr: Integer;
+
+        vTemplate: Text;
+        vBacth: Text;
+
+    begin
+
+        Clear(RecLocation);
+        RecLocation.get(xLocation);
+        if RecLocation.AppWhseJournalTemplateName = '' then ERROR(lblErrorDiarioAlm);
+        if RecLocation.AppWhseJournalBatchName = '' then ERROR(lblErrorDiarioAlm);
+        //vTemplate := 'AJUST';
+        //vBacth := 'GENERICO';
+
+        vTemplate := RecLocation.AppWhseJournalTemplateName;
+        vBacth := RecLocation.AppWhseJournalBatchName;
+
+        LRecWarehouseJournalLine.RESET;
+
+        LRecWarehouseJournalLine.SetRange("Journal Template Name", vTemplate);
+        LRecWarehouseJournalLine.SetRange("Journal Batch Name", vBacth);
+        IF (LRecWarehouseJournalLine.FindLast()) THEN
+            vNumeroLinea := LRecWarehouseJournalLine."Line No." + 10001
+        ELSE
+            vNumeroLinea := 60001;
+
+        if not xPositivo then
+            xCantidad := -xCantidad;
+
+        //Comprobar si ya está creado
+        /*Clear(LRecItemTracking);
+        LRecItemTracking.SetRange("Item No.", xReferencia);
+        LRecItemTracking.SetRange("Location Code", xLocation);
+        IF xCantidad < 0 THEN
+            LRecItemTracking.SetRange("Qty. to Handle", -xCantidad)
+        else
+            LRecItemTracking.SetRange("Qty. to Handle", -xCantidad);
+        LRecItemTracking.SetRange("Lot No.", xLote);
+        LRecItemTracking.SetRange("Serial No.", xSerie);
+        if LRecItemTracking.FindFirst() then ERROR('Ya existe el registro.\\Lote: %1 \Serie: %2', xLote, xSerie);
+        */
+
+
+        //Buscar ubicación
+        Clear(RecBin);
+        RecBin.SetRange(Code, xUbicacion);
+        IF not RecBin.FindFirst() then error(StrSubstNo(lblErrorUbicacion, xUbicacion));
+
+        LRecWarehouseJournalLine.RESET;
+        LRecWarehouseJournalLine.INIT;
+        LRecWarehouseJournalLine.VALIDATE("Journal Template Name", vTemplate);
+        LRecWarehouseJournalLine.VALIDATE("Journal Batch Name", vBacth);
+        LRecWarehouseJournalLine."Whse. Document No." := xDoc;
+        LRecWarehouseJournalLine.VALIDATE("Location Code", xLocation);
+        LRecWarehouseJournalLine.SetUpNewLine(LRecWarehouseJournalLine);
+        LRecWarehouseJournalLine."Line No." := vNumeroLinea;
+        LRecWarehouseJournalLine.VALIDATE("Registering Date", Today);
+        LRecWarehouseJournalLine.VALIDATE("Item No.", xReferencia);
+
+        LRecWarehouseJournalLine.VALIDATE(Quantity, xCantidad);
+
+        LRecWarehouseJournalLine."Zone Code" := RecBin."Zone Code";
+        LRecWarehouseJournalLine."Bin Code" := xUbicacion;
+
+        RecLocation.Get(xLocation);
+
+        //Buscar ubicación
+        Clear(RecBinAjus);
+        RecBinAjus.SetRange(Code, RecLocation."Adjustment Bin Code");
+        IF not RecBinAjus.FindFirst() then Error('No se ha encontrado la ubicación %1', RecBinAjus);
+
+        IF xCantidad > 0 THEN begin
+
+            LRecWarehouseJournalLine."From Zone Code" := RecBinAjus."Zone Code";
+            LRecWarehouseJournalLine."From Bin Code" := RecBinAjus.Code;
+
+            LRecWarehouseJournalLine."To Zone Code" := RecBin."Zone Code";
+            LRecWarehouseJournalLine."To Bin Code" := xUbicacion;
+
+        end ELSE begin
+            LRecWarehouseJournalLine."To Zone Code" := RecBinAjus."Zone Code";
+            LRecWarehouseJournalLine."To Bin Code" := RecBinAjus.Code;
+
+            LRecWarehouseJournalLine."From Zone Code" := RecBin."Zone Code";
+            LRecWarehouseJournalLine."From Bin Code" := xUbicacion;
+        end;
+
+        LRecWarehouseJournalLine."User ID" := USERID;
+
+        IF LRecWarehouseJournalLine.INSERT THEN;
+
+        vNumeroLineaTr := 70001;
+        LRecItemTracking.RESET;
+        IF LRecItemTracking.FINDLAST THEN;
+        vNumeroLineaTr += LRecItemTracking."Entry No.";
+
+        //ES NECESARIO AGREGAR LA INFORMACION DEL LOTE
+        LRecItemTracking.INIT;
+        LRecItemTracking."Entry No." := vNumeroLineaTr;
+        LRecItemTracking."Item No." := xReferencia;
+        LRecItemTracking."Location Code" := xLocation;
+        IF xCantidad < 0 THEN BEGIN
+            LRecItemTracking."Qty. to Handle" := -xCantidad;
+            LRecItemTracking."Quantity (Base)" := -xCantidad;
+            LRecItemTracking."Qty. to Handle (Base)" := -xCantidad;
+        END ELSE BEGIN
+            LRecItemTracking."Qty. to Handle" := xCantidad;
+            LRecItemTracking."Quantity (Base)" := xCantidad;
+            LRecItemTracking."Qty. to Handle (Base)" := xCantidad;
+        END;
+
+        LRecItemTracking."Source Ref. No." := vNumeroLinea;
+        LRecItemTracking."Source Type" := 7311;
+        LRecItemTracking."Source Batch Name" := vTemplate;
+        LRecItemTracking."Source ID" := vBacth;
+        LRecItemTracking."Lot No." := xLote;
+        LRecItemTracking."Serial No." := xSerie;
+        LRecItemTracking."New Package No." := xDoc;
+        LRecItemTracking.INSERT(TRUE);
+
+        //REGISTRAR
+
+        LRecWarehouseJournalLine.RESET;
+        LRecWarehouseJournalLine.SETRANGE("Journal Template Name", vTemplate);
+        LRecWarehouseJournalLine.SETRANGE("Journal Batch Name", vBacth);
+        LRecWarehouseJournalLine.SETRANGE("Location Code", xLocation);
+        LRecWarehouseJournalLine.SETRANGE("Line No.", vNumeroLinea);
+        IF LRecWarehouseJournalLine.FINDFIRST THEN
+            CODEUNIT.RUN(CODEUNIT::"Whse. Jnl.-Register Batch", LRecWarehouseJournalLine);
+
+        Diario_Producto(xLocation, xReferencia, xCantidad, xLote, xSerie, xPositivo, xDoc);
+
+    end;
+
+    local procedure Diario_Producto(xLocation: Text; xReferencia: Text; xCantidad: Decimal; xLote: Text; xSerie: Text; xPositive: boolean; xDoc: Text)
+    var
+        RecLocation: Record Location;
+        //RecWarehouseSetup: Record "Warehouse Setup";
+        LRecItemJournalLine: Record "Item Journal Line";
+        LRecReservationEntry: Record "Reservation Entry";
+        vNumeroLinea: Integer;
+        vNumeroLineaTr: Integer;
+        vTemplate: Text;
+        vBacth: Text;
+        ItemCost: record Item;
+    begin
+
+        Clear(RecLocation);
+        RecLocation.get(xLocation);
+        if RecLocation.AppItemJournalTemplateName = '' then ERROR(lblErrorDiarioAlm);
+        if RecLocation.AppItemJournalBatchName = '' then ERROR(lblErrorDiarioAlm);
+
+        vTemplate := RecLocation.AppItemJournalTemplateName;
+        vBacth := RecLocation.AppItemJournalBatchName;
+        //vTemplate := 'PRODUCTO';
+        //vBacth := 'GENERICO';
+
+        LRecItemJournalLine.RESET;
+
+        LRecItemJournalLine.SetRange("Journal Template Name", vTemplate);
+        LRecItemJournalLine.SetRange("Journal Batch Name", vBacth);
+        IF (LRecItemJournalLine.FindLast()) THEN
+            vNumeroLinea := LRecItemJournalLine."Line No." + 10001
+        ELSE
+            vNumeroLinea := 60001;
+
+
+        LRecItemJournalLine.RESET;
+        LRecItemJournalLine.INIT;
+
+        LRecItemJournalLine.VALIDATE("Journal Template Name", vTemplate);
+        LRecItemJournalLine.VALIDATE("Journal Batch Name", vBacth);
+
+        //LRecItemJournalLine.SetUpNewLine(LRecItemJournalLine);
+        //Buscamos el número de línea
+        LRecItemJournalLine."Line No." := vNumeroLinea;
+
+        LRecItemJournalLine.VALIDATE("Posting Date", Today);
+        IF xPositive THEN BEGIN
+            LRecItemJournalLine.VALIDATE("Entry Type", LRecItemJournalLine."Entry Type"::"Positive Adjmt.")
+        END ELSE BEGIN
+            LRecItemJournalLine.VALIDATE("Entry Type", LRecItemJournalLine."Entry Type"::"Negative Adjmt.");
+            xCantidad := xCantidad * -1;
+        END;
+
+        LRecItemJournalLine.VALIDATE("Item No.", xReferencia);
+        LRecItemJournalLine.VALIDATE("Location Code", xLocation);
+        LRecItemJournalLine."Document No." := xDoc;
+        LRecItemJournalLine.VALIDATE(Quantity, xCantidad);
+        LRecItemJournalLine.VALIDATE("Invoiced Quantity", xCantidad);
+        LRecItemJournalLine."Warehouse Adjustment" := TRUE;
+        //PX221123 METEMOS COSTE ESTANDAR
+        IF ItemCost.GET(LRecItemJournalLine."Item No.") and (itemCost."Standard Cost" <> 0) then
+            LRecItemJournalLine.VALIDATE("Unit Cost", ItemCost."Standard Cost");
+        //PX221123             
+
+        IF LRecItemJournalLine.INSERT THEN;
+
+        //ES NECESARIO AGREGAR LA INFORMACION DEL LOTE
+        vNumeroLineaTr := 70001;
+        IF LRecReservationEntry.FINDLAST THEN
+            vNumeroLineaTr := LRecReservationEntry."Entry No." + 100;
+
+        LRecReservationEntry.INIT;
+        LRecReservationEntry."Entry No." := vNumeroLineaTr;
+        LRecReservationEntry."Item No." := xReferencia;
+        LRecReservationEntry."Location Code" := xLocation;
+
+        IF xPositive THEN BEGIN
+            LRecReservationEntry."Quantity (Base)" := xCantidad;
+            LRecReservationEntry."Qty. to Handle (Base)" := xCantidad;
+            LRecReservationEntry.Quantity := xCantidad;
+            LRecReservationEntry."Qty. to Invoice (Base)" := xCantidad;
+        END ELSE BEGIN
+            LRecReservationEntry."Quantity (Base)" := -xCantidad;
+            LRecReservationEntry."Qty. to Handle (Base)" := -xCantidad;
+            LRecReservationEntry.Quantity := -xCantidad;
+            LRecReservationEntry."Qty. to Invoice (Base)" := -xCantidad;
+        END;
+        LRecReservationEntry."Reservation Status" := LRecReservationEntry."Reservation Status"::Prospect;
+        LRecReservationEntry."Source Ref. No." := vNumeroLinea;
+        LRecReservationEntry."Created By" := USERID;
+        LRecReservationEntry."Source Type" := 83;
+        IF xPositive THEN
+            LRecReservationEntry."Source Subtype" := 2
+        ELSE
+            LRecReservationEntry."Source Subtype" := 3;
+        LRecReservationEntry.Positive := TRUE;
+        LRecReservationEntry."Source Batch Name" := vBacth;
+        LRecReservationEntry."Source ID" := vTemplate;
+
+
+        LRecReservationEntry."Lot No." := xLote;
+        LRecReservationEntry."Serial No." := xSerie;
+        if (xSerie = '') then
+            LRecReservationEntry."Item Tracking" := LRecReservationEntry."Item Tracking"::"Lot No."
+        else
+            LRecReservationEntry."Item Tracking" := LRecReservationEntry."Item Tracking"::"Lot and Serial No.";
+
+        LRecReservationEntry."New Package No." := xDoc;
+
+        LRecReservationEntry.INSERT(TRUE);
+
+
+        //REGISTRAR
+        LRecItemJournalLine.RESET;
+        LRecItemJournalLine.SETRANGE("Journal Template Name", vTemplate);
+        LRecItemJournalLine.SETRANGE("Journal Batch Name", vBacth);
+        LRecItemJournalLine.SETRANGE("Location Code", xLocation);
+        LRecItemJournalLine.SETRANGE("Line No.", vNumeroLinea);
+        IF LRecItemJournalLine.FINDFIRST THEN
+            CODEUNIT.RUN(CODEUNIT::"Item Jnl.-Post Batch", LRecItemJournalLine);
+
+
+    end;
+
+
+
+
+    #endregion
+
+
     #region FUNCIONES BC
 
 
@@ -6022,7 +6468,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit('N');
     end;
 
-
     local procedure Item_Tipo_Dato(xTrackNo: Text): Code[50]
     var
         RecLotNo: Record "Lot No. Information";
@@ -6045,7 +6490,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         exit('');
     end;
 
-
     local procedure Existe_Referencia(xItemNo: Text; xAnalizarSeg: Boolean): Boolean
     var
         RecItem: Record Item;
@@ -6062,7 +6506,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         end;
 
     end;
-
 
     local procedure Existe_Lote(xLotNo: Text; xItemNo: Text): Boolean
     var
@@ -6186,7 +6629,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
     end;
 
 
-    [TryFunction]
+    /*[TryFunction]
     local procedure App_Location(VAR xLocation: Text)
     var
         RecWarehouseSetup: Record "Warehouse Setup";
@@ -6198,7 +6641,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             xLocation := RecWarehouseSetup."App Location";
 
 
-    end;
+    end;*/
 
     /// <summary>
     /// AnalizarSeguimientoProducto.
@@ -6478,6 +6921,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         lblErrorSinReferencia: Label 'Item No field is empty', comment = 'ESP=El campo referencia está vacio';
         lblErrorLoteInterno: Label 'Error generating internal Lot No number', comment = 'ESP=Error al generar el número de lote interno';
         lblErrorLote: Label 'Lot No not defined', comment = 'ESP=No se ha definido el lote';
+        lblErrorLoteProveedor: Label 'Vendor Lot No not defined', comment = 'ESP=No se ha definido el lote de proveedor';
         lblErrorSerie: Label 'Serial No not defined', comment = 'ESP=No se ha definido el serie';
         lblErrorPaquete: Label 'Package No not defined', comment = 'ESP=No se ha definido el paquete';
         lblErrorPaqueteGenerico: Label 'Empty Package code not defined', comment = 'ESP=No se ha definido el código de paquete vacío';
@@ -6496,6 +6940,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         lblLote: Label 'Lot No', Comment = 'ESP=Lote';
         lblSerie: Label 'Serial No', Comment = 'ESP=Serie';
         lblReferencia: Label 'Item No.', Comment = 'ESP=Referencia';
+        lblErrorDiarioAlm: Label 'Journal Template Name not define on Location', comment = 'ESP=No se ha definido el diario en el almacén';
 
         lblErrorDiarioInv: Label 'Journal Template Name not define on Warehouse Setup', comment = 'ESP=No se ha definido el diario inventario en la configuración de almacén';
         lblErrorUbicacion: Label 'Bin %1 not found', Comment = 'ESP=Ubicación %1 no encontrada';

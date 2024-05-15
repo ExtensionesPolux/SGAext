@@ -84,6 +84,38 @@ tableextension 71746 Location extends Location
             CalcFormula = exist(Bin where("Location Code" = field(Code)));
         }
 
+
+
+        //DIARIO ALMACEN
+        field(71766; AppWhseJournalTemplateName; Code[20])
+        {
+
+            Caption = 'Warehouse Journal Template', Comment = 'ESP=Diario Almacén';
+            TableRelation = "Warehouse Journal Template";
+
+        }
+        field(71767; AppWhseJournalBatchName; Code[20])
+        {
+            TableRelation = "Warehouse Journal Batch".Name where("Journal Template Name" = FIELD(AppWhseJournalTemplateName));
+            Caption = 'Warehouse Journal Batch', Comment = 'ESP=Sección  Almacén';
+
+        }
+
+        //DIARIO PRODUCTO
+        field(71768; AppItemJournalTemplateName; Code[20])
+        {
+
+            Caption = 'Item Journal Template', Comment = 'ESP=Diario Producto';
+            TableRelation = "Item Journal Template";
+
+        }
+        field(71769; AppItemJournalBatchName; Code[20])
+        {
+            TableRelation = "Item Journal Batch".Name where("Journal Template Name" = FIELD(AppItemJournalTemplateName));
+            Caption = 'Item Journal Batch', Comment = 'ESP=Sección Producto';
+
+        }
+
     }
 
 

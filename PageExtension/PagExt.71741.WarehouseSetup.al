@@ -8,10 +8,10 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             {
                 Caption = 'Aplicación SGA';
 
-                field("App Location"; Rec."App Location")
+                /*field("App Location"; Rec."App Location")
                 {
                     ApplicationArea = all;
-                }
+                }*/
 
                 field("Numero Serie Inventario"; Rec."Numero Serie Inventario")
                 {
@@ -38,6 +38,14 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                         ApplicationArea = all;
                     }
                     field("Ver Movimientos"; Rec."Ver Movimientos")
+                    {
+                        ApplicationArea = all;
+                    }
+                    field("Ver Picking Fab"; Rec."Ver Picking Fab")
+                    {
+                        ApplicationArea = all;
+                    }
+                    field("Ver Altas"; Rec."Ver Altas")
                     {
                         ApplicationArea = all;
                     }
@@ -73,6 +81,12 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                     field("Usar Lote Proveedor"; Rec."Usar Lote Proveedor")
                     {
                         ToolTip = 'For products with lot no, use the vendors lot no', comment = 'ESP="Para los productos con lote usar el lote del proveedor"';
+
+                        ApplicationArea = all;
+                    }
+                    field("Lote aut. si proveedor vacio"; Rec."Lote aut. si proveedor vacio")
+                    {
+                        ToolTip = 'If vendors lot no empty, use the automatic lot no', comment = 'ESP="Si lote proveedor vacio, usar lote automático"';
 
                         ApplicationArea = all;
                     }

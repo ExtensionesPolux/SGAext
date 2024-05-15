@@ -3,12 +3,12 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
     fields
     {
 
-        field(71740; "App Location"; Code[50])
+        /*field(71740; "App Location"; Code[50])
         {
             DataClassification = ToBeClassified;
             TableRelation = Location.Code;
             Caption = 'SGA App Location', Comment = 'ESP=Almacén Aplicación SGA';
-        }
+        }*/
 
         //Parametros
         field(71741; "Usar Lote Proveedor"; Boolean)
@@ -17,12 +17,12 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             Caption = 'Use Vendor Lot No', Comment = 'ESP=Usar Nº. Lote Proveedor';
         }
 
-        /*field(71742; "Usar paquetes"; Boolean)
+        field(71742; "Lote aut. si proveedor vacio"; Boolean)
         {
             DataClassification = ToBeClassified;
-            Caption = 'Use Package', Comment = 'ESP=Usar Paquete';
+            Caption = 'Use Automatic Lot No if empty', Comment = 'ESP=Usar Lote Automático si vacio';
 
-        }*/
+        }
 
         field(71743; "Lote Interno Obligatorio"; Boolean)
         {
@@ -77,8 +77,20 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
         field(71753; "Ver Subcontratacion"; Boolean)
         {
             DataClassification = ToBeClassified;
+
             Caption = 'See Subcontracting', Comment = 'ESP=Ver Subcontratación';
         }
+        field(71754; "Ver Altas"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'See New Items Registrations', Comment = 'ESP=Ver Alta Productos';
+        }
+        field(71755; "Ver Picking Fab"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'See Manufacturing Picking', Comment = 'ESP=Ver Picking Fabricación';
+        }
+
         // Envíos y recepciones
         field(71760; "Cantidad envio a cero"; Boolean)
         {
@@ -94,7 +106,6 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
             Caption = 'Inventory No Serial', Comment = 'ESP=Nº Serie Inventario';
-
         }
 
         field(71780; "Numero Serie Paquete"; Code[20])
@@ -102,13 +113,12 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
             Caption = 'Package No Serial', Comment = 'ESP=Nº Serie Paquete';
-
         }
+
         field(71781; "Codigo Sin Paquete"; Code[10])
         {
             DataClassification = ToBeClassified;
             Caption = 'Without Package Code', Comment = 'ESP=Código Sin Paquete';
-
         }
     }
 
