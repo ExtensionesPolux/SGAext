@@ -19,12 +19,4 @@ pageextension 71753 PostedWhseReceiptSubform extends "Posted Whse. Receipt Subfo
 
         }
     }
-
-    actions
-    {
-        // Add changes to page actions here
-    }
-
-    var
-        myInt: Integer;
 }
