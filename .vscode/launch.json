@@ -19,7 +19,7 @@
         }, 
 
         {
-            "name": "Your own server",
+            "name": "BC23 On-Premis",
             "request": "launch",
             "type": "al",
             "environmentType": "OnPrem",
