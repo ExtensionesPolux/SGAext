@@ -50,7 +50,29 @@
             "enableSqlInformationDebugger": true,
             "usePublicURLFromServer": true,
             "schemaUpdateMode": "ForceSync"
+        },
+
+        {
+            "name": "Yodeyma SandBox",
+            "request": "launch",
+            "type": "al",
+            "tenant": "4b376311-1b7f-4c53-95da-748b19c39f1b",
+            "environmentType": "Sandbox",
+            "environmentName": "Sandbox",
+            "startupObjectId": 20,
+            "startupObjectType": "Page",
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "usePublicURLFromServer": true,
+            "schemaUpdateMode": "ForceSync"
         }
+
+
+        
+        
+
 
     ]
 }
