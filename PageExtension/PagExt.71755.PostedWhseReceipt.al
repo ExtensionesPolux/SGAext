@@ -17,13 +17,4 @@ pageextension 71755 "Posted Whse. Receipt" extends "Posted Whse. Receipt"
         }
 
     }
-
-
-    actions
-    {
-        // Add changes to page actions here
-    }
-
-    var
-        myInt: Integer;
 }
