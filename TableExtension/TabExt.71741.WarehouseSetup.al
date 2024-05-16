@@ -1,4 +1,4 @@
-tableextension 71741 "Warehouse Setup" extends "Warehouse Setup"
+tableextension 71741 "Warehouse Setup" extends "Warehouse Setup" //AVA 20240516
 {
     fields
     {
