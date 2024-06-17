@@ -3271,39 +3271,26 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 end;
         end;
 
-        //Si es un contenedor unitario se añade 00 si son varios 01,02....
-        /*if jTotalContenedores = 1 then
-            NumeracionInicial := 0
-        else
-            NumeracionInicial := 1;*/
-
         for i := 1 to jTotalContenedores do begin
 
-            /*if (BaseNumeroContenedor <> '') then begin
-                NumContedor := Format(NumeracionInicial);
-                if (StrLen(NumContedor) = 1) then
-                    NumContedor := '00' + NumContedor;
-                if (StrLen(NumContedor) = 2) then
-                    NumContedor := '0' + NumContedor;
-
-                TextoContenedorFinal := BaseNumeroContenedor + NumContedor;
-            end else
-                TextoContenedorFinal := '';*/
-
-            if (RecWarehouseSetup."Usar Lote Proveedor") then begin
-                if (jLoteProveedor <> '') then
-                    TextoContenedorFinal := jLoteProveedor
-                else begin
-                    if (RecWarehouseSetup."Lote aut. si proveedor vacio") then
-                        TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true)
-                    else
-                        error(lblErrorLoteProveedor);
-                end;
-            end else
-                if (RecWarehouseSetup."Lote Automatico") then
-                    TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
-
-
+            TextoContenedorFinal := '';
+            case iTipoSeguimiento of
+                1, 3, 4, 6://Lote
+                    begin
+                        if (RecWarehouseSetup."Usar Lote Proveedor") then begin
+                            if (jLoteProveedor <> '') then
+                                TextoContenedorFinal := jLoteProveedor
+                            else begin
+                                if (RecWarehouseSetup."Lote aut. si proveedor vacio") then
+                                    TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true)
+                                else
+                                    error(lblErrorLoteProveedor);
+                            end;
+                        end else
+                            if (RecWarehouseSetup."Lote Automatico") then
+                                TextoContenedorFinal := cuNoSeriesManagement.GetNextNo(RecItem."Lot Nos.", WorkDate, true);
+                    end;
+            end;
 
             Recepcionar_Contenedor_Subcontratacion(VJsonObjectContenedor, TextoContenedorFinal, NOT jImprimir, iTipoSeguimiento);
 
