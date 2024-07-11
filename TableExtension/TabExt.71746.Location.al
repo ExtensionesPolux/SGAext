@@ -73,7 +73,7 @@ tableextension 71746 Location extends Location
             TableRelation =
             if ("Almacen Avanzado" = const(true)) "Warehouse Journal Batch".Name where("Journal Template Name" = FIELD(AppJournalTemplateName))
             else
-            "Item Journal Batch".Name where("Journal Template Name" = FIELD(AppInvJournalTemplateName));
+            "Item Journal Batch".Name where("Journal Template Name" = FIELD(AppJournalTemplateName));
             Caption = 'Journal Batch', Comment = 'ESP=Sección';
 
         }
