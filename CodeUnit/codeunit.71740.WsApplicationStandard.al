@@ -1143,7 +1143,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 if (QueryContPaquete.Lot_No <> '') then lTrackNo := QueryContPaquete.Lot_No;
                 if (QueryContPaquete.Serial_No <> '') then lTrackNo := QueryContPaquete.Serial_No;
 
-                AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, QueryContPaquete.Sum_Qty_Base, lTrackNo, lResource, QueryContPaquete.Item_No, QueryContPaquete.Lot_No, QueryContPaquete.Serial_No, lContenedor, lContenedor);
+                Clear(RecLocation);
+                RecLocation.Get(lAlmacen);
+                if RecLocation."Almacen Avanzado" then
+                    AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, QueryContPaquete.Sum_Qty_Base, lTrackNo, lResource, QueryContPaquete.Item_No, QueryContPaquete.Lot_No, QueryContPaquete.Serial_No, lContenedor, lContenedor)
+                ELSE
+                    AppCreateReclassWarehouse(lAlmacen, lUbicadionDesde, lUbicacionHasta, QueryContPaquete.Sum_Qty_Base, lTrackNo, lResource, QueryContPaquete.Item_No, QueryContPaquete.Lot_No, QueryContPaquete.Serial_No, lContenedor, lContenedor);
 
             end;
 
@@ -1165,10 +1170,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 lUbicacionHasta := Ubicacion_Paquete(newPackageNo, lAlmacen);
             end;
 
-            //Clear(RecLocation);
-            //RecLocation.Get(lAlmacen);
-            //if RecLocation."Almacen Avanzado" then
-            AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, lCantidad, lContenedor, lResource, lItemNo, lLotNo, lSerialNo, lPackageNo, newPackageNo);
+            Clear(RecLocation);
+            RecLocation.Get(lAlmacen);
+            if RecLocation."Almacen Avanzado" then
+                AppCreateReclassWarehouse_Avanzado(lAlmacen, lUbicadionDesde, lUbicacionHasta, lCantidad, lContenedor, lResource, lItemNo, lLotNo, lSerialNo, lPackageNo, newPackageNo)
+            ELSE
+                AppCreateReclassWarehouse(lAlmacen, lUbicadionDesde, lUbicacionHasta, lCantidad, lContenedor, lResource, lItemNo, lLotNo, lSerialNo, lPackageNo, newPackageNo)
 
         END;
         exit('OK');
@@ -4342,6 +4349,170 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 txtError := GetLastErrorText();
                 ERROR(txtError);
             end;*/
+        end ELSE
+            Error(lblErrorMover);
+
+    end;
+
+
+
+    procedure AppCreateReclassWarehouse(xLocation: Text; xFromBin: code[20]; xToBin: code[20]; xQty: decimal; xTrackNo: code[20]; xResourceNo: code[20]; xItemNo: code[20]; xLotNo: Text; xSerialNo: Text; xPackageNo: Text; newPackageNo: Text);
+    var
+        RecLocation: Record Location;
+        ItemJnlTemplate: Record "Item Journal Template";
+        ItemJnlLine: record "Item Journal Line";
+        ItemJnlLineLast: record "Item Journal Line";
+        RecBin: Record Bin;
+
+        ReservationEntry: Record "Reservation Entry";
+        ReservationEntryLast: Record "Reservation Entry";
+
+        //WhseItemTrackingLine: record "Whse. Item Tracking Line";
+        //WhseItemTrackingLineLast: record "Whse. Item Tracking Line";
+        LineNo: Integer;
+        LineNoReserv: Integer;
+
+        sTipo: Integer;
+
+        ItemJnlRegisterLine: Codeunit "Item Jnl.-Post Line";
+        //WhseJnlRegisterLine: codeunit "Whse. Jnl.-Register Line";
+
+        txtError: Text;
+        lblErrorReclasif: Label 'Not exist Reclassification Template', comment = 'ESP="No existe Libro diario Reclasificación"';
+    begin
+
+        Clear(RecLocation);
+        RecLocation.Get(xLocation);
+
+        if (RecLocation.AppJournalTemplateName) = '' then Error(lblErrorReclasif);
+        if (RecLocation.AppJournalBatchName) = '' then Error(lblErrorReclasif);
+
+
+        /*ItemJnlTemplate.reset;
+        ItemJnlTemplate.setrange(Type, ItemJnlTemplate.Type::);
+        if not ItemJnlTemplate.findset then
+            error(lblErrorReclasif);*/
+
+        ItemJnlLine.RESET;
+        ItemJnlLine.SETRANGE("Journal Template Name", RecLocation.AppJournalTemplateName);
+        ItemJnlLine.SETRANGE("Journal Batch Name", RecLocation.AppJournalBatchName);
+        IF ItemJnlLine.findset then
+            repeat
+                ItemJnlLine.delete;
+            until ItemJnlLine.Next = 0;
+
+        Clear(RecBin);
+        RecBin.SetRange(Code, xFromBin);
+        IF NOT RecBin.FindFirst() THEN Error(StrSubstNo(lblErrorUbicacion, xFromBin));
+
+        LineNo := 10001;
+        ItemJnlLineLast.Reset;
+        ItemJnlLineLast.setrange("Journal Template Name", RecLocation.AppJournalTemplateName);
+        ItemJnlLineLast.setrange("Journal Batch Name", RecLocation.AppJournalBatchName);
+        ItemJnlLineLast.setrange("Location Code", RecBin."Location Code");
+        if ItemJnlLineLast.findlast then
+            LineNo := ItemJnlLineLast."Line No." + 10000;
+
+        ItemJnlLine.init;
+        ItemJnlLine.validate("Item No.", xItemNo);
+        ItemJnlLine."Journal Template Name" := RecLocation.AppJournalTemplateName;
+        ItemJnlLine."Journal Batch Name" := RecLocation.AppJournalBatchName;
+        ItemJnlLine.validate("Location Code", RecBin."Location Code");
+        ItemJnlLine."Entry Type" := ItemJnlLine."Entry Type"::Transfer;
+        ItemJnlLine.validate("New Location Code", RecBin."Location Code");
+        ItemJnlLine."Line No." := LineNo;
+        ItemJnlLine.validate(ItemJnlLine."Posting Date", workdate);
+        ItemJnlLine.insert;
+
+        ItemJnlLine."Source Code" := 'RECLAS.JNL';
+        ItemJnlLine."Document No." := 'MOVE';
+
+        ItemJnlLine.validate("Bin Code", xFromBin);
+
+        Clear(RecBin);
+        RecBin.SetRange(Code, xToBin);
+        IF NOT RecBin.FindFirst() THEN Error(StrSubstNo(lblErrorUbicacion, xToBin));
+
+        ItemJnlLine.validate(Quantity, xQty);
+        ItemJnlLine."New Bin Code" := xToBin;
+
+
+        //WhseJnlLine.Resource := Resource;
+
+        ItemJnlLine.modify;
+
+
+        if (xTrackNo <> '') then begin
+            if ReservationEntryLast.findlast then
+                LineNoReserv := ReservationEntryLast."Entry No." + 1
+            else
+                LineNoReserv := 1;
+
+
+            ReservationEntry.init;
+            ReservationEntry."Entry No." := LineNoReserv;
+            ReservationEntry."Item No." := ItemJnlLine."Item No.";// xItemNo;
+            ReservationEntry."Reservation Status" := ReservationEntry."Reservation Status"::Prospect;
+            ReservationEntry."Location Code" := RecBin."Location Code";
+            ReservationEntry."Quantity (Base)" := -xQty;
+            ReservationEntry."Source Type" := 83;
+            ReservationEntry."Source Subtype" := 4;
+            ReservationEntry."Source ID" := RecLocation.AppJournalTemplateName;
+            ReservationEntry."Source Batch Name" := RecLocation.AppJournalBatchName;
+            ReservationEntry."Source Ref. No." := LineNo;
+            ReservationEntry."Qty. per Unit of Measure" := 1;
+            ReservationEntry.Validate("Qty. to Handle (Base)", -xQty);
+            ReservationEntry.Validate(Quantity, -xQty);
+            ReservationEntry.Validate("Qty. to Invoice (Base)", -xQty);
+
+            sTipo := TipoSeguimientoProducto(xItemNo);
+            /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
+
+            if ((sTipo = 1) OR (sTipo = 3) OR (sTipo = 4) or (sTipo = 6)) THEN begin
+                ReservationEntry."New Lot No." := xLotNo;
+                ReservationEntry."Lot No." := xLotNo;
+            end;
+
+            if ((sTipo = 2) OR (sTipo = 3) OR (sTipo = 5) or (sTipo = 6)) THEN begin
+                ReservationEntry."Serial No." := xSerialNo;
+                ReservationEntry."New Serial No." := xSerialNo;
+            end;
+
+            if ((sTipo = 4) OR (sTipo = 5) OR (sTipo = 6)) THEN begin
+                ReservationEntry."Package No." := xPackageNo;
+                ReservationEntry."New Package No." := newPackageNo;
+            end;
+
+            /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
+            case sTipo of
+                1:
+                    ReservationEntry."Item Tracking" := ReservationEntry."Item Tracking"::"Lot No.";
+                2:
+                    ReservationEntry."Item Tracking" := ReservationEntry."Item Tracking"::"Serial No.";
+                3:
+                    ReservationEntry."Item Tracking" := ReservationEntry."Item Tracking"::"Lot and Serial No.";
+                4:
+                    ReservationEntry."Item Tracking" := ReservationEntry."Item Tracking"::"Lot and Package No.";
+                5:
+                    ReservationEntry."Item Tracking" := ReservationEntry."Item Tracking"::"Serial and Package No.";
+                6:
+                    ReservationEntry."Item Tracking" := ReservationEntry."Item Tracking"::"Lot and Serial and Package No.";
+            end;
+
+            ReservationEntry.insert;
+
+        end;
+
+        //Commit();
+
+        ItemJnlLine.reset;
+        ItemJnlLine.SETRANGE("Document No.", 'MOVE');
+        ItemJnlLine.SETRANGE("New Bin Code", '=%1', xToBin);
+        IF ItemJnlLine.FindSet() then begin
+            //Registrar
+            CODEUNIT.Run(CODEUNIT::"Item Jnl.-Post Batch", ItemJnlLine);
+
+
         end ELSE
             Error(lblErrorMover);
 
