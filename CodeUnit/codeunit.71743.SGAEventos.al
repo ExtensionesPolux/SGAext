@@ -34,8 +34,8 @@ codeunit 71743 "SGA Eventos"
 
         WhseReceiptLine2.reset;
         WhseReceiptLine2.SetRange("No.", WhseReceiptLine."No.");
-        WhseReceiptLine2.SetRange("Line No.", WhseReceiptLine."Line No.");
-        IF NOT WhseReceiptLine2.Findfirst then exit;
+        //WhseReceiptLine2.SetRange("Line No.", WhseReceiptLine."Line No.");
+        IF NOT WhseReceiptLine2.FindSet() then exit;
 
         WarehouseSetup.Reset;
         IF NOT WarehouseSetup.Findfirst then exit;
@@ -50,9 +50,14 @@ codeunit 71743 "SGA Eventos"
         TrackLine.SetRange("Variant Code", WhseReceiptLine2."Variant Code");
         TrackLine.CalcSums("Qty. to Handle", "Qty. to Handle (Base)");
 
-        WhseReceiptLine2."Qty. to Receive" := TrackLine."Qty. to Handle";
-        WhseReceiptLine2."Qty. to Receive (Base)" := TrackLine."Qty. to Handle (Base)";
-        WhseReceiptLine2.Modify;
+        repeat
+
+            WhseReceiptLine2."Qty. to Receive" := TrackLine."Qty. to Handle";
+            WhseReceiptLine2."Qty. to Receive (Base)" := TrackLine."Qty. to Handle (Base)";
+            WhseReceiptLine2.Modify;
+
+        until WhseReceiptLine2.Next() = 0;
+
     end;
 
 
@@ -67,8 +72,8 @@ codeunit 71743 "SGA Eventos"
     begin
         WhseReceiptLine2.reset;
         WhseReceiptLine2.SetRange("No.", WarehouseReceiptLine."No.");
-        WhseReceiptLine2.SetRange("Line No.", WarehouseReceiptLine."Line No.");
-        IF NOT WhseReceiptLine2.Findfirst then exit;
+        //WhseReceiptLine2.SetRange("Line No.", WarehouseReceiptLine."Line No.");
+        IF NOT WhseReceiptLine2.FindSet() then exit;
 
         WarehouseSetup.Reset;
         IF NOT WarehouseSetup.Findfirst then exit;
@@ -83,9 +88,14 @@ codeunit 71743 "SGA Eventos"
         TrackLine.SetRange("Variant Code", WhseReceiptLine2."Variant Code");
         TrackLine.CalcSums("Qty. to Handle", "Qty. to Handle (Base)");
 
-        WhseReceiptLine2."Qty. to Receive" := TrackLine."Qty. to Handle";
-        WhseReceiptLine2."Qty. to Receive (Base)" := TrackLine."Qty. to Handle (Base)";
-        WhseReceiptLine2.Modify;
+        repeat
+
+            WhseReceiptLine2."Qty. to Receive" := TrackLine."Qty. to Handle";
+            WhseReceiptLine2."Qty. to Receive (Base)" := TrackLine."Qty. to Handle (Base)";
+            WhseReceiptLine2.Modify;
+
+        until WhseReceiptLine2.Next() = 0;
+
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Get Source Doc. Outbound", 'OnAfterCreateWhseShipmentHeaderFromWhseRequest', '', false, false)]
