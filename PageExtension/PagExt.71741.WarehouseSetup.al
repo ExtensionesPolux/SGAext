@@ -106,6 +106,12 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
 
                         ApplicationArea = all;
                     }*/
+
+                    field("Lote unico por ubicación"; Rec."Lote unico por ubicacion")
+                    {
+                        ToolTip = 'Do not allow 2 lots in one bin', comment = 'ESP="No permitir 2 lotes en una ubicación"';
+                        ApplicationArea = all;
+                    }
                 }
 
                 group(AppEnviosRecepciones)

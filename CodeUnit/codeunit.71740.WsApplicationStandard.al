@@ -4239,6 +4239,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         WhseItemTrackingLineLast: record "Whse. Item Tracking Line";
         LineNo: Integer;
 
+        QueryLotInventory: Query "Lot Numbers by Bin";
+        RecWarehouseSetup: Record "Warehouse Setup";
+
         sTipo: Integer;
 
 
@@ -4330,6 +4333,16 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 WhseItemTrackingLine."Lot No." := xLotNo;
                 WhseItemTrackingLine."Expiration Date" := Caducidad(xLotNo, xItemNo);
                 WhseItemTrackingLine."New Expiration Date" := WhseItemTrackingLine."Expiration Date";
+
+                //No permitir mover 2 lotes a una misma ubicación si esta parametrizada la opción
+                RecWarehouseSetup.get();
+                if (RecWarehouseSetup."Lote unico por ubicacion") then begin
+                    clear(QueryLotInventory);
+                    QueryLotInventory.SetRange(QueryLotInventory.Bin_Code, xToBin);
+                    QueryLotInventory.SetFilter(QueryLotInventory.Lot_No, '<>%1', xLotNo);
+                    QueryLotInventory.Open();
+                    IF QueryLotInventory.READ then ERROR(lblErrorLoteUnicoUbicacion);
+                end;
             end;
 
             if ((sTipo = 2) OR (sTipo = 3) OR (sTipo = 5) or (sTipo = 6)) THEN begin
@@ -4364,8 +4377,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
-
-
     procedure AppCreateReclassWarehouse(xLocation: Text; xFromBin: code[20]; xToBin: code[20]; xQty: decimal; xTrackNo: code[20]; xResourceNo: code[20]; xItemNo: code[20]; xLotNo: Text; xSerialNo: Text; xPackageNo: Text; newPackageNo: Text);
     var
         RecLocation: Record Location;
@@ -4376,6 +4387,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         ReservationEntry: Record "Reservation Entry";
         ReservationEntryLast: Record "Reservation Entry";
+
+        QueryLotInventory: Query "Lot Numbers by Bin";
+        RecWarehouseSetup: Record "Warehouse Setup";
 
         //WhseItemTrackingLine: record "Whse. Item Tracking Line";
         //WhseItemTrackingLineLast: record "Whse. Item Tracking Line";
@@ -4396,6 +4410,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         if (RecLocation.AppJournalTemplateName) = '' then Error(lblErrorReclasif);
         if (RecLocation.AppJournalBatchName) = '' then Error(lblErrorReclasif);
+
+
+
+
 
 
         /*ItemJnlTemplate.reset;
@@ -4484,6 +4502,17 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 ReservationEntry."Lot No." := xLotNo;
                 ReservationEntry."Expiration Date" := Caducidad(xLotNo, xItemNo);
                 ReservationEntry."New Expiration Date" := ReservationEntry."Expiration Date";
+
+                //No permitir mover 2 lotes a una misma ubicación si esta parametrizada la opción
+                RecWarehouseSetup.get();
+                if (RecWarehouseSetup."Lote unico por ubicacion") then begin
+                    clear(QueryLotInventory);
+                    QueryLotInventory.SetRange(QueryLotInventory.Bin_Code, xToBin);
+                    QueryLotInventory.SetFilter(QueryLotInventory.Lot_No, '<>%1', xLotNo);
+                    QueryLotInventory.Open();
+                    IF QueryLotInventory.READ then ERROR(lblErrorLoteUnicoUbicacion);
+                end;
+
             end;
 
             if ((sTipo = 2) OR (sTipo = 3) OR (sTipo = 5) or (sTipo = 6)) THEN begin
@@ -7092,6 +7121,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         lblErrorLoteInternoNoExiste: Label 'Internal Lot No %1 was not found in the system', Comment = 'ESP=No se ha encontrado el lote interno %1 en el sistema';
         lblErrorSerieInternoNoExiste: Label 'Internal Serial No %1 was not found in the system', Comment = 'ESP=No se ha encontrado el serie interno %1 en el sistema';
+
+        lblErrorLoteUnicoUbicacion: Label 'A Lot already exists at the destination bin', Comment = 'ESP=Ya existe otro lote en la ubicación de destino';
 
         lblErrorRegistrar: Label 'Error posting', Comment = 'ESP=Error al registrar';
         lblErrorAlmacen: Label 'App Warehouse not defined', comment = 'ESP=No se ha definido el almacén de la App';

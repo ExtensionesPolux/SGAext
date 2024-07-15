@@ -120,6 +120,13 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup" //AVA 20240516
             DataClassification = ToBeClassified;
             Caption = 'Without Package Code', Comment = 'ESP=Código Sin Paquete';
         }
+
+        field(71782; "Lote unico por ubicacion"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Single lot per bin', Comment = 'ESP=Lote único por ubicación';
+
+        }
     }
 
 }
