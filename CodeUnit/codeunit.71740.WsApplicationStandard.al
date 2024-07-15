@@ -2312,7 +2312,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                                 IF (xContenedor = '') THEN ERROR(lblErrorLote);
                             END;
                         end;
-                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
                         Crear_Reserva(xContenedor, '', jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
                     end;
                 2://Serie
@@ -2358,12 +2358,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                             foreach vTokenSerie in vArraySeries do begin
                                 vJsonObjectSerie := vTokenSerie.AsObject();
                                 jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
-                                Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                                Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
                                 Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
                                 Crear_Reserva(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
                             end;
                         end else begin
-                            Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                            Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
                             jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
                             Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
                             Crear_Reserva(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
@@ -2384,7 +2384,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
                         IF (jPaquete = '') THEN jPaquete := RecWhseSetup."Codigo Sin Paquete";
 
-                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
                         Crear_Reserva(xContenedor, '', jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecWhseReceiptLine, xTipoSeguimiento, FechaCaducidad);
 
                     end;
@@ -2427,7 +2427,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                             END;
                         end;
 
-                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
 
                         jMultiSerie := DatoJsonBoolean(VJsonObjectContenedor, 'Multiserie');
 
@@ -2636,7 +2636,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;*/
 
-    local procedure Crear_Lote(xLotNo: Text; xItemNo: Text; xQuantity: Decimal; xAlbaran: Text; xVendorLotNo: Text)
+    local procedure Crear_Lote(xLotNo: Text; xItemNo: Text; xQuantity: Decimal; xAlbaran: Text; xVendorLotNo: Text; xFechaCaducidad: Date)
     var
         RecLote: Record "Lot No. Information";
         RecItem: Record Item;
@@ -2660,6 +2660,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 RecLote."Lote Proveedor" := xVendorLotNo
             else
                 RecLote."Lote Proveedor" := xAlbaran;
+
+            if xFechaCaducidad <> 0D then
+                RecLote."Fecha Caducidad" := xFechaCaducidad;
+
 
             RecLote.INSERT;
 
@@ -2791,8 +2795,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 end;
         end;
 
-        if (xFechaCaducidad <> 0D) THEN
+        if (xFechaCaducidad <> 0D) THEN BEGIN
             RecReservationEntry."Expiration Date" := xFechaCaducidad;
+            RecReservationEntry."New Expiration Date" := xFechaCaducidad;
+        END;
 
         RecReservationEntry.INSERT;
     end;
@@ -3446,7 +3452,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                                 xContenedor := jLote;
                             END;
                         end;
-                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
                         Crear_Reserva_Sub(xContenedor, '', jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
                     end;
                 2://Serie
@@ -3493,12 +3499,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                             foreach vTokenSerie in vArraySeries do begin
                                 vJsonObjectSerie := vTokenSerie.AsObject();
                                 jSerie := DatoJsonTexto(vJsonObjectSerie, 'SerialNo');
-                                Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                                Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
                                 Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
                                 Crear_Reserva_Sub(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
                             end;
                         end else begin
-                            Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                            Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
                             jSerie := DatoJsonTexto(VJsonObjectContenedor, 'SerialNo');
                             Crear_Serie(jSerie, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
                             Crear_Reserva_Sub(xContenedor, jSerie, jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
@@ -3520,7 +3526,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
                         IF (jPaquete = '') THEN jPaquete := RecWhseSetup."Codigo Sin Paquete";
 
-                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
                         Crear_Reserva_Sub(xContenedor, '', jPaquete, jReferencia, jUnidades, jAlbaran, jLoteProveedor, RecPurchaseLine, xTipoSeguimiento, FechaCaducidad);
 
                     end;
@@ -3564,7 +3570,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                             END;
                         end;
 
-                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor);
+                        Crear_Lote(xContenedor, jReferencia, jUnidades, jAlbaran, jLoteProveedor, FechaCaducidad);
 
                         jMultiSerie := DatoJsonBoolean(VJsonObjectContenedor, 'Multiserie');
 
@@ -3757,8 +3763,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                 end;
         end;
 
-        if (xFechaCaducidad <> 0D) THEN
+        if (xFechaCaducidad <> 0D) THEN BEGIN
             RecReservationEntry."Expiration Date" := xFechaCaducidad;
+            RecReservationEntry."New Expiration Date" := xFechaCaducidad;
+        END;
 
         RecReservationEntry.INSERT;
     end;
@@ -4320,6 +4328,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             if ((sTipo = 1) OR (sTipo = 3) OR (sTipo = 4) or (sTipo = 6)) THEN begin
                 WhseItemTrackingLine."New Lot No." := xLotNo;
                 WhseItemTrackingLine."Lot No." := xLotNo;
+                WhseItemTrackingLine."Expiration Date" := Caducidad(xLotNo, xItemNo);
+                WhseItemTrackingLine."New Expiration Date" := WhseItemTrackingLine."Expiration Date";
             end;
 
             if ((sTipo = 2) OR (sTipo = 3) OR (sTipo = 5) or (sTipo = 6)) THEN begin
@@ -4465,12 +4475,15 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             ReservationEntry.Validate(Quantity, -xQty);
             ReservationEntry.Validate("Qty. to Invoice (Base)", -xQty);
 
+
             sTipo := TipoSeguimientoProducto(xItemNo);
             /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
 
             if ((sTipo = 1) OR (sTipo = 3) OR (sTipo = 4) or (sTipo = 6)) THEN begin
                 ReservationEntry."New Lot No." := xLotNo;
                 ReservationEntry."Lot No." := xLotNo;
+                ReservationEntry."Expiration Date" := Caducidad(xLotNo, xItemNo);
+                ReservationEntry."New Expiration Date" := ReservationEntry."Expiration Date";
             end;
 
             if ((sTipo = 2) OR (sTipo = 3) OR (sTipo = 5) or (sTipo = 6)) THEN begin
@@ -4518,6 +4531,22 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
     end;
 
+
+    local procedure Caducidad(xLotNo: Code[50]; xItemNo: Code[50]): Date
+    var
+        RecLotNo: Record "Lot No. Information";
+    begin
+        Clear(RecLotNo);
+        RecLotNo.SetRange("Item No.", xItemNo);
+        RecLotNo.SetRange("Lot No.", xLotNo);
+        if NOT RecLotNo.FindFirst() THEN ERROR(lblErrorTrackNo);
+
+        IF (RecLotNo."Fecha Caducidad") <> 0D THEN begin
+            exit(RecLotNo."Fecha Caducidad")
+        end ELSE begin
+            exit(0D);
+        end;
+    end;
 
     #endregion
 
@@ -6272,7 +6301,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
             RecLotNo.SetRange("Item No.", lItemNo);
             RecLotNo.SetRange("Lot No.", lLotNo);
             if not RecLotNo.FindFirst() then
-                Crear_Lote(lLotNo, lItemNo, lCantidad, '', '');
+                Crear_Lote(lLotNo, lItemNo, lCantidad, '', '', 0D);
         end;
 
         IF (lSerialNo <> '') then begin

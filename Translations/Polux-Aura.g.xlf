@@ -258,6 +258,11 @@
           <note from="Developer" annotates="general" priority="2">ESP="El producto %1 no existe"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - Method AnalizarSeguimientoProducto - NamedType lblErrorItem</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - Method 330294467 - NamedType 486645057" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Not exist Reclassification Template</source>
+          <note from="Developer" annotates="general" priority="2">ESP="No existe Libro diario Reclasificación"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - Method AppCreateReclassWarehouse - NamedType lblErrorReclasif</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - Method 1158457578 - NamedType 486645057" size-unit="char" translate="yes" xml:space="preserve">
           <source>Not exist Reclassification Template</source>
           <note from="Developer" annotates="general" priority="2">ESP="No existe Libro diario Reclasificación"</note>
@@ -662,6 +667,11 @@
           <source>On Alert</source>
           <note from="Developer" annotates="general" priority="2">ESP=En Alerta</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field En Alerta - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 411889830 - Field 3461195259 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
+          <source>Expiration Date</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Fecha Caducidad</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field Fecha Caducidad - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 3002765613 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Receipt Date</source>

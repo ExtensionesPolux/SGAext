@@ -33,6 +33,10 @@ pageextension 71742 "Lot No Information Card" extends "Lot No. Information Card"
             {
                 ApplicationArea = All;
             }
+            field("Fecha Caducidad"; Rec."Fecha Caducidad")
+            {
+                ApplicationArea = All;
+            }
 
 
         }

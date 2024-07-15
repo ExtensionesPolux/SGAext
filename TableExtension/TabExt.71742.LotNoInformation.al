@@ -46,6 +46,11 @@ tableextension 71742 "Lot No Information" extends "Lot No. Information"
             DataClassification = ToBeClassified;
             Caption = 'Vendor', Comment = 'ESP=Proveedor';
         }
+        field(71749; "Fecha Caducidad"; Date)
+        {
+            Caption = 'Expiration Date', Comment = 'ESP=Fecha Caducidad';
+            DataClassification = ToBeClassified;
+        }
 
     }
 }
