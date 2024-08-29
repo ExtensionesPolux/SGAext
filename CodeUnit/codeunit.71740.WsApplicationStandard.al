@@ -4119,7 +4119,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
                     VJsonObjectContenido.Add('Tipo', FormatoNumero(TipoSeguimientoProducto(QueryLotInventory.Item_No)));
                     VJsonObjectContenido.Add('Description', Descripcion_ItemNo(QueryLotInventory.Item_No));
                     VJsonObjectContenido.Add('BinInventory', FormatoNumero(SumQty));
-                    VJsonObjectContenido.Add('Lots', VJsonArrayInventario);
+                    VJsonObjectContenido.Add('Lots', '');
                     VJsonArrayContenido.Add(VJsonObjectContenido.Clone());
                     Clear(VJsonObjectContenido);
                 end;
@@ -5590,6 +5590,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
         bSoloEnAlmacen: Boolean;
 
         iTipoTrack: Integer;
+
+        RecLocation: Record Location;
     begin
 
         RecWarehouseSetup.Get();
@@ -5604,112 +5606,121 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
 
         VJsonObjectTrazabilidad.Add('TrackNo', xTrackNo);
 
-        Clear(QueryLotInventory);
-        case lTipo of
-            'L':
-                begin
-                    QueryLotInventory.SetRange(QueryLotInventory.Lot_No, xTrackNo);
-                end;
-            'S':
-                begin
-                    QueryLotInventory.SetRange(QueryLotInventory.Serial_No, xTrackNo);
-                end;
-            'P':
-                begin
-                    QueryLotInventory.SetRange(QueryLotInventory.Package_No, xTrackNo);
-                end;
-            'I':
-                begin
-                    QueryLotInventory.SetRange(QueryLotInventory.Item_No, xTrackNo);
-                end;
-            else
-        end;
+        Clear(RecLocation);
+        RecLocation.Get(xLocation);
+        if RecLocation."Almacen Avanzado" then begin
 
-        if (xItemNo <> '') then
-            QueryLotInventory.SetRange(QueryLotInventory.Item_No, xItemNo);
 
-        //QueryLotInventory.Open();
-        //Inventario por ubicación
-
-        QueryLotInventory.SetFilter(QueryLotInventory.Location_Code, xLocation);
-
-        Primero := true;
-        Cantidad := 0;
-        QueryLotInventory.Open();
-        WHILE QueryLotInventory.READ DO BEGIN
-            if (Primero) then begin
-                VJsonObjectTrazabilidad.Add('Tipo', lTipo);
-                VJsonObjectTrazabilidad.Add('TipoDesc', Desc_Tipo(lTipo));
-
-                IF ((lTipo = 'P') OR (lTipo = 'L')) THEN begin
-
-                    VJsonObjectTrazabilidad.Add('ItemNo', '');
-                    VJsonObjectTrazabilidad.Add('Description', '');
-                end;
-                IF ((lTipo = 'S') OR (lTipo = 'I')) THEN begin
-                    VJsonObjectTrazabilidad.Add('ItemNo', QueryLotInventory.Item_No);
-                    VJsonObjectTrazabilidad.Add('Description', Descripcion_ItemNo(QueryLotInventory.Item_No));
-                end;
-                Primero := false;
+            Clear(QueryLotInventory);
+            case lTipo of
+                'L':
+                    begin
+                        QueryLotInventory.SetRange(QueryLotInventory.Lot_No, xTrackNo);
+                    end;
+                'S':
+                    begin
+                        QueryLotInventory.SetRange(QueryLotInventory.Serial_No, xTrackNo);
+                    end;
+                'P':
+                    begin
+                        QueryLotInventory.SetRange(QueryLotInventory.Package_No, xTrackNo);
+                    end;
+                'I':
+                    begin
+                        QueryLotInventory.SetRange(QueryLotInventory.Item_No, xTrackNo);
+                    end;
+                else
             end;
 
-            VJsonObjectInventario.Add('ItemNo', QueryLotInventory.Item_No);
-            VJsonObjectInventario.Add('Description', Descripcion_ItemNo(QueryLotInventory.Item_No));
+            if (xItemNo <> '') then
+                QueryLotInventory.SetRange(QueryLotInventory.Item_No, xItemNo);
 
-            iTipoTrack := TipoSeguimientoProducto(QueryLotInventory.Item_No);
-            VJsonObjectInventario.Add('TipoSeguimiento', Format(iTipoTrack));
+            //QueryLotInventory.Open();
+            //Inventario por ubicación
 
-            /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
-            case iTipoTrack of
-                0:
-                    begin
-                        VJsonObjectInventario.Add('TrackNo', '');
-                        VJsonObjectInventario.Add('TipoTrack', 'I');
+            QueryLotInventory.SetFilter(QueryLotInventory.Location_Code, xLocation);
+
+            Primero := true;
+            Cantidad := 0;
+            QueryLotInventory.Open();
+            WHILE QueryLotInventory.READ DO BEGIN
+                if (Primero) then begin
+                    VJsonObjectTrazabilidad.Add('Tipo', lTipo);
+                    VJsonObjectTrazabilidad.Add('TipoDesc', Desc_Tipo(lTipo));
+
+                    IF ((lTipo = 'P') OR (lTipo = 'L')) THEN begin
+
+                        VJsonObjectTrazabilidad.Add('ItemNo', '');
+                        VJsonObjectTrazabilidad.Add('Description', '');
                     end;
-                2, 3, 5, 6:
-                    begin
-                        VJsonObjectInventario.Add('TrackNo', QueryLotInventory.Serial_No);
-                        VJsonObjectInventario.Add('TipoTrack', 'S');
+                    IF ((lTipo = 'S') OR (lTipo = 'I')) THEN begin
+                        VJsonObjectTrazabilidad.Add('ItemNo', QueryLotInventory.Item_No);
+                        VJsonObjectTrazabilidad.Add('Description', Descripcion_ItemNo(QueryLotInventory.Item_No));
                     end;
-                1, 4:
-                    begin
-                        VJsonObjectInventario.Add('TrackNo', QueryLotInventory.Lot_No);
-                        VJsonObjectInventario.Add('TipoTrack', 'L');
-                    end;
+                    Primero := false;
+                end;
 
-            end;
+                VJsonObjectInventario.Add('ItemNo', QueryLotInventory.Item_No);
+                VJsonObjectInventario.Add('Description', Descripcion_ItemNo(QueryLotInventory.Item_No));
 
-            VJsonObjectInventario.Add('LotNo', QueryLotInventory.Lot_No);
-            VJsonObjectInventario.Add('SerialNo', QueryLotInventory.Serial_No);
-            VJsonObjectInventario.Add('PackageNo', QueryLotInventory.Package_No);
+                iTipoTrack := TipoSeguimientoProducto(QueryLotInventory.Item_No);
+                VJsonObjectInventario.Add('TipoSeguimiento', Format(iTipoTrack));
 
-            if (QueryLotInventory.Package_No <> '') then begin
-                if (RecWarehouseSetup."Codigo Sin Paquete" <> '') then begin
-                    if (RecWarehouseSetup."Codigo Sin Paquete" <> QueryLotInventory.Package_No) then begin
+                /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
+                case iTipoTrack of
+                    0:
+                        begin
+                            VJsonObjectInventario.Add('TrackNo', '');
+                            VJsonObjectInventario.Add('TipoTrack', 'I');
+                        end;
+                    2, 3, 5, 6:
+                        begin
+                            VJsonObjectInventario.Add('TrackNo', QueryLotInventory.Serial_No);
+                            VJsonObjectInventario.Add('TipoTrack', 'S');
+                        end;
+                    1, 4:
+                        begin
+                            VJsonObjectInventario.Add('TrackNo', QueryLotInventory.Lot_No);
+                            VJsonObjectInventario.Add('TipoTrack', 'L');
+                        end;
+
+                end;
+
+                VJsonObjectInventario.Add('LotNo', QueryLotInventory.Lot_No);
+                VJsonObjectInventario.Add('SerialNo', QueryLotInventory.Serial_No);
+                VJsonObjectInventario.Add('PackageNo', QueryLotInventory.Package_No);
+
+                if (QueryLotInventory.Package_No <> '') then begin
+                    if (RecWarehouseSetup."Codigo Sin Paquete" <> '') then begin
+                        if (RecWarehouseSetup."Codigo Sin Paquete" <> QueryLotInventory.Package_No) then begin
+                            VJsonObjectInventario.Add('InPackage', FormatoBoolean(True));
+                        end else begin
+                            VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
+                        end;
+                    end ELSE begin
                         VJsonObjectInventario.Add('InPackage', FormatoBoolean(True));
-                    end else begin
-                        VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
                     end;
-                end ELSE begin
-                    VJsonObjectInventario.Add('InPackage', FormatoBoolean(True));
+                END ELSE begin
+                    VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
                 end;
-            END ELSE begin
-                VJsonObjectInventario.Add('InPackage', FormatoBoolean(False));
-            end;
 
 
 
 
-            VJsonObjectInventario.Add('Zone', QueryLotInventory.Zone_Code);
-            VJsonObjectInventario.Add('Bin', QueryLotInventory.Bin_Code);
-            VJsonObjectInventario.Add('BinInventory', FormatoNumero(QueryLotInventory.Sum_Qty_Base));
+                VJsonObjectInventario.Add('Zone', QueryLotInventory.Zone_Code);
+                VJsonObjectInventario.Add('Bin', QueryLotInventory.Bin_Code);
+                VJsonObjectInventario.Add('BinInventory', FormatoNumero(QueryLotInventory.Sum_Qty_Base));
 
-            VJsonArrayInventario.Add(VJsonObjectInventario.Clone());
-            Clear(VJsonObjectInventario);
+                VJsonArrayInventario.Add(VJsonObjectInventario.Clone());
+                Clear(VJsonObjectInventario);
 
-        END;
+            END;
 
-        VJsonObjectTrazabilidad.Add('Bins', VJsonArrayInventario.Clone());
+            VJsonObjectTrazabilidad.Add('Bins', VJsonArrayInventario.Clone());
+
+        end else begin
+
+        end;
 
         QueryLotInventory.Close();
 
