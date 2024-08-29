@@ -1,4 +1,4 @@
-codeunit 71740 WsApplicationStandard //Cambios 2024.02.16
+codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 {
     #region LOGIN
 
