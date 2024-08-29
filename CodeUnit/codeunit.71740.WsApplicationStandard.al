@@ -4166,7 +4166,49 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
         end;
 
-        IF (xItemAnt <> '') THEN begin
+        IF (xItemAnt = '') THEN begin
+
+
+            if (xTipoDato = 'I') THEN begin
+
+                Clear(RecItem);
+                RecItem.SetRange("No.", xItemNo);
+                IF RecItem.FindFirst() then begin
+                    VJsonObjectContenido.Add('Zone', '');
+                    VJsonObjectContenido.Add('Bin', '');
+                    VJsonObjectContenido.Add('ItemNo', xItemNo);
+                    VJsonObjectContenido.Add('Tipo', FormatoNumero(TipoSeguimientoProducto(xItemNo)));
+                    VJsonObjectContenido.Add('Description', Descripcion_ItemNo(xItemNo));
+                    VJsonObjectContenido.Add('BinInventory', FormatoNumero(0));
+                    VJsonObjectContenido.Add('Lots', VJsonArrayInventario);
+                    VJsonArrayContenido.Add(VJsonObjectContenido.Clone());
+                    Clear(VJsonObjectContenido);
+                end else begin
+                    VJsonObjectContenido.Add('Zone', '');
+                    VJsonObjectContenido.Add('Bin', '');
+                    VJsonObjectContenido.Add('ItemNo', xItemAnt);
+                    VJsonObjectContenido.Add('Tipo', FormatoNumero(TipoSeguimientoProducto(xItemAnt)));
+                    VJsonObjectContenido.Add('Description', Descripcion_ItemNo(xItemAnt));
+                    VJsonObjectContenido.Add('BinInventory', FormatoNumero(SumQty));
+                    VJsonObjectContenido.Add('Lots', VJsonArrayInventario);
+                    VJsonArrayContenido.Add(VJsonObjectContenido.Clone());
+                    Clear(VJsonObjectContenido);
+                end;
+
+            end else begin
+                VJsonObjectContenido.Add('Zone', '');
+                VJsonObjectContenido.Add('Bin', '');
+                VJsonObjectContenido.Add('ItemNo', xItemAnt);
+                VJsonObjectContenido.Add('Tipo', FormatoNumero(TipoSeguimientoProducto(xItemAnt)));
+                VJsonObjectContenido.Add('Description', Descripcion_ItemNo(xItemAnt));
+                VJsonObjectContenido.Add('BinInventory', FormatoNumero(SumQty));
+                VJsonObjectContenido.Add('Lots', VJsonArrayInventario);
+                VJsonArrayContenido.Add(VJsonObjectContenido.Clone());
+                Clear(VJsonObjectContenido);
+            end;
+
+
+        end else begin
             VJsonObjectContenido.Add('Zone', '');
             VJsonObjectContenido.Add('Bin', '');
             VJsonObjectContenido.Add('ItemNo', xItemAnt);
@@ -4177,7 +4219,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
             VJsonArrayContenido.Add(VJsonObjectContenido.Clone());
             Clear(VJsonObjectContenido);
         end;
-
 
         QueryLotInventory.Close();
 
