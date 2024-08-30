@@ -127,6 +127,29 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup" //AVA 20240516
             Caption = 'Single lot per bin', Comment = 'ESP=Lote único por ubicación';
 
         }
+
+        field(71790; "Codificacion Personalizada"; Boolean)
+        {
+            Caption = 'Use Product Coding', Comment = 'ESP=Utilizar Codificacion Productos';
+            DataClassification = ToBeClassified;
+        }
+
+        field(71791; "Digitos Producto"; Integer)
+        {
+            Caption = 'Product Digits', Comment = 'ESP=Digitos Producto';
+            DataClassification = ToBeClassified;
+        }
+
+        field(71792; "Digitos Entero"; Integer)
+        {
+            Caption = 'Integer Digits', Comment = 'ESP=Digitos Entero';
+            DataClassification = ToBeClassified;
+        }
+        field(71793; "Digitos Decimal"; Integer)
+        {
+            Caption = 'Decimal Digits', Comment = 'ESP=Digitos Decimal';
+            DataClassification = ToBeClassified;
+        }
     }
 
 }

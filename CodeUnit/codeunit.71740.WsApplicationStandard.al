@@ -64,6 +64,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         VJsonObjectRecurso.Add('UsarLoteProveedor', FormatoBoolean(RecWarehouseSetup."Usar Lote Proveedor"));
         VJsonObjectRecurso.Add('LoteAutomatico', FormatoBoolean(RecWarehouseSetup."Lote Automatico"));
 
+        VJsonObjectRecurso.Add('CodificacionPersonalizada', FormatoBoolean(RecWarehouseSetup."Codificacion Personalizada"));
+        VJsonObjectRecurso.Add('DigitosProducto', FormatoNumero(RecWarehouseSetup."Digitos Producto"));
+        VJsonObjectRecurso.Add('DigitosEntero', FormatoNumero(RecWarehouseSetup."Digitos Entero"));
+        VJsonObjectRecurso.Add('DigitosDecimal', FormatoNumero(RecWarehouseSetup."Digitos Decimal"));
+
         if vAlmacenEncontrado then begin
 
             RecLocation.CalcFields(RecLocation."Tiene Ubicaciones");

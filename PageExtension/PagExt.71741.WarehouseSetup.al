@@ -122,9 +122,30 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
-                    field("Cantidad recepcion a cero"; rec."Cantidad recepcion a cero")
+                    field("Cantidad recepcion a cero"; Rec."Cantidad recepcion a cero")
                     {
                         ApplicationArea = All;
+                    }
+                }
+
+                group(AppCodificacionAltas)
+                {
+                    Caption = 'New product coding', Comment = 'ESP=Codificación productos altas';
+                    field("Codificacion Personalizada"; Rec."Codificacion Personalizada")
+                    {
+                        ApplicationArea = all;
+                    }
+                    field("Digitos Producto"; Rec."Digitos Producto")
+                    {
+                        ApplicationArea = all;
+                    }
+                    field("Digitos Entero"; Rec."Digitos Entero")
+                    {
+                        ApplicationArea = all;
+                    }
+                    field("Digitos Decimal"; Rec."Digitos Decimal")
+                    {
+                        ApplicationArea = all;
                     }
                 }
 
