@@ -64,6 +64,12 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorCodSeguimiento</note>
           <target>No se ha indicado código seguimiento producto para la referencia %1</target>
         </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 2335270310" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal Template Name not define on Location</source>
+          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el diario en el almacén</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorDiarioAlm</note>
+          <target>No se ha definido el diario en el almacén</target>
+        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 951021725" size-unit="char" translate="yes" xml:space="preserve">
           <source>Journal Template Name not define on Warehouse Setup</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el diario inventario en la configuración de almacén</note>
@@ -105,6 +111,18 @@
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado el lote interno %1 en el sistema</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLoteInternoNoExiste</note>
           <target>No se ha encontrado el lote interno %1 en el sistema</target>
+        </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 1551987678" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Lot No not defined</source>
+          <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el lote de proveedor</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLoteProveedor</note>
+          <target>No se ha definido el lote de proveedor</target>
+        </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 3446054867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A Lot already exists at the destination bin</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Ya existe otro lote en la ubicación de destino</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorLoteUnicoUbicacion</note>
+          <target>Ya existe otro lote en la ubicación de destino</target>
         </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2170364747" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot No. has not been indicated</source>
@@ -292,6 +310,12 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - Method AnalizarSeguimientoProducto - NamedType lblErrorItem</note>
           <target>El producto %1 no existe</target>
         </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - Method 330294467 - NamedType 486645057" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Not exist Reclassification Template</source>
+          <note from="Developer" annotates="general" priority="2">ESP="No existe Libro diario Reclasificación"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - Method AppCreateReclassWarehouse - NamedType lblErrorReclasif</note>
+          <target>No existe Libro diario Reclasificación</target>
+        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - Method 1158457578 - NamedType 486645057" size-unit="char" translate="yes" xml:space="preserve">
           <source>Not exist Reclassification Template</source>
           <note from="Developer" annotates="general" priority="2">ESP="No existe Libro diario Reclasificación"</note>
@@ -303,10 +327,10 @@
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">Page AlertaFactBox - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 1377536918 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 367041862 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Alertas</source>
           <note from="Developer" annotates="general" priority="2"/>
-          <note from="Xliff Generator" annotates="general" priority="3">Page AlertaSerieFactBox - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page AlertaRegFactBox - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1550665627 - Control 3891454143 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Almacen</source>
@@ -454,6 +478,23 @@
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Phys_Inv_Order_Laqtia - Action Diario - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 3013621822 - Control 367041862 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3013621822">
+          <source>Alerta</source>
+          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Posted Whse. Receipt - Control AlertaRegFactBox - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2976122562 - Control 441647185 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 454122980">
+          <source>Alert</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Alerta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension PostedWhseReceiptSubform - Control Alerta - Property ToolTip</note>
+          <target>Alerta</target>
+        </trans-unit>
+        <trans-unit id="PageExtension 2976122562 - Control 3560088070 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 454122980">
+          <source>Photo</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Foto"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension PostedWhseReceiptSubform - Control Foto - Property ToolTip</note>
+          <target>Foto</target>
+        </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>Aplicación SGA</source>
           <note from="Developer" annotates="general" priority="2"/>
@@ -483,6 +524,11 @@
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control Ver cantidad inventario - Property ToolTip</note>
           <target>Ver cantidad inventario</target>
         </trans-unit>
+        <trans-unit id="PageExtension 2447066187 - Control 1622517182 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2447066187">
+          <source>Alerta</source>
+          <note from="Developer" annotates="general" priority="2"/>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Receipt - Control AlertaFactBox - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 1423562403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Aplicación SGA</source>
           <note from="Developer" annotates="general" priority="2"/>
@@ -493,6 +539,12 @@
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control AppActivar - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 3213244558 - Control 3382872103 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
+          <source>New product coding</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Codificación productos altas</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control AppCodificacionAltas - Property Caption</note>
+          <target>Codificación productos altas</target>
+        </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 727291767 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Envíos y Recepciones</source>
           <note from="Developer" annotates="general" priority="2"/>
@@ -502,6 +554,12 @@
           <source>Trazabilidad</source>
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control AppLote - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 3213244558 - Control 106427074 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
+          <source>If vendors lot no empty, use the automatic lot no</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Si lote proveedor vacio, usar lote automático"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Lote aut. si proveedor vacio - Property ToolTip</note>
+          <target>Si lote proveedor vacio, usar lote automático</target>
         </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 453237732 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>Automatic lot no</source>
@@ -515,6 +573,12 @@
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Lote Interno Obligatorio - Property ToolTip</note>
           <target>Todos los productos tienen que llevar un lote interno único</target>
         </trans-unit>
+        <trans-unit id="PageExtension 3213244558 - Control 2094926934 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
+          <source>Do not allow 2 lots in one bin</source>
+          <note from="Developer" annotates="general" priority="2">ESP="No permitir 2 lotes en una ubicación"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Setup - Control Lote unico por ubicación - Property ToolTip</note>
+          <target>No permitir 2 lotes en una ubicación</target>
+        </trans-unit>
         <trans-unit id="PageExtension 3213244558 - Control 4288541063 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3213244558">
           <source>For products with lot no, use the vendors lot no</source>
           <note from="Developer" annotates="general" priority="2">ESP="Para los productos con lote usar el lote del proveedor"</note>
@@ -526,6 +590,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="Leido"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Whse. Phys. Invt. Journal - Control Leido - Property ToolTip</note>
           <target>Leido</target>
+        </trans-unit>
+        <trans-unit id="PageExtension 3284144913 - Control 441647185 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3986227771">
+          <source>Alert</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Alerta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension WhseReceiptSubform - Control Alerta - Property ToolTip</note>
+          <target>Alerta</target>
+        </trans-unit>
+        <trans-unit id="PageExtension 3284144913 - Control 3560088070 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3986227771">
+          <source>Photo</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Foto"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension WhseReceiptSubform - Control Foto - Property ToolTip</note>
+          <target>Foto</target>
         </trans-unit>
         <trans-unit id="TableExtension 2051808746 - Field 421183472 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
           <source>Azure Code</source>
@@ -597,6 +673,18 @@
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppInvJournalTemplateName - Property Caption</note>
           <target>Diario</target>
         </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 4059171314 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Item Journal Batch</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Sección Producto</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppItemJournalBatchName - Property Caption</note>
+          <target>Sección Producto</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 2337220822 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Item Journal Template</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Diario Producto</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppItemJournalTemplateName - Property Caption</note>
+          <target>Diario Producto</target>
+        </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 1935546685 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Journal Batch</source>
           <note from="Developer" annotates="general" priority="2">ESP=Sección</note>
@@ -608,6 +696,18 @@
           <note from="Developer" annotates="general" priority="2">ESP=Diario</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppJournalTemplateName - Property Caption</note>
           <target>Diario</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 1415228622 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Warehouse Journal Batch</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Sección  Almacén</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppWhseJournalBatchName - Property Caption</note>
+          <target>Sección  Almacén</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3891454143 - Field 3125199802 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
+          <source>Warehouse Journal Template</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Diario Almacén</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Location - Field AppWhseJournalTemplateName - Property Caption</note>
+          <target>Diario Almacén</target>
         </trans-unit>
         <trans-unit id="TableExtension 3891454143 - Field 3882650204 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3891454143">
           <source>Add quantity in inventory</source>
@@ -656,6 +756,12 @@
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field En Alerta - Property Caption</note>
           <target>En Alerta</target>
         </trans-unit>
+        <trans-unit id="TableExtension 411889830 - Field 3461195259 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
+          <source>Expiration Date</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Fecha Caducidad</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Lot No Information - Field Fecha Caducidad - Property Caption</note>
+          <target>Fecha Caducidad</target>
+        </trans-unit>
         <trans-unit id="TableExtension 411889830 - Field 3002765613 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Receipt Date</source>
           <note from="Developer" annotates="general" priority="2">ESP=Fecha Recepción</note>
@@ -690,6 +796,18 @@
           <source>App Móvil</source>
           <note from="Developer" annotates="general" priority="2"/>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Phys_Invt_record_Header - Field App - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3493931752 - Field 441647185 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3493931752">
+          <source>Alert</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Alerta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Posted Whse. Receipt Line - Field Alerta - Property Caption</note>
+          <target>Alerta</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3493931752 - Field 3560088070 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3493931752">
+          <source>Photo</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Foto"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Posted Whse. Receipt Line - Field Foto - Property Caption</note>
+          <target>Foto</target>
         </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 1518918944 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
           <source>Copy Allow</source>
@@ -763,11 +881,17 @@
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Journal Line - Field Leido - Property Caption</note>
           <target>Leido</target>
         </trans-unit>
-        <trans-unit id="TableExtension 3213244558 - Field 446492480 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
-          <source>SGA App Location</source>
-          <note from="Developer" annotates="general" priority="2">ESP=Almacén Aplicación SGA</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field App Location - Property Caption</note>
-          <target>Almacén Aplicación SGA</target>
+        <trans-unit id="TableExtension 3159546305 - Field 441647185 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3159546305">
+          <source>Alert</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Alerta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Receipt Line - Field Alerta - Property Caption</note>
+          <target>Alerta</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3159546305 - Field 3560088070 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3159546305">
+          <source>Photo</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Foto"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Receipt Line - Field Foto - Property Caption</note>
+          <target>Foto</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 4287287883 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Reset Shipment quantity</source>
@@ -781,11 +905,41 @@
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Cantidad recepcion a cero - Property Caption</note>
           <target>Crear Recepciones sin cantidad</target>
         </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 2556209660 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>Use Product Coding</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Utilizar Codificacion Productos</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Codificacion Personalizada - Property Caption</note>
+          <target>Utilizar Codificacion Productos</target>
+        </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 3565850144 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Without Package Code</source>
           <note from="Developer" annotates="general" priority="2">ESP=Código Sin Paquete</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Codigo Sin Paquete - Property Caption</note>
           <target>Código Sin Paquete</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 2396139564 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>Decimal Digits</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Digitos Decimal</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Digitos Decimal - Property Caption</note>
+          <target>Digitos Decimal</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 2256780768 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>Integer Digits</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Digitos Entero</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Digitos Entero - Property Caption</note>
+          <target>Digitos Entero</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 2522505329 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>Product Digits</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Digitos Producto</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Digitos Producto - Property Caption</note>
+          <target>Digitos Producto</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 106427074 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>Use Automatic Lot No if empty</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Usar Lote Automático si vacio</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Lote aut. si proveedor vacio - Property Caption</note>
+          <target>Usar Lote Automático si vacio</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 453237732 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Automatic Lot No</source>
@@ -798,6 +952,12 @@
           <note from="Developer" annotates="general" priority="2">ESP=Nº. Lote Obligatorio</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Lote Interno Obligatorio - Property Caption</note>
           <target>Nº. Lote Obligatorio</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 1165208074 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>Single lot per bin</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Lote único por ubicación</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Lote unico por ubicacion - Property Caption</note>
+          <target>Lote único por ubicación</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 1689496183 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Inventory No Serial</source>
@@ -834,6 +994,12 @@
           <note from="Developer" annotates="general" priority="2">ESP=Movimientos</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Ver Movimientos - Property Caption</note>
           <target>Movimientos</target>
+        </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 1395734351 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>See Manufacturing Picking</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Ver Picking Fabricación</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Ver Picking Fab - Property Caption</note>
+          <target>Ver Picking Fabricación</target>
         </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 606050021 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>See Receipt</source>
