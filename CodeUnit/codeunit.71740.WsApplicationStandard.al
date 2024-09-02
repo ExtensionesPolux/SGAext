@@ -1925,14 +1925,16 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
                 VJsonObjectLines.Add('TipoSeguimimento', Format(TipoSeguimientoProducto(RecWhsReceiptLine."Item No.")));
                 VJsonObjectLines.Add('LoteInternoObligatorio', FormatoBoolean(RecWarehouseSetup."Lote Interno Obligatorio"));
 
-                Clear(RecItem);
+                VJsonObjectLines.Add('Caducidad', FormatoBoolean(Tiene_caducidad(RecWhsReceiptLine."Item No.")));
+
+                /*Clear(RecItem);
                 RecItem.Get(RecWhsReceiptLine."Item No.");
                 if (RecItem."Item Tracking Code" <> '') then begin
                     clear(RecItemTrackingCode);
                     RecItemTrackingCode.Get(RecItem."Item Tracking Code");
                     VJsonObjectLines.Add('Caducidad', FormatoBoolean(RecItemTrackingCode."Man. Expir. Date Entry Reqd."));
                 end else
-                    VJsonObjectLines.Add('Caducidad', FormatoBoolean(false));
+                    VJsonObjectLines.Add('Caducidad', FormatoBoolean(false));*/
 
 
                 VJsonObjectLines.Add('ItemReference', Buscar_Referencia_Cruzada(RecWhsReceiptLine."Item No.", ''));
@@ -4019,16 +4021,32 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
                             begin
                                 VJsonObjectInventario.Add('TrackNo', '');
                                 VJsonObjectInventario.Add('TipoTrack', 'I');
+                                VJsonObjectInventario.Add('UseExpiration', FormatoBoolean(False));
+                                VJsonObjectInventario.Add('Expiration', '');
                             end;
                         2, 3, 5, 6:
                             begin
                                 VJsonObjectInventario.Add('TrackNo', QueryLotInventory.Serial_No);
                                 VJsonObjectInventario.Add('TipoTrack', 'S');
+                                IF (Tiene_Caducidad(QueryLotInventory.Item_No)) THEN begin
+                                    VJsonObjectInventario.Add('UseExpiration', FormatoBoolean(True));
+                                    VJsonObjectInventario.Add('Expiration', FormatoFecha(Caducidad_Mov_Almacen(QueryLotInventory.Item_No, '', QueryLotInventory.Serial_No)));
+                                end ELSE BEGIN
+                                    VJsonObjectInventario.Add('UseExpiration', FormatoBoolean(False));
+                                    VJsonObjectInventario.Add('Expiration', '');
+                                END;
                             end;
                         1, 4:
                             begin
                                 VJsonObjectInventario.Add('TrackNo', QueryLotInventory.Lot_No);
                                 VJsonObjectInventario.Add('TipoTrack', 'L');
+                                IF (Tiene_Caducidad(QueryLotInventory.Item_No)) THEN begin
+                                    VJsonObjectInventario.Add('UseExpiration', FormatoBoolean(True));
+                                    VJsonObjectInventario.Add('Expiration', FormatoFecha(Caducidad_Mov_Almacen(QueryLotInventory.Item_No, QueryLotInventory.Lot_No, '')));
+                                end ELSE BEGIN
+                                    VJsonObjectInventario.Add('UseExpiration', FormatoBoolean(False));
+                                    VJsonObjectInventario.Add('Expiration', '');
+                                END;
                             end;
 
                     end;
@@ -4377,7 +4395,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
             if ((sTipo = 1) OR (sTipo = 3) OR (sTipo = 4) or (sTipo = 6)) THEN begin
                 WhseItemTrackingLine."New Lot No." := xLotNo;
                 WhseItemTrackingLine."Lot No." := xLotNo;
-                WhseItemTrackingLine."Expiration Date" := Caducidad(xLotNo, xItemNo);
+                WhseItemTrackingLine."Expiration Date" := Caducidad_Ficha_Lote(xLotNo, xItemNo);
                 WhseItemTrackingLine."New Expiration Date" := WhseItemTrackingLine."Expiration Date";
 
                 //No permitir mover 2 lotes a una misma ubicación si esta parametrizada la opción
@@ -4546,7 +4564,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
             if ((sTipo = 1) OR (sTipo = 3) OR (sTipo = 4) or (sTipo = 6)) THEN begin
                 ReservationEntry."New Lot No." := xLotNo;
                 ReservationEntry."Lot No." := xLotNo;
-                ReservationEntry."Expiration Date" := Caducidad(xLotNo, xItemNo);
+                ReservationEntry."Expiration Date" := Caducidad_Ficha_Lote(xLotNo, xItemNo);
                 ReservationEntry."New Expiration Date" := ReservationEntry."Expiration Date";
 
                 //No permitir mover 2 lotes a una misma ubicación si esta parametrizada la opción
@@ -4607,7 +4625,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
     end;
 
 
-    local procedure Caducidad(xLotNo: Code[50]; xItemNo: Code[50]): Date
+    local procedure Caducidad_Ficha_Lote(xLotNo: Code[50]; xItemNo: Code[50]): Date
     var
         RecLotNo: Record "Lot No. Information";
     begin
@@ -4621,6 +4639,32 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         end ELSE begin
             exit(0D);
         end;
+    end;
+
+
+    local procedure Caducidad_Mov_Almacen(xItemNo: Code[20]; xLotNo: Code[20]; xSerialNo: Code[20]): Date
+    var
+        RecWarehouseEntry: Record "Warehouse Entry";
+        vFecha: Date;
+    begin
+
+        Evaluate(vFecha, '31/12/2999');
+
+        if ((xLotNo = '') and (xSerialNo = ''))
+            then exit(vFecha);
+
+        Clear(RecWarehouseEntry);
+        RecWarehouseEntry.SetRange("Item No.", xItemNo);
+        if (xLotNo <> '') then
+            RecWarehouseEntry.SetRange("Lot No.", xLotNo);
+        if (xSerialNo <> '') then
+            RecWarehouseEntry.SetRange("Serial No.", xSerialNo);
+        RecWarehouseEntry.SetFilter(Quantity, '>%1', 0);
+        if RecWarehouseEntry.FindLast() then
+            exit(RecWarehouseEntry."Expiration Date");
+
+        exit(vFecha)
+
     end;
 
     #endregion
@@ -6980,7 +7024,20 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
     END;
 
 
-
+    procedure Tiene_Caducidad(xItemNo: Code[20]): Boolean
+    var
+        RecItem: Record Item;
+        RecItemTrackingCode: Record "Item Tracking Code";
+    begin
+        Clear(RecItem);
+        RecItem.Get(xItemNo);
+        if (RecItem."Item Tracking Code" <> '') then begin
+            clear(RecItemTrackingCode);
+            RecItemTrackingCode.Get(RecItem."Item Tracking Code");
+            exit(RecItemTrackingCode."Man. Expir. Date Entry Reqd.")
+        end else
+            exit(false);
+    end;
 
 
     #endregion
