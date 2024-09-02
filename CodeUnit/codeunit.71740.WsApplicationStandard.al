@@ -4648,10 +4648,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         vFecha: Date;
     begin
 
-        Evaluate(vFecha, '31/12/2999');
+        Evaluate(vFecha, '2999-31-12');
 
         if ((xLotNo = '') and (xSerialNo = ''))
-            then exit(vFecha);
+            then
+            exit(vFecha);
 
         Clear(RecWarehouseEntry);
         RecWarehouseEntry.SetRange("Item No.", xItemNo);
