@@ -5212,6 +5212,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
                 VJsonObjectLines.Add('Reference', RecWhsShipmentLine."Item No.");
                 VJsonObjectLines.Add('Description', RecWhsShipmentLine.Description);
 
+                VJsonObjectLines.Add('Zone', RecWhsShipmentLine."Zone Code");
+                VJsonObjectLines.Add('Bin', RecWhsShipmentLine."Bin Code");
+
                 VJsonObjectLines.Add('TipoSeguimimento', Format(TipoSeguimientoProducto(RecWhsShipmentLine."Item No.")));
                 VJsonObjectLines.Add('LoteInternoObligatorio', FormatoBoolean(RecWarehouseSetup."Lote Interno Obligatorio"));
 
