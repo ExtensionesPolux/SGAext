@@ -3952,6 +3952,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
 
         Clear(RecBinContent);
+
+
         RecBinContent.SetRange("Location Code", xLocation);
 
         if (xTipoDato = 'L') THEN
