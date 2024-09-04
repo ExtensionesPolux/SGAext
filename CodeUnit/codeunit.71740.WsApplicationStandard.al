@@ -853,6 +853,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
     end;
 
+
     procedure WsEnviarContenedor(xJson: Text): Text
     var
         VJsonObjectDato: JsonObject;
@@ -885,14 +886,23 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         lSourceNo := DatoJsonTexto(VJsonObjectDato, 'SourceNo');
         lSourceLineNo := DatoJsonInteger(VJsonObjectDato, 'SourceLineNo');
 
-        Asignar(lCantidad, lItemNo, lLocation, lLotNo, lSerialNo, lPackageNo, lSourceNo, lSourceLineNo);
 
-        //Modificar cantidad a enviar
-
+        //Comprobar línea
         Clear(RecWhsShipmentLine);
         RecWhsShipmentLine.SetRange("No.", lNo);
         RecWhsShipmentLine.SetRange("Line No.", lLineNo);
         IF NOT RecWhsShipmentLine.FindFirst() THEN exit(lblErrorEnvio);
+
+        if RecWhsShipmentLine."Bin Code" <> '' then begin
+            //Comprobar que existe stock en la ubicación
+            Comprobar_Stock_Ubicacion(lItemNo, lLotNo, lSerialNo, lCantidad, RecWhsShipmentLine."Bin Code");
+        end;
+
+        Asignar(lCantidad, lItemNo, lLocation, lLotNo, lSerialNo, lPackageNo, lSourceNo, lSourceLineNo);
+
+        //Modificar cantidad a enviar
+
+
 
         RecWhsShipmentLine.Validate("Qty. to Ship", RecWhsShipmentLine."Qty. to Ship" + lCantidad);
         RecWhsShipmentLine.Modify();
@@ -6791,6 +6801,33 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
 
 
+    local procedure Comprobar_Stock_Ubicacion(xItemNo: Code[20]; xLotNo: Code[50]; xSerialNo: Code[50]; xCantidad: Decimal; xBinCode: Code[50])
+    var
+        QueryLotInventory: Query "Lot Numbers by Bin";
+    begin
+
+        //Inventario por ubicación
+        Clear(QueryLotInventory);
+        QueryLotInventory.SetFilter(QueryLotInventory.Item_No, '=%1', xItemNo);
+        QueryLotInventory.SetFilter(QueryLotInventory.Bin_Code, '=%1', xBinCode);
+        QueryLotInventory.SetFilter(QueryLotInventory.Sum_Qty_Base, '>%1', xCantidad);
+
+        if (xLotNo <> '') THEN
+            QueryLotInventory.SetRange(QueryLotInventory.Lot_No, xLotNo);
+        if (xSerialNo <> '') THEN
+            QueryLotInventory.SetRange(QueryLotInventory.Serial_No, xSerialNo);
+
+        QueryLotInventory.Open();
+        IF NOT QueryLotInventory.READ THEN ERROR(lblErrorSinStock + xBinCode);
+
+        QueryLotInventory.Close();
+
+        exit;
+
+    end;
+
+
+
 
     /// <summary>
     /// Determina si es un Lote(L), Un Serie(S),Paquete(P), Nulo(N), Item(I)
@@ -7326,5 +7363,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         lblErrorSinSeriePaquete: Label 'Package Serial No not define on Warehouse Setup', comment = 'ESP=No se ha definido el nº de serie del en la configuración de almacén';
 
         lblErrorEnvio: Label 'Shipment Not Found', Comment = 'ESP=No se ha encontrado en envío';
+        lblErrorSinStock: Label 'Out of stock at bin ', Comment = 'ESP=No existe stock en la ubicación ';
 
 }

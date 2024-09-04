@@ -114,8 +114,23 @@
             "numberOfSqlStatements": 10,
             "breakOnNext": "WebServiceClient",
             "userId": "APP AURA"
-        },
-
+        },        
+        {
+            "name": "DEBUG BIOLOGIA PRODUCTION",
+            "type": "al",
+            "request": "attach",
+            "environmentType": "Sandbox",
+            "environmentName": "PRODUCTION",
+            "tenant": "568a486f-4146-47bd-9989-bf917929553e",
+            "breakOnError": "All",
+            "breakOnRecordWrite": "None",
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10,
+            "breakOnNext": "WebServiceClient",
+            "userId": "APP AURA"
+        }
 
 
 
