@@ -223,6 +223,11 @@
           <note from="Developer" annotates="general" priority="2">ESP=No se ha definido el nº de serie del en la configuración de almacén</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSinSeriePaquete</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1185164919 - NamedType 2787068066" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Out of stock at bin </source>
+          <note from="Developer" annotates="general" priority="2">ESP=No existe stock en la ubicación </note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit WsApplicationStandard - NamedType lblErrorSinStock</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1185164919 - NamedType 2273248168" size-unit="char" translate="yes" xml:space="preserve">
           <source>Track No. Not Found</source>
           <note from="Developer" annotates="general" priority="2">ESP=No se ha encontrado la trazabilidad</note>

@@ -5123,6 +5123,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         RecWarehouseActivityLineReg.SetRange("Source No.", RecWarehouseActivityLine."Source No.");
         RecWarehouseActivityLineReg.SetRange("Source Line No.", RecWarehouseActivityLine."Source Line No.");
         //RecWarehouseActivityLineReg.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
+        RecWarehouseActivityLineReg.SetFilter("Line No.", '%1|%2', xLineNoPlace, xLineNoTake);
 
         if RecWarehouseActivityLineReg.FindSet() then
             cuWarehouseActivityRegister.run(RecWarehouseActivityLineReg)
