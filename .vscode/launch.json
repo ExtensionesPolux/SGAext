@@ -83,6 +83,53 @@
             "numberOfSqlStatements": 10,
             "breakOnNext": "WebServiceClient",
             "userId": "BCAPPPREPRODUCCION"
+        },
+        {
+            "name": "BIOLOGIA PRE20240830",
+            "tenant": "568a486f-4146-47bd-9989-bf917929553e",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "PRE20240830",
+            "startupObjectId": 2500,
+            "startupObjectType": "Page",
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "Synchronize"
+        },
+        {
+            "name": "DEBUG BIOLOGIA PRE20240830",
+            "type": "al",
+            "request": "attach",
+            "environmentType": "Sandbox",
+            "environmentName": "PRE20240830",
+            "tenant": "568a486f-4146-47bd-9989-bf917929553e",
+            "breakOnError": "All",
+            "breakOnRecordWrite": "None",
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10,
+            "breakOnNext": "WebServiceClient",
+            "userId": "APP AURA"
+        },        
+        {
+            "name": "DEBUG BIOLOGIA PRODUCTION",
+            "type": "al",
+            "request": "attach",
+            "environmentType": "Sandbox",
+            "environmentName": "PRODUCTION",
+            "tenant": "568a486f-4146-47bd-9989-bf917929553e",
+            "breakOnError": "All",
+            "breakOnRecordWrite": "None",
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10,
+            "breakOnNext": "WebServiceClient",
+            "userId": "APP AURA"
         }
 
 

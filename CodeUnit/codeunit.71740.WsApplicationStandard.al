@@ -1,4 +1,4 @@
-codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
+codeunit 71740 WsApplicationStandard //Cambios 2024.09.10
 {
     #region LOGIN
 
@@ -853,6 +853,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
     end;
 
+
     procedure WsEnviarContenedor(xJson: Text): Text
     var
         VJsonObjectDato: JsonObject;
@@ -885,14 +886,23 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         lSourceNo := DatoJsonTexto(VJsonObjectDato, 'SourceNo');
         lSourceLineNo := DatoJsonInteger(VJsonObjectDato, 'SourceLineNo');
 
-        Asignar(lCantidad, lItemNo, lLocation, lLotNo, lSerialNo, lPackageNo, lSourceNo, lSourceLineNo);
 
-        //Modificar cantidad a enviar
-
+        //Comprobar línea
         Clear(RecWhsShipmentLine);
         RecWhsShipmentLine.SetRange("No.", lNo);
         RecWhsShipmentLine.SetRange("Line No.", lLineNo);
         IF NOT RecWhsShipmentLine.FindFirst() THEN exit(lblErrorEnvio);
+
+        if RecWhsShipmentLine."Bin Code" <> '' then begin
+            //Comprobar que existe stock en la ubicación
+            Comprobar_Stock_Ubicacion(lItemNo, lLotNo, lSerialNo, lCantidad, RecWhsShipmentLine."Bin Code");
+        end;
+
+        Asignar(lCantidad, lItemNo, lLocation, lLotNo, lSerialNo, lPackageNo, lSourceNo, lSourceLineNo);
+
+        //Modificar cantidad a enviar
+
+
 
         RecWhsShipmentLine.Validate("Qty. to Ship", RecWhsShipmentLine."Qty. to Ship" + lCantidad);
         RecWhsShipmentLine.Modify();
@@ -3985,6 +3995,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
 
         Clear(RecBinContent);
+
+
         RecBinContent.SetRange("Location Code", xLocation);
 
         if (xTipoDato = 'L') THEN
@@ -4493,13 +4505,18 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         LineNo: Integer;
         LineNoReserv: Integer;
 
+        pg: page "Item Reclass. Journal";
+
         sTipo: Integer;
 
         ItemJnlRegisterLine: Codeunit "Item Jnl.-Post Line";
         //WhseJnlRegisterLine: codeunit "Whse. Jnl.-Register Line";
-
         txtError: Text;
         lblErrorReclasif: Label 'Not exist Reclassification Template', comment = 'ESP="No existe Libro diario Reclasificación"';
+
+        DimensionSetID: Integer;
+
+        TEX: Record "Tracking Specification";
     begin
 
         Clear(RecLocation);
@@ -4507,11 +4524,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
         if (RecLocation.AppJournalTemplateName) = '' then Error(lblErrorReclasif);
         if (RecLocation.AppJournalBatchName) = '' then Error(lblErrorReclasif);
-
-
-
-
-
 
         /*ItemJnlTemplate.reset;
         ItemJnlTemplate.setrange(Type, ItemJnlTemplate.Type::);
@@ -4539,9 +4551,23 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
             LineNo := ItemJnlLineLast."Line No." + 10000;
 
         ItemJnlLine.init;
-        ItemJnlLine.validate("Item No.", xItemNo);
-        ItemJnlLine."Journal Template Name" := RecLocation.AppJournalTemplateName;
-        ItemJnlLine."Journal Batch Name" := RecLocation.AppJournalBatchName;
+
+        ItemJnlLine.Validate("Journal Template Name", RecLocation.AppJournalTemplateName);
+        ItemJnlLine.Validate("Journal Batch Name", RecLocation.AppJournalBatchName);
+
+        ItemJnlLine.Validate("Item No.", xItemNo);
+
+
+        //Obtener Set de Dimensiones para el producto
+        DimensionSetID := Obtener_Dimension_Set_Id(xItemNo);
+
+        ItemJnlLine.Validate("Dimension Set ID", DimensionSetID);
+        ItemJnlLine.Validate("New Dimension Set ID", DimensionSetID);
+
+
+        //ItemJnlLine.Validate("Dimension Set ID", 12);
+        //ItemJnlLine.Validate("New Dimension Set ID", 12);
+
         ItemJnlLine.validate("Location Code", RecBin."Location Code");
         ItemJnlLine."Entry Type" := ItemJnlLine."Entry Type"::Transfer;
         ItemJnlLine.validate("New Location Code", RecBin."Location Code");
@@ -4560,7 +4586,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
         ItemJnlLine.validate(Quantity, xQty);
         ItemJnlLine."New Bin Code" := xToBin;
-
 
         //WhseJnlLine.Resource := Resource;
 
@@ -4595,10 +4620,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
             /// <returns>Return 1:Lote 2:Serie 3:Lote y Serie 4:Lote y paquete 5: Serie y paquete 6: Lote, serie y paquete, 0: Sin seguimiento</returns>
 
             if ((sTipo = 1) OR (sTipo = 3) OR (sTipo = 4) or (sTipo = 6)) THEN begin
-                ReservationEntry."New Lot No." := xLotNo;
-                ReservationEntry."Lot No." := xLotNo;
-                ReservationEntry."Expiration Date" := Caducidad_Ficha_Lote(xLotNo, xItemNo);
-                ReservationEntry."New Expiration Date" := ReservationEntry."Expiration Date";
+                ReservationEntry.Validate("Lot No.", xLotNo);
+                ReservationEntry.Validate("New Lot No.", xLotNo);
+                //ReservationEntry."Expiration Date" := Caducidad_Ficha_Lote(xLotNo, xItemNo);                
 
                 //No permitir mover 2 lotes a una misma ubicación si esta parametrizada la opción
                 RecWarehouseSetup.get();
@@ -4613,6 +4637,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
             end;
 
             if ((sTipo = 2) OR (sTipo = 3) OR (sTipo = 5) or (sTipo = 6)) THEN begin
+
+
+
                 ReservationEntry."Serial No." := xSerialNo;
                 ReservationEntry."New Serial No." := xSerialNo;
             end;
@@ -4638,6 +4665,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
                     ReservationEntry."Item Tracking" := ReservationEntry."Item Tracking"::"Lot and Serial and Package No.";
             end;
 
+
+            ReservationEntry."Expiration Date" := Caducidad_Mov_Almacen(xItemNo, xLotNo, xSerialNo);
+            ReservationEntry."New Expiration Date" := ReservationEntry."Expiration Date";
+
             ReservationEntry.insert;
 
         end;
@@ -4650,13 +4681,51 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         IF ItemJnlLine.FindSet() then begin
             //Registrar
             CODEUNIT.Run(CODEUNIT::"Item Jnl.-Post Batch", ItemJnlLine);
-
-
         end ELSE
             Error(lblErrorMover);
 
     end;
 
+
+    local procedure Obtener_Dimension_Set_Id(xItemNo: Code[20]): Integer
+    var
+        Item: Record Item;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
+        DimMgt: Codeunit DimensionManagement;
+        DimensionSetID: Integer;
+        DefaultDimension: Record "Default Dimension";
+        DimSetEntry: Record "Dimension Set Entry";
+    begin
+
+        // Obtener dimensiones del artículo
+        DefaultDimension.SetRange("Table ID", DATABASE::Item);
+        DefaultDimension.SetRange("No.", xItemNo);
+        if DefaultDimension.FindSet() then begin
+            repeat
+                Clear(DimSetEntry);
+                DimSetEntry.SetRange("Dimension Code", DefaultDimension."Dimension Code");
+                DimSetEntry.SetRange("Dimension Value Code", DefaultDimension."Dimension Value Code");
+                if DimSetEntry.FindFirst() then begin
+
+                    TempDimSetEntry.Init();
+
+                    TempDimSetEntry."Dimension Set ID" := 1;
+                    TempDimSetEntry."Dimension Code" := DefaultDimension."Dimension Code";
+                    TempDimSetEntry."Dimension Value Code" := DefaultDimension."Dimension Value Code";
+                    TempDimSetEntry."Dimension Value ID" := DimSetEntry."Dimension Value ID";
+                    TempDimSetEntry."Dimension Name" := DimSetEntry."Dimension Name";
+                    TempDimSetEntry."Dimension Value Name" := DimSetEntry."Dimension Value Name";
+
+                    TempDimSetEntry.Insert();
+                end;
+            until DefaultDimension.Next() = 0;
+        end;
+
+        // Crear el nuevo Dimension Set ID o usar uno existente
+        DimensionSetID := DimMgt.GetDimensionSetID(TempDimSetEntry);
+        exit(DimensionSetID);
+
+    end;
 
     local procedure Caducidad_Ficha_Lote(xLotNo: Code[50]; xItemNo: Code[50]): Date
     var
@@ -4678,14 +4747,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
     local procedure Caducidad_Mov_Almacen(xItemNo: Code[20]; xLotNo: Code[20]; xSerialNo: Code[20]): Date
     var
         RecWarehouseEntry: Record "Warehouse Entry";
-        vFecha: Date;
     begin
-
-        Evaluate(vFecha, '2999-31-12');
 
         if ((xLotNo = '') and (xSerialNo = ''))
             then
-            exit(vFecha);
+            exit(0D);
 
         Clear(RecWarehouseEntry);
         RecWarehouseEntry.SetRange("Item No.", xItemNo);
@@ -4697,7 +4763,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         if RecWarehouseEntry.FindLast() then
             exit(RecWarehouseEntry."Expiration Date");
 
-        exit(vFecha)
+        exit(0D)
 
     end;
 
@@ -5090,6 +5156,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         RecWarehouseActivityLineReg.SetRange("Source No.", RecWarehouseActivityLine."Source No.");
         RecWarehouseActivityLineReg.SetRange("Source Line No.", RecWarehouseActivityLine."Source Line No.");
         //RecWarehouseActivityLineReg.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
+        RecWarehouseActivityLineReg.SetFilter("Line No.", '%1|%2', xLineNoPlace, xLineNoTake);
 
         if RecWarehouseActivityLineReg.FindSet() then
             cuWarehouseActivityRegister.run(RecWarehouseActivityLineReg)
@@ -5755,8 +5822,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
         Clear(RecLocation);
         RecLocation.Get(xLocation);
-        if RecLocation."Almacen Avanzado" then begin
-
+        RecLocation.CalcFields("Tiene Ubicaciones");
+        if RecLocation."Almacen Avanzado" or RecLocation."Tiene Ubicaciones" then begin
 
             Clear(QueryLotInventory);
             case lTipo of
@@ -6788,6 +6855,33 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
 
 
 
+    local procedure Comprobar_Stock_Ubicacion(xItemNo: Code[20]; xLotNo: Code[50]; xSerialNo: Code[50]; xCantidad: Decimal; xBinCode: Code[50])
+    var
+        QueryLotInventory: Query "Lot Numbers by Bin";
+    begin
+
+        //Inventario por ubicación
+        Clear(QueryLotInventory);
+        QueryLotInventory.SetFilter(QueryLotInventory.Item_No, '=%1', xItemNo);
+        QueryLotInventory.SetFilter(QueryLotInventory.Bin_Code, '=%1', xBinCode);
+        QueryLotInventory.SetFilter(QueryLotInventory.Sum_Qty_Base, '>%1', xCantidad);
+
+        if (xLotNo <> '') THEN
+            QueryLotInventory.SetRange(QueryLotInventory.Lot_No, xLotNo);
+        if (xSerialNo <> '') THEN
+            QueryLotInventory.SetRange(QueryLotInventory.Serial_No, xSerialNo);
+
+        QueryLotInventory.Open();
+        IF NOT QueryLotInventory.READ THEN ERROR(lblErrorSinStock + xBinCode);
+
+        QueryLotInventory.Close();
+
+        exit;
+
+    end;
+
+
+
 
     /// <summary>
     /// Determina si es un Lote(L), Un Serie(S),Paquete(P), Nulo(N), Item(I)
@@ -7323,5 +7417,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.08.29
         lblErrorSinSeriePaquete: Label 'Package Serial No not define on Warehouse Setup', comment = 'ESP=No se ha definido el nº de serie del en la configuración de almacén';
 
         lblErrorEnvio: Label 'Shipment Not Found', Comment = 'ESP=No se ha encontrado en envío';
+        lblErrorSinStock: Label 'Out of stock at bin ', Comment = 'ESP=No existe stock en la ubicación ';
 
 }
