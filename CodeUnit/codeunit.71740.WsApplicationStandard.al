@@ -1022,6 +1022,25 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
     end;
 
+    procedure WsCrearPicking(xJson: Text): Text
+    var
+        VJsonObjectContenedor: JsonObject;
+        VJsonText: Text;
+        jEnvio: Text;
+        jLinea: Integer;
+    begin
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            ERROR(lblErrorJson);
+
+        jEnvio := DatoJsonTexto(VJsonObjectContenedor, 'No');
+
+        Crear_Picking(jEnvio);
+
+        EXIT('');
+
+
+    end;
+
     procedure WsInventario(xJson: Text): Text
     var
 
@@ -1659,7 +1678,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
     procedure Movimientos_Almacen(xNo: Code[20]; xLocation: Text): Text
     var
-        //RecWarehouseActivityHeader: Record "Warehouse Activity Header";
+        RecWarehouseActivityHeader: Record "Warehouse Activity Header";
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
         RecWarehouseActivityLineAux: Record "Warehouse Activity Line";
 
@@ -1746,6 +1765,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                 VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
                 VJsonObjectLineas.Add('Description', Descripcion_ItemNo(RecWarehouseActivityLine."Item No."));
 
+                VJsonObjectLineas.Add('WarehouseDocument', RecWarehouseActivityLine."Whse. Document No.");
                 VJsonObjectLineas.Add('DocumentType', FORMAT(RecWarehouseActivityLine."Whse. Document Type"));
                 VJsonObjectLineas.Add('DocumentNo', RecWarehouseActivityLine."Source No.");
                 VJsonObjectLineas.Add('DocumentLineNo', RecWarehouseActivityLine."Source Line No.");
@@ -1779,6 +1799,19 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                 VJsonObjectLineas.Add('Quantity', QuitarPunto(Format(RecWarehouseActivityLine.Quantity)));
                 VJsonObjectLineas.Add('QtyToHandle', QuitarPunto(Format(RecWarehouseActivityLine."Qty. to Handle")));
                 VJsonObjectLineas.Add('QtyOutstanding', QuitarPunto(Format(RecWarehouseActivityLine."Qty. Outstanding")));
+
+                Clear(RecWarehouseActivityHeader);
+                RecWarehouseActivityHeader.SetRange("No.", RecWarehouseActivityLine."No.");
+                RecWarehouseActivityHeader.SetRange(Type, RecWarehouseActivityLine."Activity Type");
+                if RecWarehouseActivityHeader.FindFirst() then begin
+                    if RecWarehouseActivityHeader."Resource No" = '' then
+                        VJsonObjectLineas.Add('ResourceNo', '')
+                    ELSE
+                        VJsonObjectLineas.Add('ResourceNo', RecWarehouseActivityHeader."Resource No");
+                end else
+                    VJsonObjectLineas.Add('ResourceNo', '');
+
+
                 VJsonArrayLineas.Add(VJsonObjectLineas.Clone());
 
                 clear(VJsonObjectLineas);
@@ -4034,7 +4067,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                                 VJsonObjectInventario.Add('TrackNo', '');
                                 VJsonObjectInventario.Add('TipoTrack', 'I');
                                 VJsonObjectInventario.Add('UseExpiration', FormatoBoolean(False));
-                                VJsonObjectInventario.Add('Expiration', '');
+                                VJsonObjectInventario.Add('Expiration', FormatoFecha(Caducidad_Mov_Almacen(QueryLotInventory.Item_No, '', '')));
                             end;
                         2, 3, 5, 6:
                             begin
@@ -4045,7 +4078,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                                     VJsonObjectInventario.Add('Expiration', FormatoFecha(Caducidad_Mov_Almacen(QueryLotInventory.Item_No, '', QueryLotInventory.Serial_No)));
                                 end ELSE BEGIN
                                     VJsonObjectInventario.Add('UseExpiration', FormatoBoolean(False));
-                                    VJsonObjectInventario.Add('Expiration', '');
+                                    VJsonObjectInventario.Add('Expiration', FormatoFecha(Caducidad_Mov_Almacen(QueryLotInventory.Item_No, '', '')));
                                 END;
                             end;
                         1, 4:
@@ -4057,7 +4090,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                                     VJsonObjectInventario.Add('Expiration', FormatoFecha(Caducidad_Mov_Almacen(QueryLotInventory.Item_No, QueryLotInventory.Lot_No, '')));
                                 end ELSE BEGIN
                                     VJsonObjectInventario.Add('UseExpiration', FormatoBoolean(False));
-                                    VJsonObjectInventario.Add('Expiration', '');
+                                    VJsonObjectInventario.Add('Expiration', FormatoFecha(Caducidad_Mov_Almacen(QueryLotInventory.Item_No, '', '')));
                                 END;
                             end;
 
@@ -5715,6 +5748,26 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                 end;
             end;
         end;*/
+    end;
+
+    procedure Crear_Picking(xNo: Code[50])
+    var
+        WhseShptHeader: Record "Warehouse Shipment Header";
+        WhseShptLine: Record "Warehouse Shipment Line";
+        WhseShptLineAux: Record "Warehouse Shipment Line";
+        ReleaseWhseShipment: Codeunit "Whse.-Shipment Release";
+    begin
+
+        WhseShptLineAux.SetRange("No.", xNo);
+        IF Not WhseShptLineAux.FindSet() then ERROR(lblErrorNadaQueRegistrar);
+
+        WhseShptLine.Copy(WhseShptLineAux);
+
+        WhseShptHeader.Get(xNo);
+        if WhseShptHeader.Status = WhseShptHeader.Status::Open then
+            ReleaseWhseShipment.Release(WhseShptHeader);
+        WhseShptLineAux.CreatePickDoc(WhseShptLine, WhseShptHeader);
+
     end;
 
 

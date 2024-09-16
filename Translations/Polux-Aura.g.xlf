@@ -483,6 +483,11 @@
           <note from="Developer" annotates="general" priority="2">ESP="Ver cantidad inventario"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control Ver cantidad inventario - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="PageExtension 3547390336 - Control 430480725 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3547390336">
+          <source>Resource No</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Número de Recurso"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Warehouse Pick - Control Resource No - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="PageExtension 2447066187 - Control 1622517182 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2447066187">
           <source>Alerta</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -787,6 +792,11 @@
           <source>Vendor Lot</source>
           <note from="Developer" annotates="general" priority="2">ESP=Lote Proveedor</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SerialNoInformation - Field Lote Proveedor - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 809570257 - Field 430480725 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 809570257">
+          <source>Resource No.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Recurso"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Activity Header - Field Resource No - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1143503822 - Field 4283809525 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1143503822">
           <source>Read</source>
