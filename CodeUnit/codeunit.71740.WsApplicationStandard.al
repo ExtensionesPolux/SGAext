@@ -1763,6 +1763,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10
                 VJsonObjectLineas.Add('SourceDocument', Format(RecWarehouseActivityLine."Source Document"));
 
                 VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
+
+                VJsonObjectLineas.Add('ItemReference', Buscar_Referencia_Cruzada(RecWarehouseActivityLine."Item No.", ''));
+
                 VJsonObjectLineas.Add('Description', Descripcion_ItemNo(RecWarehouseActivityLine."Item No."));
 
                 VJsonObjectLineas.Add('WarehouseDocument', RecWarehouseActivityLine."Whse. Document No.");
@@ -7018,7 +7021,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10
         RecItemReference: Record "Item Reference";
     begin
         clear(RecItemReference);
-        RecItemReference.SetRange("Reference No.", xItem);
+        RecItemReference.SetRange(RecItemReference."Item No.", xItem);
         if (xVendor <> '') then begin
             RecItemReference.SetRange("Reference Type", RecItemReference."Reference Type"::Vendor);
             RecItemReference.SetRange("Reference Type No.", xVendor);
@@ -7026,7 +7029,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10
             RecItemReference.SetRange("Reference Type", RecItemReference."Reference Type"::"Bar Code");
 
         IF RecItemReference.FindFirst() then
-            exit(RecItemReference."Item No.")
+            exit(RecItemReference."Reference No.")
         ELSE
             exit('');
     end;
