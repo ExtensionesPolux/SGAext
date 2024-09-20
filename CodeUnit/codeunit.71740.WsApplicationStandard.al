@@ -5813,13 +5813,23 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         RecWarehouseSetup.Get();
 
+
+
+
         lTipo := 'N';
         if (xTrackNo <> '') then
             lTipo := Tipo_Trazabilidad(xTrackNo)
         else
             if (xItemNo <> '') then lTipo := Tipo_Trazabilidad(xItemNo);
 
-        if (lTipo = 'N') THEN ERROR(lblErrorTrackNo + ' (' + xTrackNo + ')');
+        if (lTipo = 'N') THEN begin
+            //Buscar si es una referencia cruzada 
+            xTrackNo := Buscar_Item_De_Referencia_Cruzada(xTrackNo);
+            if (xTrackNo = '') then
+                ERROR(lblErrorTrackNo + ' (' + xTrackNo + ')')
+            else
+                lTipo := 'I';
+        end;
 
         VJsonObjectTrazabilidad.Add('TrackNo', xTrackNo);
 
@@ -7010,6 +7020,19 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
     end;
 
 
+    local procedure Buscar_Item_De_Referencia_Cruzada(xCode: Code[50]): Code[50]
+    var
+        RecItemReference: Record "Item Reference";
+    begin
+        clear(RecItemReference);
+        RecItemReference.SetRange(RecItemReference."Reference No.", xCode);
+
+        IF RecItemReference.FindFirst() then
+            exit(RecItemReference."Item No.")
+        ELSE
+            exit('');
+    end;
+
 
     /// <summary>
     /// Busca Referencia Cruzada
@@ -7022,6 +7045,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
     begin
         clear(RecItemReference);
         RecItemReference.SetRange(RecItemReference."Item No.", xItem);
+        RecItemReference.SetFilter("Ending Date", '%1|>%2', 0D, WorkDate());
         if (xVendor <> '') then begin
             RecItemReference.SetRange("Reference Type", RecItemReference."Reference Type"::Vendor);
             RecItemReference.SetRange("Reference Type No.", xVendor);
