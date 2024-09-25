@@ -5813,8 +5813,15 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         RecWarehouseSetup.Get();
 
+        if (xItemNo <> '') then begin
 
+            clear(RecItem);
+            RecItem.SetRange("No.", xItemNo);
+            if not RecItem.FindFirst() then begin
+                xItemNo := Buscar_Item_De_Referencia_Cruzada(xItemNo);
+            end;
 
+        end;
 
         lTipo := 'N';
         if (xTrackNo <> '') then

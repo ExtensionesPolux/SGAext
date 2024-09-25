@@ -130,13 +130,22 @@
             "numberOfSqlStatements": 10,
             "breakOnNext": "WebServiceClient",
             "userId": "APP AURA"
-        }
-
-
-
-        
-        
-
-
+        },
+        {
+            "name": "SandBox Tecnac",
+            "tenant": "a0836f4b-eeeb-408d-ab89-b7689a3c979e",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "Sandbox_20240710",
+            "startupObjectId": 89,
+            "startupObjectType": "Page",
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "ForceSync"
+        }       
+    
     ]
 }
