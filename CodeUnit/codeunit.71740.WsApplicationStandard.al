@@ -5132,15 +5132,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
             RecWarehouseActivityLine.Validate("Qty. to Handle", xQuantity);
 
-            IF RecWarehouseActivityLine."Qty. Outstanding" <> xQuantity THEN BEGIN
-                //Dividimos linea
-                //RecWarehouseActivityLine.SplitLine(RecWarehouseActivityLine);
-                //Place
-                Cortar_Linea(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo, false);
-                //Take
-                Cortar_Linea(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo, true);
-
-            end;
 
             if ((RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Shipment)
                 OR (RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Production))
@@ -5151,11 +5142,24 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                     RecWarehouseActivityLine.Validate("Serial No.", xSerialNo);
 
                 //Cambiar el lote/serie también el take
-                Cambiar_Track_Movimiento_Take(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo);
+                Cambiar_Track_Movimiento_Take(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo,
+                                                xItemNo, xLotNo, xSerialNo);
             end else begin
                 RecWarehouseActivityLine.Validate("Bin Code", xBinTo);
             end;
+
             RecWarehouseActivityLine.Modify();
+
+            IF RecWarehouseActivityLine."Qty. Outstanding" <> xQuantity THEN BEGIN
+                //Dividimos linea
+                //RecWarehouseActivityLine.SplitLine(RecWarehouseActivityLine);
+                //Place
+                Cortar_Linea(xNo, xLineNoPlace, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo, false);
+                //Take
+                Cortar_Linea(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo, true);
+
+            end;
+
 
         end ELSE
             Error(lblErrorSinMovimiento);
@@ -5189,7 +5193,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                                                                                                       xDocumentLineNo: Integer;
                                                                                                       xBinFrom: Text;
                                                                                                       xBinTo: Text;
-                                                                                                      xQuantity: decimal;
                                                                                                       xItemNo: Text;
                                                                                                       xLotNo: Text;
                                                                                                       xSerialNo: Text)
@@ -5207,7 +5210,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
             RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Line No.", xDocumentLineNo);
         RecWarehouseActivityLine.SetRange("Item No.", xItemNo);
 
-        RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
+        //RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
 
         RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Take);
 
@@ -5224,7 +5227,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
     end;
 
 
-    local procedure Cortar_Linea(xNo: Text; xLineNoTake: Integer; xDocumentType: Enum "Warehouse Activity Document Type"; xDocumentNo: Text;
+    local procedure Cortar_Linea(xNo: Text; xLineNo: Integer; xDocumentType: Enum "Warehouse Activity Document Type"; xDocumentNo: Text;
                                                                                      xDocumentLineNo: Integer;
                                                                                      xBinFrom: Text;
                                                                                      xBinTo: Text;
@@ -5241,12 +5244,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         clear(RecWarehouseActivityLine);
         RecWarehouseActivityLine.SetRange("No.", xNo);
-        RecWarehouseActivityLine.SetRange("Line No.", xLineNoTake);
+        RecWarehouseActivityLine.SetRange("Line No.", xLineNo);
         RecWarehouseActivityLine.SetRange("Whse. Document Type", xDocumentType);
         if (xDocumentNo <> '') then
-            RecWarehouseActivityLine.SetRange("Whse. Document No.", xDocumentNo);
+            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source No.", xDocumentNo);
         if (xDocumentLineNo <> 0) then
-            RecWarehouseActivityLine.SetRange("Whse. Document Line No.", xDocumentLineNo);
+            RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Line No.", xDocumentLineNo);
         RecWarehouseActivityLine.SetRange("Item No.", xItemNo);
 
         //RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
