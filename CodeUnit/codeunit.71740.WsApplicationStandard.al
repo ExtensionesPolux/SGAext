@@ -564,14 +564,17 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         VJsonText: Text;
         jRecepcion: Text;
         jLinea: Integer;
+        jWorkDate: Date;
     begin
+
         If not VJsonObjectContenedor.ReadFrom(xJson) then
             ERROR(lblErrorJson);
 
         jRecepcion := DatoJsonTexto(VJsonObjectContenedor, 'No');
         jLinea := DatoJsonInteger(VJsonObjectContenedor, 'LineNo');
+        jWorkDate := DatoJsonDate(VJsonObjectContenedor, 'WorkDate');
 
-        Registrar_Recepcion(jRecepcion, jLinea);
+        Registrar_Recepcion(jRecepcion, jLinea, jWorkDate);
 
         //Actualizar_Cantidad_Recibir(jRecepcion);
         Objeto_Recepcion(jRecepcion).WriteTo(VJsonText);
@@ -620,6 +623,8 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
             iTipoDato := Tipo_Dato(jTrackNo)
         else
             iTipoDato := '';
+
+
 
         RecLocations.CalcFields("Tiene Ubicaciones");
         if RecLocations."Tiene Ubicaciones" then begin
@@ -3023,9 +3028,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
     end;
 
-    local procedure Registrar_Recepcion(xRecepcion: Text; xLinea: Integer)
+    local procedure Registrar_Recepcion(xRecepcion: Text; xLinea: Integer; xFechaTrabajo: Date)
     var          //RecWarehouseSetup: Record "Warehouse Setup";
         pgWR: Page "Warehouse Receipt";
+        RecWhseReceiptHeader: Record "Warehouse Receipt Header";
         RecWhseReceiptLine: Record "Warehouse Receipt Line";
         cuWhsePostReceipt: Codeunit "Whse.-Post Receipt";
         //RecWarehouseSetup: Record "Warehouse Setup";
@@ -3033,6 +3039,17 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         txtError: Text;
 
     begin
+
+        Clear(RecWhseReceiptHeader);
+        RecWhseReceiptHeader.SetRange("No.", xRecepcion);
+        IF RecWhseReceiptHeader.FindFirst() THEN begin
+            if (xFechaTrabajo <> 0D) then
+                RecWhseReceiptHeader."Posting Date" := xFechaTrabajo
+            else
+                RecWhseReceiptHeader."Posting Date" := WorkDate();
+            RecWhseReceiptHeader.Modify();
+        end;
+
         RecWhseReceiptLine.RESET;
         RecWhseReceiptLine.SETRANGE("No.", xRecepcion);
 
@@ -6906,12 +6923,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
     /// <summary>
     /// Determina si es un Lote(L), Un Serie(S),Paquete(P), Nulo(N), Item(I)
     /// </summary>
-    local procedure Tipo_Dato(xTrackNo: Text): Code[1]
+    local procedure Tipo_Dato(var xTrackNo: Text): Code[1]
     var
         RecLotNo: Record "Lot No. Information";
         RecSerialNo: Record "Serial No. Information";
         RecPackage: Record "Package No. Information";
         RecItem: Record Item;
+        sRefCruzada: Code[50];
     begin
 
         Clear(RecSerialNo);
@@ -6929,6 +6947,13 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         Clear(RecItem);
         RecItem.SetRange("No.", xTrackNo);
         if RecItem.FindFirst() then exit('I');
+
+        sRefCruzada := Buscar_Item_De_Referencia_Cruzada(xTrackNo);
+        if sRefCruzada <> '' then begin
+            xTrackNo := sRefCruzada;
+            exit('I');
+        end;
+
 
         exit('N');
     end;
