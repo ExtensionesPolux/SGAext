@@ -463,6 +463,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control App - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 1580859378 - Control 655145352 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
+          <source>Allows changing picking</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Permitir cambiar Picking</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Resource Card - Control Permite cambiar picking - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="PageExtension 1580859378 - Control 1518918944 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1580859378">
           <source>Copy Allows</source>
           <note from="Developer" annotates="general" priority="2">ESP="Permite copiar"</note>
@@ -737,6 +742,11 @@
           <source>Photo</source>
           <note from="Developer" annotates="general" priority="2">ESP="Foto"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Posted Whse. Receipt Line - Field Foto - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 348912950 - Field 655145352 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
+          <source>Allows changing picking</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Permitir cambiar Picking</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Resource - Field Permite cambiar picking - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 348912950 - Field 1518918944 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 348912950">
           <source>Copy Allow</source>

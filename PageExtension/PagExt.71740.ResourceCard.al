@@ -30,6 +30,11 @@ pageextension 71740 "Resource Card" extends "Resource Card"
                     ToolTip = 'View inventory quantity', comment = 'ESP="Ver cantidad inventario"';
                     ApplicationArea = all;
                 }
+                field("Permite cambiar picking"; Rec."Permite cambiar picking")
+                {
+                    ToolTip = 'Allows changing picking', Comment = 'ESP=Permitir cambiar Picking';
+                    ApplicationArea = all;
+                }
             }
         }
     }

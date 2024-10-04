@@ -29,6 +29,12 @@ tableextension 71740 Resource extends Resource
             DataClassification = ToBeClassified;
             Caption = 'View inventory quantity', Comment = 'ESP=Mostrar Cantidad inventario';
         }
+
+        field(71744; "Permite cambiar picking"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Allows changing picking', Comment = 'ESP=Permitir cambiar Picking';
+        }
     }
 
 }

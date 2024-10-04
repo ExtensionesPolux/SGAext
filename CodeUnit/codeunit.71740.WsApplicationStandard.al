@@ -50,6 +50,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         VJsonObjectRecurso.Add('Copiar', FormatoBoolean(RecRecursos."Permite Copiar"));
         VJsonObjectRecurso.Add('Regularizar', FormatoBoolean(RecRecursos."Permite Regularizar"));
         VJsonObjectRecurso.Add('Inventario', FormatoBoolean(RecRecursos."Ver cantidad inventario"));
+        VJsonObjectRecurso.Add('CambiarPicking', FormatoBoolean(RecRecursos."Permite cambiar picking"));
 
         RecWarehouseSetup.Get();
         //VJsonObjectRecurso.Add('UsarPaquete', FormatoBoolean(RecWarehouseSetup."Usar paquetes"));
@@ -1768,6 +1769,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                 VJsonObjectLineas.Add('SourceDocument', Format(RecWarehouseActivityLine."Source Document"));
 
                 VJsonObjectLineas.Add('ItemNo', RecWarehouseActivityLine."Item No.");
+                VJsonObjectLineas.Add('Seguimiento', TipoSeguimientoProducto(RecWarehouseActivityLine."Item No."));
 
                 VJsonObjectLineas.Add('ItemReference', Buscar_Referencia_Cruzada(RecWarehouseActivityLine."Item No.", ''));
 
@@ -5095,18 +5097,20 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
         RecWarehouseActivityLineReg: Record "Warehouse Activity Line";
 
+        RecRecurso: Record Resource;
+
         cuWarehouseActivityRegister: Codeunit "Whse.-Activity-Register";
 
         VJsonObjectAlmacenamiento: JsonObject;
         VJsonText: Text;
         txtError: Text;
+        FechaCaducidad: Date;
     begin
 
         clear(RecWarehouseActivityLine);
         RecWarehouseActivityLine.SetRange("No.", xNo);
         RecWarehouseActivityLine.SetRange("Line No.", xLineNoPlace);
         RecWarehouseActivityLine.SetRange("Whse. Document Type", xDocumentType);
-
         RecWarehouseActivityLine.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
 
         if (xDocumentNo <> '') then
@@ -5128,41 +5132,74 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Place);
 
-        if RecWarehouseActivityLine.FindFirst() then begin
-
-            RecWarehouseActivityLine.Validate("Qty. to Handle", xQuantity);
+        if NOT RecWarehouseActivityLine.FindFirst() then Error(lblErrorSinMovimiento);
 
 
-            if ((RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Shipment)
-                OR (RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Production))
-             then begin
+        IF RecWarehouseActivityLine."Qty. Outstanding" <> xQuantity THEN BEGIN
+            //Dividimos linea
+            //RecWarehouseActivityLine.SplitLine(RecWarehouseActivityLine);
+
+            FechaCaducidad := RecWarehouseActivityLine."Expiration Date";
+            //Place
+            Cortar_Linea(xNo, xLineNoPlace, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo, false);
+            //Take
+            Cortar_Linea(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo, true);
+
+            Clear(RecWarehouseActivityLine);
+            clear(RecWarehouseActivityLine);
+            RecWarehouseActivityLine.SetRange("No.", xNo);
+            RecWarehouseActivityLine.SetRange("Line No.", xLineNoPlace);
+            RecWarehouseActivityLine.SetRange("Whse. Document Type", xDocumentType);
+            RecWarehouseActivityLine.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
+
+            if (xDocumentNo <> '') then
+                RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source No.", xDocumentNo);
+            if (xDocumentLineNo <> 0) then
+                RecWarehouseActivityLine.SetRange(RecWarehouseActivityLine."Source Line No.", xDocumentLineNo);
+            RecWarehouseActivityLine.SetRange("Item No.", xItemNo);
+
+            if ((xDocumentType <> RecWarehouseActivityLine."Whse. Document Type"::Shipment)
+                and (xDocumentType <> RecWarehouseActivityLine."Whse. Document Type"::Production))
+            then begin
                 if (xLotNo <> '') THEN
-                    RecWarehouseActivityLine.Validate("Lot No.", xLotNo);
+                    RecWarehouseActivityLine.SetRange("Lot No.", xLotNo);
                 if (xSerialNo <> '') THEN
-                    RecWarehouseActivityLine.Validate("Serial No.", xSerialNo);
-
-                //Cambiar el lote/serie también el take
-                Cambiar_Track_Movimiento_Take(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo,
-                                                xItemNo, xLotNo, xSerialNo);
-            end else begin
-                RecWarehouseActivityLine.Validate("Bin Code", xBinTo);
+                    RecWarehouseActivityLine.SetRange("Serial No.", xSerialNo);
             end;
+            RecWarehouseActivityLine.SetRange("Qty. to Handle", xQuantity);
+            RecWarehouseActivityLine.SetRange("Action Type", RecWarehouseActivityLine."Action Type"::Place);
 
-            RecWarehouseActivityLine.Modify();
-
-            IF RecWarehouseActivityLine."Qty. Outstanding" <> xQuantity THEN BEGIN
-                //Dividimos linea
-                //RecWarehouseActivityLine.SplitLine(RecWarehouseActivityLine);
-                //Place
-                Cortar_Linea(xNo, xLineNoPlace, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo, false);
-                //Take
-                Cortar_Linea(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo, true);
-
-            end;
+            if NOT RecWarehouseActivityLine.FindFirst() then Error(lblErrorSinMovimiento);
 
 
-        end ELSE
-            Error(lblErrorSinMovimiento);
+
+        end;
+
+        RecWarehouseActivityLine.Validate("Qty. to Handle", xQuantity);
+
+
+        if ((RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Shipment)
+            OR (RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Production))
+         then begin
+            if (xLotNo <> '') THEN
+                RecWarehouseActivityLine.Validate("Lot No.", xLotNo);
+            if (xSerialNo <> '') THEN
+                RecWarehouseActivityLine.Validate("Serial No.", xSerialNo);
+
+            //Cambiar el lote/serie también el take
+            Cambiar_Track_Movimiento_Take(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo,
+                                            xItemNo, xLotNo, xSerialNo, FechaCaducidad);
+        end else begin
+            RecWarehouseActivityLine.Validate("Bin Code", xBinTo);
+        end;
+
+        RecWarehouseActivityLine.Validate("Expiration Date", FechaCaducidad);
+        RecWarehouseActivityLine.Modify();
+
+
+
+
+
 
         clear(RecWarehouseActivityLineReg);
         RecWarehouseActivityLineReg.SetRange("No.", xNo);
@@ -5182,20 +5219,22 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         //RecWarehouseActivityLineReg.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
         RecWarehouseActivityLineReg.SetFilter("Line No.", '%1|%2', xLineNoPlace, xLineNoTake);
 
-        if RecWarehouseActivityLineReg.FindSet() then
+        /*if RecWarehouseActivityLineReg.FindSet() then
             cuWarehouseActivityRegister.run(RecWarehouseActivityLineReg)
         ELSE
-            Error(lblErrorSinMovimiento);
+            Error(lblErrorSinMovimiento);*/
     end;
 
 
-    local procedure Cambiar_Track_Movimiento_Take(xNo: Text; xLineNoTake: Integer; xDocumentType: Enum "Warehouse Activity Document Type"; xDocumentNo: Text;
+    local procedure Cambiar_Track_Movimiento_Take(xNo: Text; xLineNoTake: Integer; xDocumentType: Enum "Warehouse Activity Document Type";
+                                                                                                     xDocumentNo: Text;
                                                                                                       xDocumentLineNo: Integer;
                                                                                                       xBinFrom: Text;
                                                                                                       xBinTo: Text;
                                                                                                       xItemNo: Text;
                                                                                                       xLotNo: Text;
-                                                                                                      xSerialNo: Text)
+                                                                                                      xSerialNo: Text;
+                                                                                                      xFechaCaducidad: Date)
     var
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
     begin
@@ -5220,6 +5259,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                 RecWarehouseActivityLine.Validate("Lot No.", xLotNo);
             if (xSerialNo <> '') THEN
                 RecWarehouseActivityLine.Validate("Serial No.", xSerialNo);
+
+            RecWarehouseActivityLine.Validate("Expiration Date", xFechaCaducidad);
+
             RecWarehouseActivityLine.Modify();
         end ELSE
             Error(lblErrorSinMovimiento);
@@ -5262,6 +5304,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         if RecWarehouseActivityLine.FindFirst() then begin
             RecWarehouseActivityLine.Validate("Qty. to Handle", xQuantity);
             RecWarehouseActivityLine.SplitLine(RecWarehouseActivityLine);
+
             RecWarehouseActivityLine.Modify();
         end;
 
