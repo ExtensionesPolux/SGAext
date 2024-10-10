@@ -645,10 +645,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                         jTrackNoAux := '';
                         Clear(RecLotNo);
                         RecLotNo.SetCurrentKey("Item No.");
+                        RecLotNo.SetFilter(Inventory, '>0');
                         RecLotNo.SetRange("Lot No.", jTrackNo);
                         if RecLotNo.FindSet() then begin
                             if (RecLotNo."Item No." <> jTrackNoAux) then begin
                                 jTrackNoAux := RecLotNo."Item No.";
+                                if RecLotNo.Count > 1 then jTrackNoAux := '';
                                 jArrayContenidoAux := Contenidos_Ubicacion(RecLotNo."Item No.", jZone, jBin, jLocation, iTipoDato, jTrackNo);
                                 for i := 0 to jArrayContenidoAux.Count - 1 do begin
                                     jArrayContenidoAux.Get(i, jToken);
@@ -1414,6 +1416,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         jQuantity := DatoJsonDecimal(VJsonObjectDatos, 'Quantity');
 
         Clear(RecBin);
+        RecBin.SetRange("Location Code", jLocation);
         RecBin.SetRange(RecBin.Code, jBin);
         if Not RecBin.FindFirst() then EXIT(StrSubstNo(lblErrorUbicacion, jBin));
 
@@ -4403,6 +4406,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
             until WhseJnlLine.Next = 0;
 
         Clear(RecBin);
+        RecBin.SetRange("Location Code", xLocation);
         RecBin.SetRange(Code, xFromBin);
         IF NOT RecBin.FindFirst() THEN Error(StrSubstNo(lblErrorUbicacion, xFromBin));
 
@@ -4428,6 +4432,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         WhseJnlLine.validate("From Bin Code", xFromBin);
 
         Clear(RecBin);
+        RecBin.SetRange("Location Code", xLocation);
         RecBin.SetRange(Code, xToBin);
         IF NOT RecBin.FindFirst() THEN Error(StrSubstNo(lblErrorUbicacion, xToBin));
 
@@ -4469,6 +4474,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                 RecWarehouseSetup.get();
                 if (RecWarehouseSetup."Lote unico por ubicacion") then begin
                     clear(QueryLotInventory);
+                    QueryLotInventory.SetRange(QueryLotInventory.Location_Code, xLocation);
                     QueryLotInventory.SetRange(QueryLotInventory.Bin_Code, xToBin);
                     QueryLotInventory.SetFilter(QueryLotInventory.Lot_No, '<>%1', xLotNo);
                     QueryLotInventory.Open();
@@ -4561,6 +4567,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
             until ItemJnlLine.Next = 0;
 
         Clear(RecBin);
+        RecBin.SetRange("Location Code", xLocation);
         RecBin.SetRange(Code, xFromBin);
         IF NOT RecBin.FindFirst() THEN Error(StrSubstNo(lblErrorUbicacion, xFromBin));
 
@@ -4603,6 +4610,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         ItemJnlLine.validate("Bin Code", xFromBin);
 
         Clear(RecBin);
+        RecBin.SetRange("Location Code", xLocation);
         RecBin.SetRange(Code, xToBin);
         IF NOT RecBin.FindFirst() THEN Error(StrSubstNo(lblErrorUbicacion, xToBin));
 
@@ -4650,6 +4658,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                 RecWarehouseSetup.get();
                 if (RecWarehouseSetup."Lote unico por ubicacion") then begin
                     clear(QueryLotInventory);
+                    QueryLotInventory.SetRange(QueryLotInventory.Location_Code, xLocation);
                     QueryLotInventory.SetRange(QueryLotInventory.Bin_Code, xToBin);
                     QueryLotInventory.SetFilter(QueryLotInventory.Lot_No, '<>%1', xLotNo);
                     QueryLotInventory.Open();
@@ -5219,10 +5228,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         //RecWarehouseActivityLineReg.SetFilter("Qty. Outstanding", '>=%1', xQuantity);
         RecWarehouseActivityLineReg.SetFilter("Line No.", '%1|%2', xLineNoPlace, xLineNoTake);
 
-        /*if RecWarehouseActivityLineReg.FindSet() then
+        if RecWarehouseActivityLineReg.FindSet() then
             cuWarehouseActivityRegister.run(RecWarehouseActivityLineReg)
         ELSE
-            Error(lblErrorSinMovimiento);*/
+            Error(lblErrorSinMovimiento);
     end;
 
 
@@ -6266,6 +6275,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         //Se añade la línea nueva
         Clear(RecBin);
+        RecBin.SetRange("Location Code", xLocation);
         RecBin.SetRange(code, xBin);
         IF NOT RecBin.FindFirst() then Error(StrSubstNo(lblErrorUbicacion, xBin));
 
@@ -6297,8 +6307,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         RecWarehouseJournalLine."To Bin Code" := RecBin.Code;
 
         Clear(RecLocation);
-        RecLocation.Get(RecBin."Location Code");
+        RecLocation.Get(xLocation);
         Clear(RecBin);
+        RecBin.SetRange("Location Code", xLocation);
         RecBin.SetRange(code, RecLocation."Adjustment Bin Code");
         IF NOT RecBin.FindFirst() then Error(StrSubstNo(lblErrorUbicacion, RecLocation."Adjustment Bin Code"));
 
@@ -6717,6 +6728,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         //Buscar ubicación
         Clear(RecBin);
+        RecBin.SetRange("Location Code", xLocation);
         RecBin.SetRange(Code, xUbicacion);
         IF not RecBin.FindFirst() then error(StrSubstNo(lblErrorUbicacion, xUbicacion));
 
