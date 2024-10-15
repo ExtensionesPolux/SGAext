@@ -4791,6 +4791,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         if (xSerialNo <> '') then
             RecWarehouseEntry.SetRange("Serial No.", xSerialNo);
         RecWarehouseEntry.SetFilter(Quantity, '>%1', 0);
+        RecWarehouseEntry.SetFilter("Expiration Date", '<>0D');
         if RecWarehouseEntry.FindLast() then
             exit(RecWarehouseEntry."Expiration Date");
 
