@@ -1684,7 +1684,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
     #endregion
 
     #region MOVIMIENTOS ALMACEN
-
     procedure Movimientos_Almacen(xNo: Code[20]; xLocation: Text): Text
     var
         RecWarehouseActivityHeader: Record "Warehouse Activity Header";
@@ -1847,21 +1846,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         exit(VJsonText);
 
     end;
-
-
-
-
-
-    procedure Crear_Movimientos_Almacenamiento()
-    var
-
-    begin
-
-
-
-    end;
-
-
 
     #endregion
 
@@ -5144,12 +5128,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         if NOT RecWarehouseActivityLine.FindFirst() then Error(lblErrorSinMovimiento);
 
+        FechaCaducidad := RecWarehouseActivityLine."Expiration Date";
 
         IF RecWarehouseActivityLine."Qty. Outstanding" <> xQuantity THEN BEGIN
             //Dividimos linea
             //RecWarehouseActivityLine.SplitLine(RecWarehouseActivityLine);
 
-            FechaCaducidad := RecWarehouseActivityLine."Expiration Date";
             //Place
             Cortar_Linea(xNo, xLineNoPlace, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo, xQuantity, xItemNo, xLotNo, xSerialNo, false);
             //Take
@@ -5181,12 +5165,9 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
             if NOT RecWarehouseActivityLine.FindFirst() then Error(lblErrorSinMovimiento);
 
-
-
         end;
 
         RecWarehouseActivityLine.Validate("Qty. to Handle", xQuantity);
-
 
         if ((RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Shipment)
             OR (RecWarehouseActivityLine."Whse. Document Type" = RecWarehouseActivityLine."Whse. Document Type"::Production))
@@ -5205,11 +5186,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         RecWarehouseActivityLine.Validate("Expiration Date", FechaCaducidad);
         RecWarehouseActivityLine.Modify();
-
-
-
-
-
 
         clear(RecWarehouseActivityLineReg);
         RecWarehouseActivityLineReg.SetRange("No.", xNo);
@@ -5832,17 +5808,30 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         WhseShptLine: Record "Warehouse Shipment Line";
         WhseShptLineAux: Record "Warehouse Shipment Line";
         ReleaseWhseShipment: Codeunit "Whse.-Shipment Release";
+        WhsePickLineAux: Record "Warehouse Activity Line";
     begin
 
+
+
+        Clear(WhseShptLineAux);
         WhseShptLineAux.SetRange("No.", xNo);
         IF Not WhseShptLineAux.FindSet() then ERROR(lblErrorNadaQueRegistrar);
 
-        WhseShptLine.Copy(WhseShptLineAux);
 
-        WhseShptHeader.Get(xNo);
-        if WhseShptHeader.Status = WhseShptHeader.Status::Open then
-            ReleaseWhseShipment.Release(WhseShptHeader);
-        WhseShptLineAux.CreatePickDoc(WhseShptLine, WhseShptHeader);
+        // Verificar si ya existe un picking asociado al envío (xNo)
+        Clear(WhsePickLineAux);
+        WhsePickLineAux.SETRANGE("Whse. Document No.", xNo);
+        IF NOT WhsePickLineAux.FINDSET() THEN BEGIN
+
+            WhseShptLine.Copy(WhseShptLineAux);
+
+            WhseShptHeader.Get(xNo);
+            if WhseShptHeader.Status = WhseShptHeader.Status::Open then
+                ReleaseWhseShipment.Release(WhseShptHeader);
+
+            WhseShptLineAux.CreatePickDoc(WhseShptLine, WhseShptHeader);
+
+        END;
 
     end;
 
@@ -6593,8 +6582,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
     #endregion
 
-
-
     #region AJUSTE
 
 
@@ -6945,7 +6932,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
 
     #endregion
-
 
     #region FUNCIONES BC
 
