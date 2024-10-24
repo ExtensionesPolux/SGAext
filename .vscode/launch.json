@@ -73,7 +73,7 @@
             "type": "al",
             "request": "attach",
             "environmentType": "Sandbox",
-            "environmentName": "preproduccion",
+            "environmentName": "    ",
             "tenant": "9addc9fc-494e-4bfe-9de4-c4f0d7a8c2f0",
             "breakOnError": "All",
             "breakOnRecordWrite": "None",

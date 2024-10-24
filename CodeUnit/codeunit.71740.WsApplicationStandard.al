@@ -921,6 +921,29 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         exit(VJsonText);
     end;
 
+
+
+    procedure WsActualizarEnvio(xJson: Text): Text
+    var
+        VJsonObjectDato: JsonObject;
+        VJsonObjectShipment: JsonObject;
+        lNo: Text;
+        VJsonText: Text;
+    begin
+        If not VJsonObjectDato.ReadFrom(xJson) then
+            ERROR(lblErrorJson);
+
+        lNo := DatoJsonTexto(VJsonObjectDato, 'No');
+
+
+        VJsonObjectShipment := Objeto_Envio(lNo);
+
+        VJsonObjectShipment.WriteTo(VJsonText);
+        exit(VJsonText);
+    end;
+
+
+
     procedure WsEnviarEliminarContenedor(xJson: Text): Text
     var
         VJsonObjectDato: JsonObject;
@@ -4451,7 +4474,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
             if ((sTipo = 1) OR (sTipo = 3) OR (sTipo = 4) or (sTipo = 6)) THEN begin
                 WhseItemTrackingLine."New Lot No." := xLotNo;
                 WhseItemTrackingLine."Lot No." := xLotNo;
-                WhseItemTrackingLine."Expiration Date" := Caducidad_Ficha_Lote(xLotNo, xItemNo);
+                WhseItemTrackingLine."Expiration Date" := Caducidad_Mov_Almacen(xItemNo, xLotNo, xSerialNo); // Caducidad_Ficha_Lote(xLotNo, xItemNo);
                 WhseItemTrackingLine."New Expiration Date" := WhseItemTrackingLine."Expiration Date";
 
                 //No permitir mover 2 lotes a una misma ubicación si esta parametrizada la opción
@@ -4742,23 +4765,22 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
     end;
 
-    local procedure Caducidad_Ficha_Lote(xLotNo: Code[50]; xItemNo: Code[50]): Date
-    var
-        RecLotNo: Record "Lot No. Information";
-    begin
-        Clear(RecLotNo);
-        RecLotNo.SetRange("Item No.", xItemNo);
-        RecLotNo.SetRange("Lot No.", xLotNo);
-        if NOT RecLotNo.FindFirst() THEN ERROR(lblErrorTrackNo);
+    /*    local procedure Caducidad_Ficha_Lote(xLotNo: Code[50]; xItemNo: Code[50]): Date
+        var
+            RecLotNo: Record "Lot No. Information";
+        begin
+            Clear(RecLotNo);
+            RecLotNo.SetRange("Item No.", xItemNo);
+            RecLotNo.SetRange("Lot No.", xLotNo);
+            if NOT RecLotNo.FindFirst() THEN ERROR(lblErrorTrackNo);
 
-        IF (RecLotNo."Fecha Caducidad") <> 0D THEN begin
-            exit(RecLotNo."Fecha Caducidad")
-        end ELSE begin
-            exit(0D);
+            IF (RecLotNo."Fecha Caducidad") <> 0D THEN begin
+                exit(RecLotNo."Fecha Caducidad")
+            end ELSE begin
+                exit(0D);
+            end;
         end;
-    end;
-
-
+    */
     local procedure Caducidad_Mov_Almacen(xItemNo: Code[20]; xLotNo: Code[20]; xSerialNo: Code[20]): Date
     var
         RecWarehouseEntry: Record "Warehouse Entry";
