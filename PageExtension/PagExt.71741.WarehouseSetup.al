@@ -147,6 +147,10 @@ pageextension 71741 "Warehouse Setup" extends "Warehouse Setup"
                     {
                         ApplicationArea = all;
                     }
+                    field("Ubicacion Altas"; Rec."Ubicacion Altas")
+                    {
+                        ApplicationArea = all;
+                    }
                 }
 
             }

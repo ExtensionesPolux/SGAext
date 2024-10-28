@@ -150,6 +150,13 @@ tableextension 71741 "Warehouse Setup" extends "Warehouse Setup" //AVA 20240516
             Caption = 'Decimal Digits', Comment = 'ESP=Digitos Decimal';
             DataClassification = ToBeClassified;
         }
+        field(71794; "Ubicacion Altas"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'News Bin', Comment = 'ESP=Ubicación Altas';
+            TableRelation = Bin.Code;
+
+        }
     }
 
 }

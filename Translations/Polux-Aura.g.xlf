@@ -888,6 +888,11 @@
           <note from="Developer" annotates="general" priority="2">ESP=Nº Serie Paquete</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Numero Serie Paquete - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 3213244558 - Field 538468400 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
+          <source>News Bin</source>
+          <note from="Developer" annotates="general" priority="2">ESP=Ubicación Altas</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Warehouse Setup - Field Ubicacion Altas - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 3213244558 - Field 4288541063 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3213244558">
           <source>Use Vendor Lot No</source>
           <note from="Developer" annotates="general" priority="2">ESP=Usar Nº. Lote Proveedor</note>

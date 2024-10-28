@@ -69,6 +69,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         VJsonObjectRecurso.Add('DigitosProducto', FormatoNumero(RecWarehouseSetup."Digitos Producto"));
         VJsonObjectRecurso.Add('DigitosEntero', FormatoNumero(RecWarehouseSetup."Digitos Entero"));
         VJsonObjectRecurso.Add('DigitosDecimal', FormatoNumero(RecWarehouseSetup."Digitos Decimal"));
+        VJsonObjectRecurso.Add('UbicacionAltas', RecWarehouseSetup."Ubicacion Altas");
 
         if vAlmacenEncontrado then begin
 

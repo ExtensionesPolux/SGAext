@@ -2,7 +2,7 @@
   "id": "bfb980a0-2232-41e8-98c0-20152c02adb6",
   "name": "Polux-Aura",
   "publisher": "Polux-Solutions",
-  "version": "24.0.1.10",
+  "version": "23.0.1.10",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -13,8 +13,8 @@
   "target": "Cloud",
   "dependencies": [],
   "screenshots": [],
-  "platform": "24.0.0.0",
-  "application": "24.0.0.0",
+  "platform": "23.0.0.0",
+  "application": "23.0.0.0",
   "idRanges": [
     {
       "from": 71740,
@@ -26,7 +26,7 @@
     "allowDownloadingSource": false,
     "includeSourceInSymbolFile": true
   },
-  "runtime": "13.0",
+  "runtime": "12.0",
   "features": [
     "TranslationFile"]
   
