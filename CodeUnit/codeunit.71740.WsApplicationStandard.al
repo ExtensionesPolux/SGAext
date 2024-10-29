@@ -4541,6 +4541,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         ItemJnlLine: record "Item Journal Line";
         ItemJnlLineLast: record "Item Journal Line";
         RecBin: Record Bin;
+        RecItem: Record Item;
 
         ReservationEntry: Record "Reservation Entry";
         ReservationEntryLast: Record "Reservation Entry";
@@ -4606,6 +4607,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         ItemJnlLine.Validate("Item No.", xItemNo);
 
+        Clear(RecItem);
+        RecItem.Get(xItemNo);
+
+        ItemJnlLine.Validate("Unit of Measure Code", RecItem."Base Unit of Measure");
 
         //Obtener Set de Dimensiones para el producto
         DimensionSetID := Obtener_Dimension_Set_Id(xItemNo);
