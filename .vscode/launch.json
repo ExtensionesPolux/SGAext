@@ -69,11 +69,26 @@
             "schemaUpdateMode": "ForceSync"
         },
         {
+            "name": "EL PIMPI",
+            "tenant": "9addc9fc-494e-4bfe-9de4-c4f0d7a8c2f0",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "Preproduccion",
+            "startupObjectId": 2500,
+            "startupObjectType": "Page",
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "Synchronize"
+        },
+        {
             "name": "DEBUG WEB SERVICE EL PIMPI",
             "type": "al",
             "request": "attach",
             "environmentType": "Sandbox",
-            "environmentName": "    ",
+            "environmentName": "Preproduccion",
             "tenant": "9addc9fc-494e-4bfe-9de4-c4f0d7a8c2f0",
             "breakOnError": "All",
             "breakOnRecordWrite": "None",

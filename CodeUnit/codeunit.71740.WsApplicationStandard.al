@@ -4046,6 +4046,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
             if NOT RecItem.FindFirst() THEN begin
                 xNuevoItem := Buscar_Referencia_Cruzada(xItemNo, '');
                 if (xNuevoItem = '') then Error(StrSubstNo(lblErrorReferencia, xItemNo));
+
                 xItemNo := xNuevoItem;
 
             end;
@@ -4150,6 +4151,17 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
             until RecBinContent.Next() = 0;
 
+        end else begin
+
+            VJsonObjectContenido.Add('Zone', '');
+            VJsonObjectContenido.Add('Bin', '');
+            VJsonObjectContenido.Add('ItemNo', xItemNo);
+            VJsonObjectContenido.Add('Tipo', FormatoNumero(TipoSeguimientoProducto(xItemNo)));
+            VJsonObjectContenido.Add('Description', Descripcion_ItemNo(xItemNo));
+            VJsonObjectContenido.Add('BinInventory', FormatoNumero(0));
+            VJsonObjectContenido.Add('Lots', VJsonArrayInventario);
+            VJsonArrayContenido.Add(VJsonObjectContenido.Clone());
+            Clear(VJsonObjectContenido);
         end;
 
 
@@ -6642,7 +6654,6 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         lContenedor := DatoJsonTexto(VJsonObjectDatos, 'TrackNo');
         lTipo := DatoJsonTexto(VJsonObjectDatos, 'Tipo');
-        lUbicadionDesde := DatoJsonTexto(VJsonObjectDatos, 'BinFrom');
 
         lItemNo := DatoJsonTexto(VJsonObjectDatos, 'ItemNo');
         lUbicadionDesde := DatoJsonTexto(VJsonObjectDatos, 'BinFrom');
@@ -6675,7 +6686,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         IF RecLocation."Almacen Avanzado" then
             Diario_Almacen(lLotNo, lSerialNo, lItemNo, lCantidad, lUbicadionDesde, lAlmacen, lPositivo, 'APP_AJ')
         ELSE
-            Diario_Producto(lAlmacen, lItemNo, lCantidad, lLotNo, lSerialNo, lPositivo, 'APP_AJ');
+            Diario_Producto(lAlmacen, lUbicadionDesde, lItemNo, lCantidad, lLotNo, lSerialNo, lPositivo, 'APP_AJ');
 
         exit('OK');
 
@@ -6825,11 +6836,11 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         IF LRecWarehouseJournalLine.FINDFIRST THEN
             CODEUNIT.RUN(CODEUNIT::"Whse. Jnl.-Register Batch", LRecWarehouseJournalLine);
 
-        Diario_Producto(xLocation, xReferencia, xCantidad, xLote, xSerie, xPositivo, xDoc);
+        Diario_Producto(xLocation, xUbicacion, xReferencia, xCantidad, xLote, xSerie, xPositivo, xDoc);
 
     end;
 
-    local procedure Diario_Producto(xLocation: Text; xReferencia: Text; xCantidad: Decimal; xLote: Text; xSerie: Text; xPositive: boolean; xDoc: Text)
+    local procedure Diario_Producto(xLocation: Text; xBin: Text; xReferencia: Text; xCantidad: Decimal; xLote: Text; xSerie: Text; xPositive: boolean; xDoc: Text)
     var
         RecLocation: Record Location;
         //RecWarehouseSetup: Record "Warehouse Setup";
@@ -6884,6 +6895,10 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         LRecItemJournalLine.VALIDATE("Location Code", xLocation);
         LRecItemJournalLine."Document No." := xDoc;
         LRecItemJournalLine.VALIDATE(Quantity, xCantidad);
+
+        if (xBin <> '') then
+            LRecItemJournalLine.VALIDATE(LRecItemJournalLine."Bin Code", xBin);
+
         LRecItemJournalLine.VALIDATE("Invoiced Quantity", xCantidad);
         LRecItemJournalLine."Warehouse Adjustment" := TRUE;
         //PX221123 METEMOS COSTE ESTANDAR
