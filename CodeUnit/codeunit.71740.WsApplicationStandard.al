@@ -5138,7 +5138,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         VJsonObjectAlmacenamiento: JsonObject;
         VJsonText: Text;
         txtError: Text;
-        FechaCaducidad: Date;
+    //FechaCaducidad: Date;
     begin
 
         clear(RecWarehouseActivityLine);
@@ -5168,7 +5168,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
         if NOT RecWarehouseActivityLine.FindFirst() then Error(lblErrorSinMovimiento);
 
-        FechaCaducidad := RecWarehouseActivityLine."Expiration Date";
+        //FechaCaducidad := RecWarehouseActivityLine."Expiration Date";
 
         IF RecWarehouseActivityLine."Qty. Outstanding" <> xQuantity THEN BEGIN
             //Dividimos linea
@@ -5219,12 +5219,12 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
             //Cambiar el lote/serie también el take
             Cambiar_Track_Movimiento_Take(xNo, xLineNoTake, xDocumentType, xDocumentNo, xDocumentLineNo, xBinFrom, xBinTo,
-                                            xItemNo, xLotNo, xSerialNo, FechaCaducidad);
+                                            xItemNo, xLotNo, xSerialNo);
         end else begin
             RecWarehouseActivityLine.Validate("Bin Code", xBinTo);
         end;
 
-        RecWarehouseActivityLine.Validate("Expiration Date", FechaCaducidad);
+        RecWarehouseActivityLine.Validate("Expiration Date", Caducidad_Mov_Almacen(RecWarehouseActivityLine."Item No.", RecWarehouseActivityLine."Lot No.", RecWarehouseActivityLine."Serial No."));
         RecWarehouseActivityLine.Modify();
 
         clear(RecWarehouseActivityLineReg);
@@ -5259,8 +5259,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
                                                                                                       xBinTo: Text;
                                                                                                       xItemNo: Text;
                                                                                                       xLotNo: Text;
-                                                                                                      xSerialNo: Text;
-                                                                                                      xFechaCaducidad: Date)
+                                                                                                      xSerialNo: Text)
     var
         RecWarehouseActivityLine: Record "Warehouse Activity Line";
     begin
@@ -5286,7 +5285,7 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
             if (xSerialNo <> '') THEN
                 RecWarehouseActivityLine.Validate("Serial No.", xSerialNo);
 
-            RecWarehouseActivityLine.Validate("Expiration Date", xFechaCaducidad);
+            RecWarehouseActivityLine.Validate("Expiration Date", Caducidad_Mov_Almacen(RecWarehouseActivityLine."Item No.", RecWarehouseActivityLine."Lot No.", RecWarehouseActivityLine."Serial No."));
 
             RecWarehouseActivityLine.Modify();
         end ELSE
