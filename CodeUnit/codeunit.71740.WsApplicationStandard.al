@@ -715,6 +715,94 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
 
     end;
 
+
+
+    procedure WsDatosAlta(xJson: Text): Text
+    var
+        RecLocations: Record Location;
+        VJsonObjectContenedor: JsonObject;
+
+        jObjectDatos: JsonObject;
+
+        VJsonText: Text;
+        jTrackNo: Text;
+        jZone: Text;
+        jBin: Text;
+        jLocation: Text;
+
+        iTipoDato: Code[1];
+        RecItem: Record Item;
+        RecLotNo: Record "Lot No. Information";
+        RecSerialNo: Record "Serial No. Information";
+        RecPackage: Record "Package No. Information";
+        jTrackNoAux: Text;
+    begin
+        If not VJsonObjectContenedor.ReadFrom(xJson) then
+            ERROR(lblErrorJson);
+
+        jTrackNo := DatoJsonTexto(VJsonObjectContenedor, 'ItemNo');
+        jBin := DatoJsonTexto(VJsonObjectContenedor, 'Bin');
+        jLocation := DatoJsonTexto(VJsonObjectContenedor, 'Location');
+
+        Clear(RecLocations);
+        RecLocations.Get(jLocation);
+
+        if (jTrackNo <> '') then
+            iTipoDato := Tipo_Dato(jTrackNo)
+        else
+            iTipoDato := '';
+
+
+        RecLocations.CalcFields("Tiene Ubicaciones");
+        if RecLocations."Tiene Ubicaciones" then begin
+
+            case iTipoDato of
+                'I':
+                    begin
+                        Clear(RecItem);
+                        RecItem.SetRange("No.", jTrackNo);
+                        if not RecItem.FindFirst() THEN ERROR(lblErrorTrackNo);
+                        jObjectDatos.Add('ItemNo', jTrackNo);
+
+                        jObjectDatos.Add('TipoSeguimiento', FormatoNumero(TipoSeguimientoProducto(jTrackNo)));
+                        jObjectDatos.Add('TipoDesc', Desc_Tipo(iTipoDato));
+                        jObjectDatos.Add('Description', RecItem.Description);
+                        RecItem.CalcFields(Inventory);
+                        jObjectDatos.Add('Inventory', FormatoNumero(RecItem.Inventory));
+
+                    end;
+                'L':
+                    begin
+
+                    end;
+                'S':
+                    begin
+
+                    end;
+                'P':
+                    begin
+
+
+                    end;
+                else begin
+
+
+                end;
+
+            end;
+
+            jObjectDatos.WriteTo(VJsonText);
+            exit(VJsonText);
+
+            //EXIT(Contenidos_Ubicacion(jItemNo, jZone, jBin, jLocation));
+        end else begin
+            EXIT(Contenidos_Sin_Ubicacion(jTrackNo, jLocation, iTipoDato, jTrackNo));
+        end;
+
+    end;
+
+
+
     procedure WsPicking(xJson: Text): Text
     var
         VJsonObjectContenedor: JsonObject;
