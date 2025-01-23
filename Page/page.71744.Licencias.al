@@ -124,6 +124,25 @@ page 71744 Licencias
                 begin
                     LicenseMgt.Eliminar_Registro_BC(rec.Code);
                     Cargar_Datos();
+
+                    CurrPage.Update(false);
+                end;
+            }
+            action(DELETEALL)
+            {
+                ApplicationArea = all;
+                Caption = 'Eliminar Registros Tablas';
+                Image = Delete;
+
+                trigger OnAction()
+                var
+                    RecDispositivos: Record Dispositivos;
+                begin
+                    Clear(RecDispositivos);
+                    RecDispositivos.SetRange(Baja, true);
+                    IF RecDispositivos.FindSet() then
+                        if Dialog.Confirm('Se van a eliminar los dispositivos dados de baja') then
+                            RecDispositivos.DeleteAll();
                     CurrPage.Update(false);
                 end;
             }
@@ -131,6 +150,12 @@ page 71744 Licencias
     }
 
     trigger OnOpenPage()
+    begin
+        CompanyInfo.Reset;
+        CompanyInfo.Findfirst;
+    end;
+
+    trigger OnAfterGetRecord()
     begin
         CompanyInfo.Reset;
         CompanyInfo.Findfirst;

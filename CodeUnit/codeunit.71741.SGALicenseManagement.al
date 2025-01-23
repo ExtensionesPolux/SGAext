@@ -167,6 +167,11 @@ codeunit 71741 "SGA License Management"
             end;
 
             Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_App');
+
+            IF (Respuesta = '') THEN BEGIN
+                Respuesta := DatoJsonTexto(jsonEntrada, 'Mensaje_Error');
+                ERROR(Respuesta);
+            END;
         end
         else
             Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
@@ -423,13 +428,26 @@ codeunit 71741 "SGA License Management"
 
     #region Json
 
-    local procedure Json_Read_Label(json: JsonObject; Etiqueta: text) Valor: Text
+    local procedure Json_Read_Label(json: JsonObject; Etiqueta: text): Text
     var
         jsonToken: JsonToken;
-
+        jVariable: Text;
     begin
-        json.Get(Etiqueta, jsonToken);
-        Valor := jsonToken.AsValue().AsText();
+
+        jVariable := '';
+        if json.Get(Etiqueta, jsonToken) then begin
+            if jsonToken.AsValue().IsNull then
+                exit('')
+            else begin
+                jVariable := jsonToken.AsValue().AsText();
+                exit(jVariable);
+            end;
+        end else begin
+            exit('');
+        end;
+
+        //json.Get(Etiqueta, jsonToken);
+        //Valor := jsonToken.AsValue().AsText();
     end;
 
     local procedure DatoJsonTexto(xObjeto: JsonObject; xNodo: Text): text
@@ -489,21 +507,28 @@ codeunit 71741 "SGA License Management"
         yyyy: Integer;
         n: integer;
     begin
-        Fecha := 0D;
 
-        n := StrPos(texto, '/');
-        IF (n > 0) then begin
-            Evaluate(dd, copystr(texto, 1, n - 1));
-            texto := COPYSTR(texto, n + 1, STRLEN(texto) - n);
-        end;
-        n := StrPos(texto, '/');
-        IF (n > 0) then begin
-            Evaluate(mm, copystr(texto, 1, n - 1));
-            texto := COPYSTR(texto, n + 1, STRLEN(texto) - n);
-        end;
-        Evaluate(yyyy, texto);
+        IF (texto = '') THEN begin
+            Fecha := DMY2DATE(31, 12, 2999)
+        end else begin
 
-        if (dd <> 0) AND (mm <> 0) AND (yyyy <> 0) then fecha := DMY2DATE(dd, mm, yyyy);
+            Fecha := 0D;
+
+            n := StrPos(texto, '/');
+            IF (n > 0) then begin
+                Evaluate(dd, copystr(texto, 1, n - 1));
+                texto := COPYSTR(texto, n + 1, STRLEN(texto) - n);
+            end;
+            n := StrPos(texto, '/');
+            IF (n > 0) then begin
+                Evaluate(mm, copystr(texto, 1, n - 1));
+                texto := COPYSTR(texto, n + 1, STRLEN(texto) - n);
+            end;
+            Evaluate(yyyy, texto);
+
+            if (dd <> 0) AND (mm <> 0) AND (yyyy <> 0) then fecha := DMY2DATE(dd, mm, yyyy);
+
+        end;
     end;
     #Endregion
 

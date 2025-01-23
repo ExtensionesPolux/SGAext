@@ -303,6 +303,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action DELETE - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1456375839 - Action 1182422028 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Eliminar Registros Tablas</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Licencias - Action DELETEALL - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1456375839 - Action 240497149 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cargar Datos</source>
           <note from="Developer" annotates="general" priority="2"></note>

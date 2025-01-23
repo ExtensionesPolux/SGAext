@@ -277,6 +277,26 @@ codeunit 71740 WsApplicationStandard //Cambios 2024.09.10 CAMBIO
         exit('');
     end;
 
+    procedure WsHola(xDispositivo: Text): Text
+    var
+        cuLicencia: Codeunit "SGA License Management";
+    begin
+
+        exit(cuLicencia.Hola());
+
+    end;
+
+    procedure WsHolaSin(): Text
+    var
+        cuLicencia: Codeunit "SGA License Management";
+    begin
+
+        //exit(cuLicencia.Hola());
+
+        exit('Hola');
+    end;
+
+
     #endregion
 
 
