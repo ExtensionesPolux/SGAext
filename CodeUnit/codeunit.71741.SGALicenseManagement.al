@@ -93,6 +93,7 @@ codeunit 71741 "SGA License Management"
 
         JsonAzure.add('Commando', 'HOLA');
         JsonAzure.Add('ID', Identificador);
+        JsonAzure.Add('CompanyName', CompanyName);
         JsonAzure.WriteTo(RequestBody);
 
         IAzureFunctionsAuthentication := AzureFunctionsAuthentication.CreateCodeAuth(CompanyInfo."URL API", CompanyInfo."Azure Code");
@@ -104,6 +105,23 @@ codeunit 71741 "SGA License Management"
         end
         else
             Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());
+    end;
+
+
+    local procedure EsSandBox(): Boolean
+    var
+        EnvironmentInformation: Codeunit "Environment Information";
+
+    begin
+        exit(EnvironmentInformation.IsSandbox());
+    end;
+
+    local procedure EsOnPremise(): Boolean
+    var
+        EnvironmentInformation: Codeunit "Environment Information";
+
+    begin
+        exit(EnvironmentInformation.IsOnPrem());
     end;
 
     procedure Registro(xJson: Text) Respuesta: Text
@@ -123,6 +141,7 @@ codeunit 71741 "SGA License Management"
         RequestBody: text;
         CompanyInfo: record "Company Information";
         Identificador: Guid;
+
     begin
         Get_CompanyInfo(CompanyInfo);
         Identificador := CreateGuid();
@@ -131,10 +150,15 @@ codeunit 71741 "SGA License Management"
 
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
         JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.Add('CompanyName', CompanyName);
         JsonBC.WriteTo(MensajeBC);
 
         JsonAzure.add('Commando', 'REGISTRAR');
         JsonAzure.Add('ID', Identificador);
+        JsonAzure.Add('CompanyName', CompanyName);
+        JsonAzure.Add('OnPremise', Format(EsOnPremise()));
+        JsonAzure.Add('SandBox', Format(EsSandBox()));
+
         JsonAzure.add('Mensaje_BC', MensajeBC);
         JsonAzure.add('Mensaje_App', Encriptado);
         JsonAzure.WriteTo(RequestBody);
@@ -200,10 +224,15 @@ codeunit 71741 "SGA License Management"
 
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
         JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.Add('CompanyName', CompanyName);
         JsonBC.WriteTo(MensajeBC);
 
         JsonAzure.add('Commando', 'RENOVAR');
         JsonAzure.Add('ID', Identificador);
+        JsonAzure.Add('CompanyName', CompanyName);
+        JsonAzure.Add('OnPremise', Format(EsOnPremise()));
+        JsonAzure.Add('SandBox', Format(EsSandBox()));
+
         JsonAzure.add('Mensaje_BC', MensajeBC);
         JsonAzure.add('Mensaje_App', Encriptado);
         JsonAzure.WriteTo(RequestBody);
@@ -260,10 +289,12 @@ codeunit 71741 "SGA License Management"
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
         JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
         jsonBC.add('Id_Dispositivo', DispositivoID);
+        JsonBC.Add('CompanyName', CompanyName);
         JsonBC.WriteTo(MensajeBC);
 
         JsonAzure.add('Commando', Comando);
         JsonAzure.Add('ID', Identificador);
+        JsonAzure.Add('CompanyName', CompanyName);
         JsonAzure.add('Mensaje_BC', MensajeBC);
         JsonAzure.WriteTo(RequestBody);
 
@@ -316,10 +347,12 @@ codeunit 71741 "SGA License Management"
 
         JsonBC.Add('Licencia_BC', CompanyInfo."License BC");
         JsonBC.Add('Id_Polux', CompanyInfo."License Aura-SGA");
+        JsonBC.Add('CompanyName', CompanyName);
         JsonBC.WriteTo(MensajeBC);
 
         JsonAzure.add('Commando', 'INFO');
         JsonAzure.Add('ID', Identificador);
+        JsonAzure.Add('CompanyName', CompanyName);
         JsonAzure.add('Mensaje_BC', MensajeBC);
         JsonAzure.WriteTo(RequestBody);
 
@@ -336,6 +369,8 @@ codeunit 71741 "SGA License Management"
             CompanyInfo."Licencias Usadas" := DatoJsonInteger(JsonInfo, 'Licencias_Usadas');
             CompanyInfo."Fecha Vto Licencias" := string2date(DatoJsonTexto(JsonInfo, 'Fecha_Vto'));
             CompanyInfo.Modify;
+
+
 
 
             jsonInfo.get('Devices', jsonTokenLines);
@@ -371,6 +406,11 @@ codeunit 71741 "SGA License Management"
             Dispositivos.SetRange(baja, false);
             Dispositivos.SetFilter(Id, '<>%1', Identificador);
             Dispositivos.deleteall(true);
+
+            if (DatoJsonTexto(JsonInfo, 'Estado') = 'NOK') then
+                Message(DatoJsonTexto(JsonInfo, 'Error'));
+
+
         end
         else
             Error('Post request failed.\Details: %1', AzureFunctionsResponse.GetError());

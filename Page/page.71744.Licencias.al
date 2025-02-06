@@ -167,13 +167,24 @@ page 71744 Licencias
 
     local procedure Cargar_Datos()
     var
+        RecDispositivos: Record Dispositivos;
         LicenseMgt: Codeunit "SGA License Management";
     begin
+
+
+        Clear(RecDispositivos);
+        RecDispositivos.SetRange(Baja, false);
+        if RecDispositivos.FindSet() then RecDispositivos.DeleteAll();
+
         LicenseMgt.Informacion();
 
         rec.reset;
-        //rec.setrange(Baja, False);
-        rec.FindFirst();
+
+        Clear(RecDispositivos);
+        if RecDispositivos.FindFirst() then
+            //rec.setrange(Baja, False);
+            rec.FindFirst();
+
     end;
 
 }
